@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECHO.11 — iOS Launch Roadmap</title>
+<link rel="stylesheet" href="echo-roadmap.css" />
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<header class="cover" data-screen-label="Cover">
+  <div class="wrap">
+    <div class="cover-top">
+      <div class="wordmark">ECHO<span>.11</span></div>
+      <div class="kicker bare mono">Architecture &amp; Launch Brief · v1.0</div>
+    </div>
+
+    <h1>The <em>30-Day</em> Path to the App Store.</h1>
+    <p class="dek">A modular roadmap to bridge the <b>echo11-frequencies</b> engine and the ECHO.11 brand system into one production iOS app — <b>Signal first, Insights and Book next</b>. Honest about the hurdles, grounded in what's actually in your repo.</p>
+
+    <div class="cover-meta">
+      <div class="cell"><div class="lab">Target</div><div class="val accent">App Store · Jun 30, 2026</div></div>
+      <div class="cell"><div class="lab">Window</div><div class="val">4 sprints · 27 days</div></div>
+      <div class="cell"><div class="lab">Source of truth</div><div class="val">echo11.app</div></div>
+      <div class="cell"><div class="lab">Prepared for</div><div class="val">Shira Sarid</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 EXECUTIVE READ ============ -->
+<section data-screen-label="01 Executive read">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">01 — THE HONEST READ</span>
+      <h2>You don't have a prototype. You have a shipping product that isn't packaged yet.</h2>
+      <p class="lead"><b>echo11-frequencies</b> is a mature, zero-build PWA: a real-time Web Audio engine, 22 frequencies, offline service worker, bilingual RTL, and a single Edge Function. The work ahead is <b>packaging and unification</b> — not a rewrite.</p>
+    </div>
+
+    <div class="verdict">
+      <span class="vlab">Verdict</span>
+      <p>A June 30 launch is <b>realistic</b> — but only if you <em>wrap, not rebuild</em>. The fastest, lowest-risk route is Capacitor around your existing code. The two genuine threats to the date are <b>iOS background audio</b> and <b>Apple's "minimum functionality" review</b>, not engineering volume. Submit by end of Week 3 to leave a review buffer.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">22</div><div class="l">Frequencies, synthesized live — no audio files</div></div>
+      <div class="stat"><div class="n">172<span class="u">KB</span></div><div class="l">Monolithic app.js (~3,200 lines) — refactor risk</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">Server function — /api/ai-analysis (Claude Haiku)</div></div>
+      <div class="stat"><div class="n">0</div><div class="l">Build step, npm deps, or database to migrate</div></div>
+    </div>
+
+    <div class="prose" style="margin-top:34px;">
+      <p><b>One important clarification.</b> You have two live properties, and the roadmap unifies them: <code>echo11.space</code> is the frequencies PWA (this repo); <code>echo11.app</code> / <code>echo-11-site</code> is the brand landing site. From this point on, <b>echo11.app is the single source of truth</b> for backend, deep links, and branding. Reconciling that split is the very first dependency below — it touches your manifest, schema, service-worker scope, and the AI function's origin allowlist.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 DEPENDENCY AUDIT ============ -->
+<section data-screen-label="02 Dependency audit">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">02 — CRITICAL DEPENDENCIES TO REFACTOR FIRST</span>
+      <h2>What in the repo blocks a clean wrap — in priority order.</h2>
+      <p class="lead">Drawn directly from <b>echo11-frequencies@main</b>. Clear these before any native packaging, or they compound inside Xcode where they're far more expensive to debug.</p>
+    </div>
+
+    <div class="deps">
+      <div class="dep">
+        <div class="idx">D1</div>
+        <div>
+          <h4>Domain fragmentation — <code>echo11.space</code> hardcoded everywhere</h4>
+          <p><code>manifest.json</code> (<code>start_url:"/"</code>), JSON-LD schema URLs, canonical/hreflang tags, <code>sitemap.xml</code>, service-worker scope and GA all assume <code>echo11.space</code>. Shipping under <code>echo11.app</code> with these unchanged breaks PWA scope, deep links and SEO continuity.</p>
+          <div class="fix"><b>Fix</b>Centralize one <code>ORIGIN</code> constant, switch to <code>https://echo11.app</code>, set a 301 from <code>.space</code>, bump the SW cache version so no one is pinned to the old origin.</div>
+        </div>
+        <span class="pill blocker">Blocker</span>
+      </div>
+
+      <div class="dep">
+        <div class="idx">D2</div>
+        <div>
+          <h4>Audio lifecycle is browser-coupled</h4>
+          <p>Start/stop/resume, the iOS silent-switch bypass (looped silent element) and Wake Lock live inline in <code>app.js</code>. Inside a WKWebView these don't guarantee background or lock-screen playback — the core promise of a frequencies app.</p>
+          <div class="fix"><b>Fix</b>Extract an <code>audioEngine</code> module with clean <code>play/stop/resume</code> hooks so a native <code>AVAudioSession</code> bridge (Capacitor) can own background mode and interruptions.</div>
+        </div>
+        <span class="pill blocker">Blocker</span>
+      </div>
+
+      <div class="dep">
+        <div class="idx">D3</div>
+        <div>
+          <h4>Monolith: <code>app.js</code> 172 KB · <code>index.html</code> 285 KB</h4>
+          <p>Everything embedded in two files. Functional today, but fragile — one bad edit can take down the whole engine, and it's nearly impossible to unit-test the audio path before submission.</p>
+          <div class="fix"><b>Fix</b>Light split only: <code>audio-engine.js</code>, <code>state.js</code>, <code>ui.js</code>. Don't gold-plate — just enough seams to test and to bridge native. Use an AI agent for this (§07).</div>
+        </div>
+        <span class="pill high">High</span>
+      </div>
+
+      <div class="dep">
+        <div class="idx">D4</div>
+        <div>
+          <h4><code>/api/ai-analysis.js</code> is an open POST</h4>
+          <p>The Edge Function proxies to Claude Haiku with your <code>ANTHROPIC_API_KEY</code>. It caps prompt length (good) but has no origin check or rate limit — once the key is behind a store app, abuse is billable.</p>
+          <div class="fix"><b>Fix</b>Add an <code>Origin</code> allowlist (<code>echo11.app</code> + the Capacitor scheme), per-IP rate limiting, and keep <code>Cache-Control: no-store</code>. Verify the key is server-only.</div>
+        </div>
+        <span class="pill high">High</span>
+      </div>
+
+      <div class="dep">
+        <div class="idx">D5</div>
+        <div>
+          <h4>Expiring media on a third-party CDN</h4>
+          <p>Your own notes flag that the 432 Hz / 528 Hz video backgrounds depend on a Midjourney CDN that "may expire." If they 404 inside a shipped build, you can't hot-fix without a resubmission.</p>
+          <div class="fix"><b>Fix</b>Self-host all video/poster assets in the repo (you already do for stills) before the build is frozen.</div>
+        </div>
+        <span class="pill high">High</span>
+      </div>
+
+      <div class="dep">
+        <div class="idx">D6</div>
+        <div>
+          <h4>App Store icon set + manifest icons</h4>
+          <p><code>manifest.json</code> points at <code>web-app-manifest-512x512.png</code>. Apple needs a <b>1024×1024 with no alpha and no rounded corners</b>; a transparent source will be rejected at upload.</p>
+          <div class="fix"><b>Fix</b>Generate the full iOS icon set from a flat 1024 master. Confirm the 512 manifest PNG exists and is opaque.</div>
+        </div>
+        <span class="pill med">Medium</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 SPRINT ROADMAP ============ -->
+<section data-screen-label="03 Sprint roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">03 — THE 4-WEEK SPRINT PLAN</span>
+      <h2>Signal to the App Store in four sprints.</h2>
+      <p class="lead">Scope is deliberately ruthless: ship the <b>Frequencies (Signal)</b> module only. Insights and Book are post-launch (§05). <b>Day 1, before anything else: enrol in the Apple Developer Program</b> — approval can take 24–48h+.</p>
+    </div>
+
+    <div class="sprint">
+      <div class="week">
+        <div class="week-head">
+          <span class="wk">WEEK 1</span><span class="dates">Jun 3 – Jun 9</span>
+          <h3>Foundation &amp; de-risk</h3>
+          <span class="goal">Unblock the wrap.</span>
+        </div>
+        <div class="week-body">
+          <div class="task"><span class="tk">01</span><div><div class="tt">Enrol in Apple Developer Program ($99/yr) — Day 1</div><div class="td">Gates everything. New accounts can sit in review; do it before writing code.</div></div></div>
+          <div class="task"><span class="tk">02</span><div><div class="tt">Domain unification → echo11.app (D1)</div><div class="td">One ORIGIN constant, manifest + schema + sitemap + SW scope, 301 from .space.</div></div></div>
+          <div class="task"><span class="tk">03</span><div><div class="tt">Self-host expiring media (D5) + flat 1024 icon master (D6)</div><div class="td">Freeze all assets into the repo so the build is reproducible.</div></div></div>
+          <div class="task"><span class="tk">04</span><div><div class="tt">Spike: Capacitor shell loading echo11.app in WKWebView</div><div class="td">Prove the app boots and audio plays in the foreground before investing further.</div></div></div>
+          <span class="milestone">◆ Milestone — App runs in a device simulator</span>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="week-head">
+          <span class="wk">WEEK 2</span><span class="dates">Jun 10 – Jun 16</span>
+          <h3>Native audio &amp; the hard problem</h3>
+          <span class="goal">Make background playback real.</span>
+        </div>
+        <div class="week-body">
+          <div class="task"><span class="tk">01</span><div><div class="tt">Extract audioEngine module (D2) + light app.js split (D3)</div><div class="td">Clean play/stop/resume seams; AI-assisted refactor with tests on the Hz math.</div></div></div>
+          <div class="task"><span class="tk">02</span><div><div class="tt">Native AVAudioSession (.playback) + background audio capability</div><div class="td">The #1 technical risk. Lock-screen + control-center via Media Session bridge; handle call/alarm interruptions.</div></div></div>
+          <div class="task"><span class="tk">03</span><div><div class="tt">Harden /api/ai-analysis (D4)</div><div class="td">Origin allowlist for echo11.app + Capacitor scheme, rate limit, key audit.</div></div></div>
+          <div class="task"><span class="tk">04</span><div><div class="tt">Native onboarding + headphone prompt (anti-"minimum functionality")</div><div class="td">Genuine native surface so review doesn't read it as a thin web wrapper.</div></div></div>
+          <span class="milestone">◆ Milestone — Frequency plays with screen locked</span>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="week-head">
+          <span class="wk">WEEK 3</span><span class="dates">Jun 17 – Jun 23</span>
+          <h3>Polish, compliance &amp; submit</h3>
+          <span class="goal">Get it in the queue.</span>
+        </div>
+        <div class="week-body">
+          <div class="task"><span class="tk">01</span><div><div class="tt">Medical-claims pass on all copy</div><div class="td">Soften "healing / anesthetic / immune boost / cure"; keep "Not a medical device." Avoids 5.x rejection.</div></div></div>
+          <div class="task"><span class="tk">02</span><div><div class="tt">Store assets: 6.7" + 6.5" screenshots, description, keywords, privacy nutrition label</div><div class="td">Privacy Policy + Support URL on echo11.app. Category: Health &amp; Fitness. Age 4+.</div></div></div>
+          <div class="task"><span class="tk">03</span><div><div class="tt">TestFlight internal build + device matrix</div><div class="td">Real iPhone (notch + Dynamic Island), low-power mode, Bluetooth handoff, RTL Hebrew.</div></div></div>
+          <div class="task"><span class="tk">04</span><div><div class="tt">Submit to App Store Review</div><div class="td">Submitting here, not Week 4, is what protects the Jun 30 date.</div></div></div>
+          <span class="milestone">◆ Milestone — Binary submitted for review</span>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="week-head">
+          <span class="wk">WEEK 4</span><span class="dates">Jun 24 – Jun 30</span>
+          <h3>Review buffer &amp; launch</h3>
+          <span class="goal">Land it — and seed what's next.</span>
+        </div>
+        <div class="week-body">
+          <div class="task"><span class="tk">01</span><div><div class="tt">Respond to review feedback within hours</div><div class="td">Most first submissions get one round of notes. Fast turnaround is the difference between Jun 30 and July.</div></div></div>
+          <div class="task"><span class="tk">02</span><div><div class="tt">Release on approval + verify deep links / universal links</div><div class="td">apple-app-site-association on echo11.app; confirm marketing links open the app.</div></div></div>
+          <div class="task"><span class="tk">03</span><div><div class="tt">Groundwork for Phase 2 (Insights)</div><div class="td">Scaffold the remote-content tab against echo11.app — no submission impact.</div></div></div>
+          <span class="milestone">◆ Milestone — LIVE on the App Store</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 STACK DECISION ============ -->
+<section data-screen-label="04 Stack decision">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">04 — TECHNICAL STACK · AN HONEST CALL</span>
+      <h2>Capacitor, not React Native. Wrap the working engine — don't rewrite it.</h2>
+      <p class="lead">You raised React Native / Expo for speed. For <b>this</b> codebase it's the slower, riskier path: it would mean re-implementing your entire Web Audio synthesis engine in native audio. Capacitor reuses 100% of what already works.</p>
+    </div>
+
+    <div class="cols">
+      <div class="card pick">
+        <div class="ct"><h3>Capacitor (Ionic)</h3><span class="tag go">Recommended</span></div>
+        <div class="sub">Native shell around your existing HTML/JS/Web Audio.</div>
+        <ul>
+          <li class="pro"><span class="m">+</span><span>Reuses <b>all</b> of app.js + the audio engine — zero rewrite</span></li>
+          <li class="pro"><span class="m">+</span><span>Native AVAudioSession, background audio, push, widgets when you want them</span></li>
+          <li class="pro"><span class="m">+</span><span>One codebase serves PWA <em>and</em> App Store; iterate via web deploys</span></li>
+          <li class="pro"><span class="m">+</span><span>Realistic to ship inside 30 days, solo</span></li>
+          <li class="con"><span class="m">–</span><span>Still needs native config for the audio session (Week 2 work)</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="ct"><h3>React Native / Expo</h3><span class="tag no">Not for v1</span></div>
+        <div class="sub">Full native rewrite of UI and audio.</div>
+        <ul>
+          <li class="con"><span class="m">–</span><span>Rewrites 3,200 lines of working Web Audio in native audio APIs</span></li>
+          <li class="con"><span class="m">–</span><span>Throws away the offline PWA you'd still want to keep</span></li>
+          <li class="con"><span class="m">–</span><span>Weeks of work + new bug surface — endangers Jun 30</span></li>
+          <li class="pro"><span class="m">+</span><span>Right call <em>later</em> if the app demands deep native UX (v2+)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:24px;">
+      <p><b>Shortcut for the spike:</b> generate the initial package with <a href="https://www.pwabuilder.com">PWABuilder</a> (point it at echo11.app), then keep its output as a Capacitor project. You get a submittable scaffold in an afternoon and a real native project you can extend for background audio — best of both, no dead end.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 INTEGRATION ============ -->
+<section data-screen-label="05 Integration strategy">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">05 — INTEGRATION &amp; MODULARITY</span>
+      <h2>One brand, three modules, loaded from echo11.app.</h2>
+      <p class="lead">The Vercel-hosted web <em>is</em> the app. The native shell owns device capabilities; the web layer owns content and UI — so brand changes ship instantly without an App Store round-trip.</p>
+    </div>
+
+    <div class="stack">
+      <div class="layer native">
+        <div class="ln">Native shell · Capacitor</div>
+        <div class="ld"><b>Device only:</b> audio session &amp; background mode, lock-screen controls, splash/icons, deep-link routing, later push &amp; widgets. Thin and stable — rarely resubmitted.</div>
+      </div>
+      <div class="layer">
+        <div class="ln">Web core · echo11.app</div>
+        <div class="ld"><b>Everything visible:</b> the frequency engine, UI, onboarding, brand. Served from Vercel; bundled offline copy via the service worker so it works on a plane.</div>
+      </div>
+      <div class="layer">
+        <div class="ln">Edge · /api on echo11.app</div>
+        <div class="ld"><b>The one backend:</b> the Claude-powered AI analysis function. Origin-locked to echo11.app. Add new endpoints here as Insights/Book need them.</div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:26px;">
+      <p>Brand consistency is structural, not manual: both the app and the marketing site render from the same <b>echo11.app</b> design tokens and components. A type or color change propagates everywhere at once.</p>
+    </div>
+
+    <div class="phases">
+      <div class="phase now">
+        <span class="pn">Phase 1 · this sprint</span>
+        <h4>Signal</h4>
+        <p>The frequencies engine, wrapped and shipped. The product that earns the App Store slot.</p>
+        <span class="when">→ Live Jun 30</span>
+      </div>
+      <div class="phase">
+        <span class="pn">Phase 2 · post-launch</span>
+        <h4>Insights</h4>
+        <p>Articles &amp; the CTRL+HUMAN podcast as a native tab over remote echo11.app content. No new binary needed.</p>
+        <span class="when">→ July</span>
+      </div>
+      <div class="phase">
+        <span class="pn">Phase 3 · later</span>
+        <h4>Book</h4>
+        <p>Sales landing + reader. External-link commerce first; StoreKit only if you sell digital goods in-app.</p>
+        <span class="when">→ Q3</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 APP STORE GUIDE ============ -->
+<section data-screen-label="06 App Store guide">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">06 — APP STORE SUBMISSION</span>
+      <h2>The requirements checklist, in submission order.</h2>
+      <p class="lead">Nothing here is hard individually — missing one is what delays a launch. Privacy Policy and Support URL both resolve on <b>echo11.app</b>.</p>
+    </div>
+
+    <div class="checklist">
+      <div class="check"><div class="box"></div><div><div class="ct2">Apple Developer Program enrolment</div><div class="cd">$99/yr · enrol Day 1, approval can lag</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">App icon — 1024×1024, no alpha, no rounding</div><div class="cd">Flat master → full iOS set</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Screenshots — 6.7" (1290×2796) &amp; 6.5"</div><div class="cd">iPad set only if you ship iPad</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">App name + subtitle + 100 keywords</div><div class="cd">"echo.11 · healing frequencies"</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Description + promo text</div><div class="cd">Lead with science framing, soft claims</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Privacy nutrition label</div><div class="cd">Anonymous analytics only; no personal data</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Privacy Policy URL · echo11.app/legal</div><div class="cd">Already drafted in legal.html</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Support URL + contact email</div><div class="cd">hello@echo11.app</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">Category Health &amp; Fitness · Age 4+</div><div class="cd">Health category gets extra claim scrutiny</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">"Not a medical device" disclaimer in-app</div><div class="cd">Visible, not buried in legal</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">TestFlight build + real-device pass</div><div class="cd">Background audio, RTL, low-power mode</div></div></div>
+      <div class="check"><div class="box"></div><div><div class="ct2">apple-app-site-association on echo11.app</div><div class="cd">Universal links open the app</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 AI TOOLING ============ -->
+<section data-screen-label="07 AI tooling">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">07 — AGENTIC TOOLING</span>
+      <h2>What to point at the code, and for what.</h2>
+      <p class="lead">You've already written <code>ai.txt</code> and <code>llms.txt</code> — the repo is agent-ready. Use that. Match the tool to the job rather than forcing one for everything.</p>
+    </div>
+
+    <div class="tools">
+      <div class="tool">
+        <div class="th"><h4>Claude Code</h4><span class="role">Audit · refactor</span></div>
+        <p>Terminal agent with whole-repo context — best for the heavy lift: auditing app.js, splitting it into modules (D3), and generating tests around the Hz-synthesis math so a refactor can't silently break a frequency.</p>
+        <div class="use"><b>Use it for</b>The D2/D3 refactor, the security pass on /api, dependency audit.</div>
+      </div>
+      <div class="tool">
+        <div class="th"><h4>Cursor</h4><span class="role">Daily IDE</span></div>
+        <p>Inline agent for day-to-day work — wiring Capacitor config, Swift glue for the audio session, and fast edit/preview loops on the web layer.</p>
+        <div class="use"><b>Use it for</b>Native config, store-asset scripts, iterative UI.</div>
+      </div>
+      <div class="tool">
+        <div class="th"><h4>PWABuilder</h4><span class="role">Packaging</span></div>
+        <p>Not AI — but the fastest way from echo11.app to a submittable, Capacitor-compatible Xcode project. Your Week-1 spike starts here.</p>
+        <div class="use"><b>Use it for</b>The initial iOS package scaffold.</div>
+      </div>
+      <div class="tool">
+        <div class="th"><h4>Xcode + TestFlight</h4><span class="role">Build · test</span></div>
+        <p>Non-negotiable for archive, signing and real-device testing. Background audio behaviour <em>must</em> be verified on hardware, never the simulator alone.</p>
+        <div class="use"><b>Use it for</b>Signing, TestFlight, device matrix, submission.</div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:22px;">
+      <p><b>Keep the Claude integration you already have.</b> <code>api/ai-analysis.js</code> already calls <code>claude-haiku-4-5</code> for in-app analysis — that's a real native-feeling feature reviewers like. Just lock its origin to echo11.app (D4) and it ships as-is.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 RISKS ============ -->
+<section data-screen-label="08 Risk register">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="secnum">08 — RISK REGISTER · BE HONEST</span>
+      <h2>The five things most likely to cost you June 30.</h2>
+      <p class="lead">None are reasons not to ship. Each has a mitigation already built into the sprint plan — surfaced here so nothing is a surprise.</p>
+    </div>
+
+    <div class="risks">
+      <div class="risk-row">
+        <div class="rtop"><h4>iOS background audio in a WebView</h4><span class="sev critical">Critical</span></div>
+        <div class="rd">Web Audio can suspend when the app backgrounds or the screen locks. For a frequencies app that's an existential bug — people listen with the phone in their pocket. Your browser silent-switch trick won't carry over by itself.</div>
+        <div class="rm"><b>Mitigated</b>Native AVAudioSession <code>.playback</code> + UIBackgroundModes audio + Media Session bridge — the centerpiece of Week 2, tested on real hardware.</div>
+      </div>
+
+      <div class="risk-row">
+        <div class="rtop"><h4>App Store 4.2 — "minimum functionality"</h4><span class="sev critical">Critical</span></div>
+        <div class="rd">Apple rejects apps that are thin wrappers of a website. A pure WebView of echo11.app is squarely in that risk zone.</div>
+        <div class="rm"><b>Mitigated</b>Native onboarding, background audio, lock-screen controls and the Claude analysis feature give genuine native value beyond the site.</div>
+      </div>
+
+      <div class="risk-row">
+        <div class="rtop"><h4>Health / medical claims (Guideline 5.x)</h4><span class="sev high">High</span></div>
+        <div class="rd">Language like "healing," "natural anesthetic," "immune boost" and "misophonia relief" invites scrutiny in the Health category and can trigger rejection or a demand for evidence.</div>
+        <div class="rm"><b>Mitigated</b>Week-3 copy pass softens claims to experiential framing; prominent "Not a medical device" disclaimer in-app, not just in legal.</div>
+      </div>
+
+      <div class="risk-row">
+        <div class="rtop"><h4>Review queue vs. a hard date</h4><span class="sev high">High</span></div>
+        <div class="rd">First submissions commonly get one round of notes. If you submit in Week 4, a single rejection pushes you past June 30.</div>
+        <div class="rm"><b>Mitigated</b>Submit end of Week 3; Week 4 is a dedicated review-response buffer, not new build work.</div>
+      </div>
+
+      <div class="risk-row">
+        <div class="rtop"><h4>Solo bandwidth + domain migration mid-flight</h4><span class="sev med">Medium</span></div>
+        <div class="rd">One founder, fixed date, while moving the canonical origin from .space to .app — a migration that can break PWA scope, deep links and SEO if rushed late.</div>
+        <div class="rm"><b>Mitigated</b>Migration is Week 1, before native work; scope is frozen to Signal-only; agents (§07) absorb the refactor load.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="closing" data-screen-label="Closing">
+  <div class="wrap">
+    <span class="kicker bare mono">echo11.app · production source of truth</span>
+    <h2>Ship the <em>Signal</em>. Earn the slot.<br/>Add the rest from orbit.</h2>
+    <p>Wrap the engine that already works, defend the audio path and the review, and launch lean. Insights and Book arrive as web deploys behind a binary you never have to rebuild.</p>
+    <div class="foot">ECHO.11 — Launch Architecture Brief · Prepared June 3, 2026</div>
+  </div>
+</section>
+
+</body>
+</html>

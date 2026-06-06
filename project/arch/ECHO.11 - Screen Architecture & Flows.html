@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECHO.11 — Screen Architecture & Flows</title>
+<link rel="stylesheet" href="arch.css" />
+</head>
+<body>
+
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="brand">echo<span class="mk"><i></i><i></i></span></span>
+    <nav>
+      <a href="#map">Screen Map</a>
+      <a href="#onboarding">Onboarding</a>
+      <a href="#home">Home</a>
+      <a href="#core">Core + States</a>
+      <a href="#account">Account / Paywall</a>
+      <a href="#states">Error / Empty / Loading</a>
+      <a href="#gaps">Gap Analysis</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ───────────────────────── HERO ───────────────────────── -->
+  <header class="hero">
+    <div class="eyebrow">UX Architecture Audit · Decoded from the build</div>
+    <h1>The complete <em>screen architecture</em> &amp; flows of ECHO.11</h1>
+    <p class="lede">Every screen, state and transition in the shipping app — mapped from source, not memory. Use this to confirm nothing is missing: each gap is flagged <b style="color:var(--rose)">red</b>, each partial implementation <b style="color:var(--amber)">amber</b>, each solid screen <b style="color:var(--green)">green</b>.</p>
+    <div class="hero-meta">
+      <span class="chip"><span class="d"></span><b>4</b> onboarding stages</span>
+      <span class="chip"><span class="d"></span><b>4</b> primary tabs</span>
+      <span class="chip"><span class="d"></span><b>6</b> overlays &amp; modals</span>
+      <span class="chip"><span class="d"></span><b>21</b> frequencies · 4 episodes</span>
+      <span class="chip"><span class="d"></span><b>5</b> state machines</span>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="sw gate"></span>Gate / required</span>
+      <span class="lg"><span class="sw present"></span>Built &amp; complete</span>
+      <span class="lg"><span class="sw partial"></span>Partial / demo data</span>
+      <span class="lg"><span class="sw missing"></span>Missing / gap</span>
+    </div>
+  </header>
+
+  <!-- ───────────────────────── TOP-LEVEL STATE ───────────────────────── -->
+  <section class="sec" id="map">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Top-level state machine</h2></div>
+    <p class="sec-sub">The app shell drives one <code style="font-family:var(--mono);color:var(--signal)">stage</code> variable through a linear gauntlet before unlocking the tabbed app. Splash is timed and un-skippable; Auth and Protocol are gates.</p>
+
+    <div class="flow">
+      <div class="step"><div class="node is-gate"><span class="tag">stage = splash</span><h3>Splash</h3><p>Obsidian + echo.|| logo. Auto cross-fades after 2.5s hold → 3s fade. No interaction.</p></div></div>
+      <div class="arrow">→<small>2.5s timer</small></div>
+      <div class="step"><div class="node is-gate"><span class="tag">stage = auth</span><h3>Auth</h3><p>Sign-in gate. Apple · Google · email · guest. Guest = anonymous skip.</p></div></div>
+      <div class="arrow">→<small>onDone()</small></div>
+      <div class="step"><div class="node is-gate"><span class="tag">stage = protocol</span><h3>Protocol</h3><p>Education + safety consent. Continue is <b style="color:var(--amber)">disabled until checkbox</b>.</p></div></div>
+      <div class="arrow">→<small>onBegin()</small></div>
+      <div class="step"><div class="node signal"><span class="tag">stage = app</span><h3>App shell</h3><p>Tab bar + scroll area. Default tab = <b style="color:var(--signal)">Signal</b> (Home).</p></div></div>
+    </div>
+
+    <div class="sm-note" style="border:0;padding-top:18px;">
+      <b>Skip logic:</b> <code style="font-family:var(--mono);color:var(--signal)">Protocol</code> exposes an <code style="font-family:var(--mono);color:var(--signal)">onSkip</code> prop and a <code style="font-family:var(--mono);color:var(--signal)">showProtocol</code> tweak, but the safety consent checkbox is <b style="color:var(--amber)">non-bypassable</b> in the visible flow — the "Continue" button stays disabled until it's ticked. Logout returns the user all the way back to <b>stage = auth</b> (not splash).
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- FULL SCREEN MAP -->
+    <div class="sec-head" style="margin-top:60px;"><span class="sec-num">02</span><h2>Full screen map</h2></div>
+    <p class="sec-sub">Every reachable surface, grouped by architectural layer. Overlays (hatched) render <em>above</em> any tab and persist across navigation.</p>
+
+    <div class="map">
+      <!-- onboarding layer -->
+      <div class="layer">
+        <div class="layer-label"><div class="ll-num">L0</div><div class="ll-name">Onboarding</div><div class="ll-meta">Linear · gated</div></div>
+        <div class="layer-nodes">
+          <div class="mini gate"><div class="mtag">Timed</div><div class="mname">Splash</div><div class="mdesc">Brand hold, auto-advance.</div></div>
+          <div class="mini gate"><div class="mtag">Gate · identity</div><div class="mname">Auth / Sign-in</div><div class="mdesc">4 paths incl. guest. Email regex validation.</div></div>
+          <div class="mini gate"><div class="mtag">Gate · consent</div><div class="mname">Protocol</div><div class="mdesc">3 explainer steps + required safety consent.</div></div>
+        </div>
+      </div>
+
+      <!-- primary tabs -->
+      <div class="layer">
+        <div class="layer-label"><div class="ll-num">L1</div><div class="ll-name">Primary tabs</div><div class="ll-meta">Tab bar · persistent</div></div>
+        <div class="layer-nodes">
+          <div class="mini"><div class="mtag">Tab · default</div><div class="mname">Signal · Home</div><div class="mdesc">Dashboard: anchor, reset, quick-start, library, streak.</div></div>
+          <div class="mini"><div class="mtag">Tab</div><div class="mname">Insights</div><div class="mdesc">Article feed (Substack hero + evergreen list).</div></div>
+          <div class="mini"><div class="mtag">Tab</div><div class="mname">Listen</div><div class="mdesc">CTRL+HUMAN podcast hub + episode list.</div></div>
+          <div class="mini"><div class="mtag">Tab</div><div class="mname">About</div><div class="mdesc">Membership · FAQ · bio · connect · legal · logout.</div></div>
+        </div>
+      </div>
+
+      <!-- detail / push screens -->
+      <div class="layer">
+        <div class="layer-label"><div class="ll-num">L2</div><div class="ll-name">Push screens</div><div class="ll-meta">In-tab navigation</div></div>
+        <div class="layer-nodes">
+          <div class="mini"><div class="mtag">From Insights / Home</div><div class="mname">Reader</div><div class="mdesc">Full article + scroll progress bar. Save/Share.</div></div>
+          <div class="mini"><div class="mtag">From Library (alt)</div><div class="mname">Freq Detail</div><div class="mdesc">Full-bleed per-frequency page. Superseded by Player.</div></div>
+          <div class="mini"><div class="mtag">From Signal (alt)</div><div class="mname">Frequencies / Listen list</div><div class="mdesc">Filterable master library (type + intention chips).</div></div>
+        </div>
+      </div>
+
+      <!-- overlays -->
+      <div class="layer">
+        <div class="layer-label"><div class="ll-num">L3</div><div class="ll-name">Overlays</div><div class="ll-meta">z-above · global</div></div>
+        <div class="layer-nodes">
+          <div class="mini overlay"><div class="mtag">Full-screen modal</div><div class="mname">Player</div><div class="mdesc">Core experience. Duration, countdown, L/R readout.</div></div>
+          <div class="mini overlay"><div class="mtag">Bottom sheet</div><div class="mname">Paywall</div><div class="mdesc">Yearly / monthly tiers, trial, restore.</div></div>
+          <div class="mini overlay"><div class="mtag">Persistent bar</div><div class="mname">Now-playing</div><div class="mdesc">Survives tab switches. EQ + Stop.</div></div>
+          <div class="mini overlay"><div class="mtag">Toast · once</div><div class="mname">Headphone reminder</div><div class="mdesc">First binaural play, per-device.</div></div>
+          <div class="mini overlay"><div class="mtag">Toast</div><div class="mname">Share / copy</div><div class="mdesc">"Copied to clipboard" on anchor share.</div></div>
+          <div class="mini overlay"><div class="mtag">Dev / demo panel</div><div class="mname">Tweaks</div><div class="mdesc">Accent · typeface · theme · text size · density.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── ONBOARDING ───────────────────────── -->
+  <section class="sec" id="onboarding">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Onboarding flow</h2></div>
+    <p class="sec-sub">Three screens after splash. The app collects <b>identity</b> and <b>safety consent</b> — and nothing else. There is no preference/intake questionnaire, no goal-setting, no notification priming.</p>
+
+    <div class="grid g3">
+      <div class="node is-present">
+        <span class="corner">Screen 1</span>
+        <span class="tag">Splash</span>
+        <h3>Brand hold</h3>
+        <p>Pure obsidian, centered <b>echo.||</b> logo (the || doubles as a pause glyph). Cinematic 2.5s hold, then a slow 3s cross-fade mounts Auth underneath.</p>
+        <ul>
+          <li>Collects: nothing</li>
+          <li>Skip: none — timed auto-advance</li>
+          <li>No tap target</li>
+        </ul>
+      </div>
+      <div class="node is-gate">
+        <span class="corner">Screen 2 · Gate</span>
+        <span class="tag">Auth / Sign-in</span>
+        <h3>Identity</h3>
+        <p>Desert hero image + scrim. Four entry paths backed by Supabase auth (Apple / Google OAuth, email magic-link, anonymous).</p>
+        <ul>
+          <li>Collects: provider OR email</li>
+          <li>Validates email by regex; sets invalid state</li>
+          <li>Skip: <b>"Continue as guest →"</b> = anonymous</li>
+          <li>Legal: Terms &amp; Privacy links</li>
+        </ul>
+      </div>
+      <div class="node is-gate">
+        <span class="corner">Screen 3 · Gate</span>
+        <span class="tag">Protocol</span>
+        <h3>Education + consent</h3>
+        <p>Three explainer steps — <em>Stereo Separation → Neuro-Entrainment → Nervous System Shift</em> — then a required safety/consent block.</p>
+        <ul>
+          <li>Collects: safety acknowledgement (checkbox)</li>
+          <li>"Continue" disabled until checked</li>
+          <li>Wellness-not-medical disclaimer, contraindications</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="co-k">Onboarding observations</div>
+      <h3>What the flow does — and doesn't — collect</h3>
+      <ul>
+        <li><b>No personalization intake.</b> The greeting hard-codes the name "Shira" and time-of-day; there's no name capture, goal selection, or recommended-frequency onboarding.</li>
+        <li><b>Email path has no confirmation screen.</b> After a valid email the flow jumps straight to Protocol — there's no "check your inbox / enter code" magic-link confirmation state in the UI.</li>
+        <li><b>Consent is the only true gate</b> with enforced blocking. Auth can always be bypassed via guest.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── HOME ───────────────────────── -->
+  <section class="sec" id="home">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Home screen — visual hierarchy &amp; first action</h2></div>
+    <p class="sec-sub">The Signal tab's <code style="font-family:var(--mono);color:var(--signal)">HomeDashboard</code>. Read top-to-bottom, it descends from atmosphere → one-tap rescue → curated shortcuts → full catalogue → habit loop. The design pushes a single, unmistakable <b>first action</b>.</p>
+
+    <div class="anatomy">
+      <div class="stack">
+        <div class="layer-band">
+          <div class="lb-z">z1</div>
+          <div class="lb-body"><h4>Hero — looping film + greeting</h4><p>Astronaut loop, time-aware "Good {morning}, Shira", + shareable Daily Neural Anchor quote floating over the bottom edge.</p></div>
+        </div>
+        <div class="layer-band lead">
+          <div class="lb-z">z2</div>
+          <div class="lb-body"><h4>Neural Reset (one-tap)</h4><p>Pulsing CTA → opens Player on a calming 6&nbsp;Hz theta reset. Softened from "SOS".</p></div>
+          <div class="lb-flag">★ first action</div>
+        </div>
+        <div class="layer-band">
+          <div class="lb-z">z3</div>
+          <div class="lb-body"><h4>Quick Start grid (3)</h4><p>Focus 40Hz · Sleep 2Hz · Reset 6Hz → each opens the Player directly.</p></div>
+        </div>
+        <div class="layer-band">
+          <div class="lb-z">z4</div>
+          <div class="lb-body"><h4>Protocol Library (collapsible)</h4><p>Accordion: Binaural 🎧 (open by default) + Ambient. Premium rows show lock pips.</p></div>
+        </div>
+        <div class="layer-band">
+          <div class="lb-z">z5</div>
+          <div class="lb-body"><h4>Neural Streak (7-day)</h4><p>"Consistency Protocol" habit row. <b style="color:var(--amber)">Demo data</b> — hardcoded pattern, not real sessions.</p></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sm" style="margin-top:0;">
+          <div class="sm-title">First-action analysis</div>
+          <div class="sm-head"><h3>One screen, four ways to start audio</h3></div>
+          <p style="color:var(--muted);font-size:14px;margin-top:14px;">Every primary surface on Home funnels to the <b style="color:var(--ink)">Player</b>. There is no dead-end hero — the page is engineered so the very first deliberate tap produces sound:</p>
+          <div class="states" style="margin-top:18px;">
+            <span class="state init">Home</span>
+            <span class="trans"><span class="lbl">Reset / Quick / Library</span><span class="ln">→</span></span>
+            <span class="state">Player (Ready)</span>
+            <span class="trans"><span class="lbl">tap play</span><span class="ln">→</span></span>
+            <span class="state" style="border-color:var(--signal);color:var(--signal)">Playing</span>
+          </div>
+          <div class="sm-note">
+            <b>Premium fork:</b> tapping a locked frequency anywhere on Home intercepts to the <b>Paywall</b> sheet instead of the Player. <b>Headphone fork:</b> first-ever binaural play fires a one-time toast reminder.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── CORE + STATE MACHINES ───────────────────────── -->
+  <section class="sec" id="core">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Core feature screens &amp; state machines</h2></div>
+    <p class="sec-sub">Five interactive surfaces carry the product. Each is mapped with its explicit states and transitions as implemented.</p>
+
+    <!-- SM1: Player -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Core experience · 01</div><h3>Player (full-screen modal)</h3></div>
+        <span class="sm-ctx">freq · duration · countdown</span>
+      </div>
+      <div class="states">
+        <span class="state">Closed</span>
+        <span class="trans"><span class="lbl">openPlayer(f)</span><span class="ln">→</span></span>
+        <span class="state init">Ready</span>
+        <span class="trans"><span class="lbl">tap play</span><span class="ln">→</span></span>
+        <span class="state">Playing</span>
+        <span class="trans"><span class="lbl">15m / 30m</span><span class="ln">→</span></span>
+        <span class="state">Countdown</span>
+        <span class="trans"><span class="lbl">reaches 0</span><span class="ln">→</span></span>
+        <span class="state terminal">Auto-stop → Ready</span>
+      </div>
+      <div class="states" style="margin-top:12px;">
+        <span class="state">Playing</span>
+        <span class="trans"><span class="lbl">Loop selected</span><span class="ln">→</span></span>
+        <span class="state terminal">Looping (no countdown)</span>
+        <span class="trans" style="margin-left:20px;"><span class="lbl">premium + locked</span><span class="ln">⇢</span></span>
+        <span class="state err">Paywall intercept</span>
+      </div>
+      <div class="sm-note">
+        Top half = atmospheric image + mode kicker; bottom half = obsidian controls. Shows <b>headphone-required vs ambient/speaker-safe</b> badge, L/R Hz readout, duration chips (15m · 30m · Loop), live countdown, animated sine wave, and a clinical "experiential note" per brainwave band. Closes via chevron-down with a 320ms exit animation.
+      </div>
+    </div>
+
+    <!-- SM2: Audio session / now-playing -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Core experience · 02</div><h3>Audio session &amp; Now-Playing bar</h3></div>
+        <span class="sm-ctx">currentId · global</span>
+      </div>
+      <div class="states">
+        <span class="state init">currentId = null</span>
+        <span class="trans"><span class="lbl">toggleFreq(f)</span><span class="ln">→</span></span>
+        <span class="state">Synthesizing (Web Audio)</span>
+        <span class="trans"><span class="lbl">now-bar mounts</span><span class="ln">→</span></span>
+        <span class="state">Playing · session timer runs</span>
+        <span class="trans"><span class="lbl">Stop / re-toggle</span><span class="ln">→</span></span>
+        <span class="state terminal">Stopped · logSession()</span>
+      </div>
+      <div class="sm-note">
+        Audio is <b>100% on-device sine synthesis</b> (no streaming). The Now-Playing bar and the top-bar session timer persist across <em>all</em> tabs while sound plays. On stop, listening seconds are logged to Supabase <code style="font-family:var(--mono);color:var(--signal)">sessions</code> for the streak.
+      </div>
+    </div>
+
+    <!-- SM3: Reader -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Content · 03</div><h3>Reader (article)</h3></div>
+        <span class="sm-ctx">scroll progress 0 → 1</span>
+      </div>
+      <div class="states">
+        <span class="state init">Enter (prog = 0)</span>
+        <span class="trans"><span class="lbl">scroll</span><span class="ln">→</span></span>
+        <span class="state">Reading · top progress bar fills</span>
+        <span class="trans"><span class="lbl">CTA</span><span class="ln">→</span></span>
+        <span class="state terminal">Open full essay (Substack, new tab)</span>
+      </div>
+      <div class="sm-note">
+        Hero image, byline, body + pullquote, then <b>Save</b> &amp; <b>Share</b> buttons. <b style="color:var(--rose)">Note:</b> Save &amp; Share here are visual only — not wired to the favorites backend.
+      </div>
+    </div>
+
+    <!-- SM4: Podcast -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Content · 04</div><h3>Podcast — CTRL+HUMAN (Listen tab)</h3></div>
+        <span class="sm-ctx">epIdx · cur 0→1 · playing</span>
+      </div>
+      <div class="states">
+        <span class="state init">Ep 01 · auto-playing</span>
+        <span class="trans"><span class="lbl">pause</span><span class="ln">⇄</span></span>
+        <span class="state">Paused</span>
+        <span class="trans"><span class="lbl">scrub / ±15s</span><span class="ln">→</span></span>
+        <span class="state">Seeked</span>
+        <span class="trans"><span class="lbl">select episode</span><span class="ln">→</span></span>
+        <span class="state terminal">Switch ep · reset to 0</span>
+      </div>
+      <div class="sm-note">
+        Waveform, scrubber with elapsed/-remaining, transport (±15s + play/pause), and a 4-episode list. <b style="color:var(--amber)">Simulated</b> playback (a setInterval ticks progress) — links out to Apple Podcasts for the real audio.
+      </div>
+    </div>
+
+    <!-- SM5: Insights -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Content · 05</div><h3>Insights feed</h3></div>
+        <span class="sm-ctx">hero = RSS · list = evergreen</span>
+      </div>
+      <div class="states">
+        <span class="state init">Mount · hero = local fallback</span>
+        <span class="trans"><span class="lbl">FEED_ENDPOINT set</span><span class="ln">⇢</span></span>
+        <span class="state">Hero = latest Substack post</span>
+        <span class="trans"><span class="lbl">tap row</span><span class="ln">→</span></span>
+        <span class="state">Reader</span>
+        <span class="trans"><span class="lbl">View all</span><span class="ln">→</span></span>
+        <span class="state terminal">Substack (new tab)</span>
+      </div>
+      <div class="sm-note">
+        Two tiers: a dynamic hero pulled from the Substack RSS feed (via a proxy endpoint) and a hardcoded evergreen explainer list. <b style="color:var(--amber)">Endpoint not wired</b> (<code style="font-family:var(--mono);color:var(--signal)">FEED_ENDPOINT = null</code>) → silently uses newest local article, with no loading or fetch-error state.
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── ACCOUNT / PAYWALL ───────────────────────── -->
+  <section class="sec" id="account">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Settings · Profile · Paywall</h2></div>
+    <p class="sec-sub">There is no dedicated Settings or Profile screen. Account-level functions live inside the <b>About</b> tab; appearance settings live in the <b>Tweaks</b> dev panel; monetization is a bottom-sheet <b>Paywall</b>.</p>
+
+    <div class="grid g3">
+      <div class="node is-partial">
+        <span class="tag">About tab = de-facto profile</span>
+        <h3>Account / Profile</h3>
+        <p>The About screen carries all account functions. No separate profile page exists.</p>
+        <ul>
+          <li><b style="color:var(--green)">Essential:</b> Membership status (active/locked)</li>
+          <li><b style="color:var(--green)">Essential:</b> Log Out → back to Auth</li>
+          <li><b style="color:var(--green)">Essential:</b> Legal (Terms/Privacy/Disclaimer)</li>
+          <li><b style="color:var(--amber)">Partial:</b> "Manage subscription" is a dead button</li>
+          <li><b style="color:var(--rose)">Missing:</b> account email, edit profile, favorites</li>
+        </ul>
+      </div>
+      <div class="node is-partial">
+        <span class="tag">Tweaks panel</span>
+        <h3>Settings (appearance)</h3>
+        <p>Real settings are limited to the Tweaks panel — intended as a demo/exploration tool, not a shipping settings screen.</p>
+        <ul>
+          <li>Accent color · Typeface</li>
+          <li>Theme (dark/light)</li>
+          <li>Text size · Density</li>
+          <li><b style="color:var(--rose)">Missing:</b> notifications, playback defaults, account, data</li>
+        </ul>
+      </div>
+      <div class="node is-present">
+        <span class="tag">Bottom-sheet modal</span>
+        <h3>Paywall</h3>
+        <p>Triggered by any premium-locked tap or the About membership card. Two interactive tiers.</p>
+        <ul>
+          <li>Yearly $69.99 — 7-day free trial (default)</li>
+          <li>Monthly $11.99</li>
+          <li>Restore Purchases · auto-renew disclosure</li>
+          <li>CTA → <code style="font-family:var(--mono);color:var(--signal)">unlocked = true</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- paywall SM -->
+    <div class="sm">
+      <div class="sm-head">
+        <div><div class="sm-title">Monetization</div><h3>Paywall state machine</h3></div>
+        <span class="sm-ctx">selected · unlocked</span>
+      </div>
+      <div class="states">
+        <span class="state init">Closed</span>
+        <span class="trans"><span class="lbl">premium tap / card</span><span class="ln">→</span></span>
+        <span class="state">Sheet open · Yearly selected</span>
+        <span class="trans"><span class="lbl">tap tier</span><span class="ln">⇄</span></span>
+        <span class="state">Monthly selected</span>
+        <span class="trans"><span class="lbl">Start trial</span><span class="ln">→</span></span>
+        <span class="state terminal">unlocked · sheet closes (320ms)</span>
+      </div>
+      <div class="sm-note">
+        CTA copy + microcopy swap per tier. <b style="color:var(--rose)">No purchase-success, error, or "already subscribed" confirmation screen</b> — the unlock is instant and silent. Dismiss via close button or scrim tap.
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── ERROR / EMPTY / LOADING ───────────────────────── -->
+  <section class="sec" id="states">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Error, empty &amp; loading states</h2></div>
+    <p class="sec-sub">This is the thinnest layer of the app — and the most important place to check before launch. The product is built for the happy path; nearly every error/empty/loading surface is currently <b style="color:var(--rose)">absent</b>.</p>
+
+    <div class="grid g3">
+      <div class="node is-missing">
+        <span class="corner">Loading</span>
+        <span class="tag">Across the app</span>
+        <h3>No loading states</h3>
+        <p>No spinners, skeletons, or pending UI anywhere. Audio is instant synth so it needs none — but the Substack fetch, auth round-trips, and OAuth redirects have <b>no loading feedback</b>.</p>
+      </div>
+      <div class="node is-partial">
+        <span class="corner">Error</span>
+        <span class="tag">Auth</span>
+        <h3>Email-invalid only</h3>
+        <p>The one real error state: an invalid email sets a red input border. No errors for OAuth failure, network loss, magic-link failure, or backend unavailability.</p>
+      </div>
+      <div class="node is-missing">
+        <span class="corner">Error</span>
+        <span class="tag">Insights / RSS</span>
+        <h3>Silent fetch failure</h3>
+        <p>If the feed fetch throws, it silently keeps the local fallback. No retry, no "couldn't load" message.</p>
+      </div>
+      <div class="node is-partial">
+        <span class="corner">Empty</span>
+        <span class="tag">Streak / sessions</span>
+        <h3>Demo, not real</h3>
+        <p>The 7-day streak uses a hardcoded pattern. There's no genuine zero-state ("start your first session") for a brand-new user.</p>
+      </div>
+      <div class="node is-missing">
+        <span class="corner">Empty</span>
+        <span class="tag">Favorites</span>
+        <h3>No favorites surface</h3>
+        <p>The backend fully supports favorites (add/remove/toggle), but there's <b>no UI</b> to view or manage them — so no empty state either.</p>
+      </div>
+      <div class="node is-missing">
+        <span class="corner">Error</span>
+        <span class="tag">Audio / device</span>
+        <h3>No playback failure</h3>
+        <p>No handling for a blocked AudioContext, muted device, or autoplay restriction. The session timer would run with no sound.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── GAP ANALYSIS ───────────────────────── -->
+  <section class="sec" id="gaps">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Gap analysis — "did I miss anything?"</h2></div>
+    <p class="sec-sub">A prioritized checklist of screens &amp; states that the architecture implies but does not yet implement. Status reflects what's in the build today.</p>
+
+    <div class="gaps">
+      <div class="gap-row">
+        <span class="gtype">Onboarding</span>
+        <div class="gbody"><h4>Magic-link confirmation</h4><p>Email submit jumps straight to Protocol — no "check your inbox / enter code" screen for the <code>signInWithEmail</code> path.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Onboarding</span>
+        <div class="gbody"><h4>Personalization intake</h4><p>Name is hardcoded ("Shira"); no goal/intention capture to seed recommendations or the greeting.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Permissions</span>
+        <div class="gbody"><h4>Notification / reminder priming</h4><p>A streak/habit product with no prompt to enable session reminders or notifications.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Core screen</span>
+        <div class="gbody"><h4>Favorites / Saved library</h4><p>Backend ready (<code>favorites</code> table + helpers); no screen, no entry point, Reader "Save" is inert.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Core screen</span>
+        <div class="gbody"><h4>Search / browse-by-intent</h4><p>Library filters exist on the alt Frequencies screen, but no global search across frequencies, articles, or episodes.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Session</span>
+        <div class="gbody"><h4>Session-complete screen</h4><p>Timed sessions auto-stop silently. No "session complete / how do you feel / log mood / continue" moment.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Account</span>
+        <div class="gbody"><h4>Real settings &amp; profile</h4><p>Appearance lives in the demo Tweaks panel; account info, playback defaults, and data controls have no home.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Account</span>
+        <div class="gbody"><h4>Manage subscription</h4><p>The button exists on the active-premium card but performs no action.</p></div>
+        <span class="status partial">Partial</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Monetization</span>
+        <div class="gbody"><h4>Purchase confirmation / restore result</h4><p>Unlock is instant &amp; silent. No success, error, or "restored" feedback after the CTA.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">States</span>
+        <div class="gbody"><h4>Loading / empty / network-error coverage</h4><p>Only an invalid-email error exists. Fetches, auth, and audio failures are unhandled in the UI.</p></div>
+        <span class="status missing">Missing</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Content</span>
+        <div class="gbody"><h4>Real podcast playback</h4><p>The Listen player is a simulated waveform/scrubber; actual episodes only play via the Apple Podcasts link-out.</p></div>
+        <span class="status partial">Partial</span>
+      </div>
+      <div class="gap-row">
+        <span class="gtype">Redundancy</span>
+        <div class="gbody"><h4>Two library paths + two detail views</h4><p>Home's collapsible library, the standalone Frequencies/Listen screens, plus both Player modal &amp; Freq-Detail page open frequencies. Worth consolidating to one canonical path.</p></div>
+        <span class="status partial">Partial</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="co-k">Verdict</div>
+      <h3>The happy path is complete and polished. The edges are open.</h3>
+      <p>Every primary surface — onboarding, the four tabs, the Player, and the Paywall — is built and coherent. The work that remains is almost entirely <b>defensive &amp; lifecycle</b>: confirmation screens, the favorites surface, real settings, session completion, and the full matrix of loading / empty / error states. Closing those is what moves ECHO.11 from a strong demo to a shippable product.</p>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>echo.|| — UX Architecture &amp; Flows</span>
+    <span>Mapped from source · 4 stages · 4 tabs · 6 overlays · 5 state machines</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ECHO.11 — MVP Closing Report</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.2.5/index.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.2.5/index.min.css" />
+<style>
+  /* ── Standalone PM dashboard. No dependency on any app file. ── */
+  :root{
+    --paper:#FBFAF7; --panel:#FFFFFF; --ink:#16150F; --muted:#5E5C54; --faint:#8A887F;
+    --line:rgba(0,0,0,.11); --line-2:rgba(0,0,0,.06);
+    --obsidian:#0B0B0B; --signal:#2A5BD7; --signal-soft:#EAF0FF; --signal-pill:#82A9FF;
+    --green:#1F8A5B; --green-bg:#E6F4EC; --amber:#B8791F; --amber-bg:#FBF1DE;
+    --rose:#C0392B; --rose-bg:#FBE9E7; --grey:#6B6B6B; --grey-bg:#EFEFEC;
+    --ui:'Geist Variable','Geist',-apple-system,system-ui,sans-serif;
+    --mono:'Geist Mono Variable','Geist Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--ui);line-height:1.5;}
+  a{color:var(--signal);}
+
+  .doc{max-width:1000px;margin:0 auto;padding:0 36px 90px;}
+
+  /* header band */
+  .masthead{background:var(--obsidian);color:#F2EFE9;margin:0 -36px;padding:34px 36px 30px;}
+  .mh-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .brand{display:inline-flex;align-items:flex-end;gap:7px;font-weight:600;font-size:18px;letter-spacing:-.01em;}
+  .brand .mk{display:inline-flex;align-items:flex-end;gap:3px;padding-bottom:3px;}
+  .brand .mk i{width:2.5px;height:15px;background:var(--signal-pill);border-radius:2px;}
+  .badge-status{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#0B0B0B;background:var(--signal-pill);border-radius:99px;padding:6px 13px;font-weight:600;}
+  .mh-title{font-size:34px;letter-spacing:-.025em;font-weight:600;margin:20px 0 0;}
+  .mh-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:rgba(242,239,233,.66);}
+  .mh-meta b{color:#F2EFE9;font-weight:500;}
+
+  /* print bar */
+  .actionbar{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .pbtn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:9px 14px;display:inline-flex;align-items:center;gap:7px;}
+  .pbtn:hover{background:var(--signal-soft);border-color:var(--signal);}
+
+  /* section */
+  section{margin-top:46px;}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:9px;}
+  .sec-num{font-family:var(--mono);font-size:13px;color:var(--signal);font-weight:500;}
+  .sec-head h2{font-size:21px;letter-spacing:-.01em;font-weight:600;margin:0;}
+  .sec-note{font-size:13px;color:var(--muted);margin:10px 0 0;}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px;}
+  .lg{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);}
+  .dotc{width:9px;height:9px;border-radius:2px;}
+
+  /* status pills */
+  .pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:3px 8px;border-radius:99px;white-space:nowrap;}
+  .p-done{color:var(--green);background:var(--green-bg);}
+  .p-part{color:var(--amber);background:var(--amber-bg);}
+  .p-rm{color:var(--rose);background:var(--rose-bg);}
+  .p-pend{color:var(--grey);background:var(--grey-bg);}
+
+  /* screen map cards */
+  .maps{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  .scard{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:15px 16px;break-inside:avoid;}
+  .scard-h{display:flex;align-items:center;gap:9px;}
+  .scard-id{font-family:var(--mono);font-size:11px;color:var(--faint);}
+  .scard-name{font-size:15.5px;font-weight:600;letter-spacing:-.01em;flex:1;}
+  .scard-layer{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--signal);border:1px solid var(--line);border-radius:99px;padding:2px 7px;}
+  .scard-purpose{font-size:12.5px;color:var(--muted);margin:9px 0 0;line-height:1.4;}
+  .blk-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:12px 0 6px;}
+  .blocks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0;counter-reset:b;}
+  .blocks li{font-size:12px;color:var(--ink);padding:4px 0 4px 24px;position:relative;border-top:1px solid var(--line-2);line-height:1.35;}
+  .blocks li:first-child{border-top:0;}
+  .blocks li::before{counter-increment:b;content:counter(b,decimal-leading-zero);position:absolute;left:0;top:4px;font-family:var(--mono);font-size:9.5px;color:var(--signal);}
+  .blocks li b{font-weight:600;}
+  .blocks li .new{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--green);border:1px solid var(--green);border-radius:99px;padding:0 5px;margin-left:5px;text-transform:uppercase;}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:500;border-bottom:1px solid var(--ink);}
+  tr{break-inside:avoid;}
+  td b{font-weight:600;}
+  td code{font-family:var(--mono);font-size:11.5px;background:var(--signal-soft);color:var(--signal);padding:1px 5px;border-radius:4px;}
+  .t-day{font-family:var(--mono);color:var(--signal);white-space:nowrap;}
+  .num-cell{font-family:var(--mono);color:var(--faint);width:26px;}
+
+  /* checklists */
+  .cl-group{margin-top:20px;break-inside:avoid;}
+  .cl-group h3{font-size:13px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--signal);margin:0 0 8px;}
+  .cl{margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden;}
+  .cl li{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-top:1px solid var(--line-2);}
+  .cl li:first-child{border-top:0;}
+  .cl input{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid var(--faint);border-radius:5px;flex-shrink:0;margin:1px 0 0;cursor:pointer;position:relative;background:#fff;}
+  .cl input:checked{background:var(--signal);border-color:var(--signal);}
+  .cl input:checked::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+  .cl label{font-size:13px;color:var(--ink);cursor:pointer;line-height:1.4;}
+  .cl input:checked + label{color:var(--faint);text-decoration:line-through;}
+  .cl .ctag{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:1px 6px;margin-left:6px;}
+
+  .callout{margin-top:22px;border:1px solid var(--signal);background:var(--signal-soft);border-radius:12px;padding:16px 18px;break-inside:avoid;}
+  .callout b{color:var(--ink);}
+  .callout .ck{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);}
+  .callout p{margin:7px 0 0;font-size:13.5px;color:var(--ink);}
+
+  .docfoot{margin-top:44px;border-top:1px solid var(--line);padding-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  @media (max-width:760px){ .maps{grid-template-columns:1fr;} .doc{padding:0 20px 60px;} .masthead{margin:0 -20px;padding:28px 20px;} }
+
+  /* print */
+  @page{margin:14mm 12mm;}
+  @media print{
+    body{background:#fff;}
+    .doc{max-width:none;padding:0;}
+    .actionbar{display:none;}
+    .masthead{margin:0;border-radius:0;}
+    section{margin-top:30px;}
+    .scard,.cl-group,.callout,tr{break-inside:avoid;}
+    a{color:var(--ink);text-decoration:none;}
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ══════════ MASTHEAD ══════════ -->
+  <header class="masthead">
+    <div class="mh-top">
+      <span class="brand">echo<span class="mk"><i></i><i></i></span></span>
+      <span class="badge-status">Status · Pre-Beta</span>
+    </div>
+    <h1 class="mh-title">MVP Closing Report</h1>
+    <div class="mh-meta">
+      <span>SPRINT · <b>3-day cycle</b></span>
+      <span>BUILD · <b>echo11-app.html</b></span>
+      <span>STACK · <b>React / Babel prototype · 390×844 iOS frame</b></span>
+      <span>OWNER · <b>Product + Lead QA</b></span>
+    </div>
+  </header>
+
+  <div class="actionbar">
+    <button class="pbtn" onclick="window.print()">⎙ Print / Save as PDF</button>
+    <button class="pbtn" onclick="resetChecks()">↻ Reset checklist</button>
+  </div>
+
+  <!-- ══════════ 1 · VISUAL MAP ══════════ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Visual Map — Figma-Ready</h2></div>
+    <p class="sec-note">Every screen with its core purpose and ordered UI blocks (top → bottom) for direct replication in Figma. <b>NEW</b> tags mark blocks added this sprint.</p>
+    <div class="legend">
+      <span class="lg"><span class="dotc" style="background:var(--green)"></span>Complete</span>
+      <span class="lg"><span class="dotc" style="background:var(--amber)"></span>Partial / simulated</span>
+      <span class="lg"><span class="dotc" style="background:var(--grey)"></span>Pending</span>
+      <span class="lg"><span class="dotc" style="background:var(--rose)"></span>Scheduled removal</span>
+    </div>
+
+    <div class="maps">
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">00</span><span class="scard-name">Splash</span><span class="scard-layer">L0</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Brand hold; timed auto-advance to Auth.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Full-bleed obsidian background</li><li>Centered <b>echo.||</b> logo, cross-fade out</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">01</span><span class="scard-name">Auth / Sign-in</span><span class="scard-layer">L0 · Gate</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Capture identity or skip as guest.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks">
+          <li>Desert hero image + light scrim</li>
+          <li>Logo kicker + editorial title + sub</li>
+          <li>Inline error banner <span class="new">new</span></li>
+          <li>Apple button (with spinner) <span class="new">new</span></li>
+          <li>Google button (with spinner) <span class="new">new</span></li>
+          <li>"or" divider</li>
+          <li>Email field + inline validation <span class="new">new</span></li>
+          <li>Continue-with-email button (pending state)</li>
+          <li>Legal microcopy · Continue as guest</li>
+        </ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">02</span><span class="scard-name">Protocol</span><span class="scard-layer">L0 · Gate</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Educate + capture required safety consent.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Kicker + title + italic sub</li><li>3 numbered explainer steps</li><li>Consent card + checkbox</li><li>CTA (disabled until checked) + legal links</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">03</span><span class="scard-name">Signal / Home</span><span class="scard-layer">L1 · Tab</span><span class="pill p-part">Partial</span></div>
+        <p class="scard-purpose">Hub funneling to the first audio action.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Hero film + greeting + Daily Anchor</li><li>Neural Reset CTA (one-tap)</li><li>Quick Start ×3 cards</li><li><b>Saved / Favorites row</b> <span class="new">task 3</span></li><li>Protocol Library accordion (Binaural / Ambient)</li><li>Consistency streak (7-day)</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">04</span><span class="scard-name">Insights</span><span class="scard-layer">L1 · Tab</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Editorial feed; hero from RSS.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Section head (kicker + title + sub)</li><li>Hero article — skeleton / error+retry / loaded <span class="new">new</span></li><li>Evergreen list ×4 rows</li><li>"View all on Substack" CTA</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">05</span><span class="scard-name">Listen (Podcast)</span><span class="scard-layer">L1 · Tab</span><span class="pill p-part">Sim</span></div>
+        <p class="scard-purpose">CTRL+HUMAN episode player.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Section head</li><li>Cover art + "Now Playing" badge</li><li>Episode meta</li><li>Waveform + scrubber + times</li><li>Transport (±15s · play/pause)</li><li>Episode list</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">06</span><span class="scard-name">About</span><span class="scard-layer">L1 · Tab</span><span class="pill p-part">Partial</span></div>
+        <p class="scard-purpose">Account / profile surface.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Portrait hero</li><li>Membership card (active / locked)</li><li><b>Settings + Account Info</b> <span class="new">task 4</span></li><li>FAQ / Science accordion</li><li>Bio + tags · Connect + socials</li><li>Legal links · Log Out</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">07</span><span class="scard-name">Reader</span><span class="scard-layer">L2 · Push</span><span class="pill p-part">Partial</span></div>
+        <p class="scard-purpose">Long-form article view.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Top scroll-progress bar</li><li>Hero image · kicker · title</li><li>Byline row</li><li>Body paragraphs + pullquote</li><li>"Read on Substack" CTA</li><li>Save / Share buttons</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">08</span><span class="scard-name">Frequency Detail</span><span class="scard-layer">L2 · Push</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Single frequency (alternate to Player).</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Full-bleed image + gradient</li><li>Back chip</li><li>Mode kicker · name · sub</li><li>Hz meta · play button · state label</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">09</span><span class="scard-name">Player</span><span class="scard-layer">L3 · Overlay</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Core listening experience (50/50 split).</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Top: image + close + logo + mode kicker</li><li>Name + sub</li><li>Headphone / ambient badge</li><li>L/R Hz readout</li><li>Play / pause (signal glow)</li><li>Countdown · animated sine wave</li><li>Duration chips (15m · 30m · Loop)</li><li>Clinical "experiential note"</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">10</span><span class="scard-name">Session Complete</span><span class="scard-layer">L3 · Overlay</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Closes the loop when a timed session ends. <span class="new">new</span></p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Close + logo header</li><li>Pulsing signal halo + checkmark</li><li>"Session Complete" kicker</li><li>Frequency name</li><li>Duration line ("You tuned in for N min")</li><li>Hz / band meta</li><li><b>Done</b> (primary) + <b>Listen again</b> (secondary)</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">11</span><span class="scard-name">Paywall</span><span class="scard-layer">L3 · Sheet</span><span class="pill p-part">Sim</span></div>
+        <p class="scard-purpose">Subscription conversion (bottom sheet).</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Grabber · close · logo</li><li>Serif hook + sub</li><li>2 tier cards (yearly default / monthly)</li><li>Primary CTA — pending spinner <span class="new">new</span></li><li>Microcopy + auto-renew disclosure</li><li>Restore · Terms · Privacy</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">12</span><span class="scard-name">Now-Playing Bar</span><span class="scard-layer">L3 · Persist</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Global transport across all tabs.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Animated EQ dot</li><li>Name + "Playing · N Hz"</li><li>Stop button</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">13</span><span class="scard-name">Toasts</span><span class="scard-layer">L3 · Ephem</span><span class="pill p-done">Done</span></div>
+        <p class="scard-purpose">Headphone reminder · share confirmation.</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Single-line pill (icon + message)</li></ul>
+      </div>
+
+      <div class="scard">
+        <div class="scard-h"><span class="scard-id">14</span><span class="scard-name">Tweaks Panel</span><span class="scard-layer">L3 · Dev</span><span class="pill p-rm">Remove</span></div>
+        <p class="scard-purpose">Demo appearance controls — to be replaced by Settings (Task 4).</p>
+        <div class="blk-label">UI Blocks</div>
+        <ul class="blocks"><li>Accent · Typeface · Theme · Text size · Density</li></ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ 2 · SPRINT SUMMARY ══════════ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Sprint Summary</h2></div>
+
+    <table>
+      <thead><tr><th class="num-cell">Day</th><th>Deliverable</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="t-day">D1</td><td><b>UX Architecture Audit</b></td><td>Screen map · user flows · 5 state machines · 12-item gap analysis (branded HTML)</td></tr>
+        <tr><td class="t-day">D2</td><td><b>Task 1 — Defensive UX</b></td><td>Spinner / Skeleton / InlineError primitives; Auth pending + best-effort + retry; Insights skeleton → error+retry; Paywall CTA pending</td></tr>
+        <tr><td class="t-day">D3</td><td><b>Task 2 — Session Complete</b></td><td>Timed-session completion screen (Done / Listen again); verified end-to-end</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead><tr><th>Asset type</th><th>Path</th></tr></thead>
+      <tbody>
+        <tr><td>Architecture doc</td><td><code>arch/ECHO.11 — Screen Architecture &amp; Flows.html</code> + <code>arch/arch.css</code></td></tr>
+        <tr><td>PM dashboard (this doc)</td><td><code>project-dashboard.html</code></td></tr>
+        <tr><td>New code module</td><td><code>echo-ui.jsx</code> — defensive primitives</td></tr>
+        <tr><td>Code edited</td><td><code>echo-app-unified.jsx</code> · <code>echo-screens-a.jsx</code> · <code>echo-paywall.jsx</code> · <code>echo-player.jsx</code> · <code>echo-extra.css</code> · <code>echo11-app.html</code></td></tr>
+        <tr><td>Backups</td><td><code>backup-v1/</code> — 4 pre-edit snapshots</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <span class="ck">Effort accounting</span>
+      <p>~5 product directives this thread · 2 automated verifier passes (both green). <b>Token usage is not instrumented in this environment — intentionally not estimated to avoid fabricated metrics.</b></p>
+    </div>
+  </section>
+
+  <!-- ══════════ 3 · BETA READINESS ══════════ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Roadmap to Beta — Readiness Checklist</h2></div>
+    <p class="sec-note">Interactive — tick items as you complete them; state is saved locally in this browser.</p>
+
+    <div class="cl-group">
+      <h3>Product (carry-over)</h3>
+      <ul class="cl" data-cl>
+        <li><input type="checkbox" id="b1"><label for="b1">Task 3 — Favorites / Saved surface (Home + About entry, wired to backend) <span class="ctag">prod</span></label></li>
+        <li><input type="checkbox" id="b2"><label for="b2">Task 4 — Settings screen + Account Info; remove Tweaks panel <span class="ctag">prod</span></label></li>
+        <li><input type="checkbox" id="b3"><label for="b3">Email magic-link confirmation screen</label></li>
+        <li><input type="checkbox" id="b4"><label for="b4">Replace demo streak with real session data; log on Session Complete</label></li>
+        <li><input type="checkbox" id="b5"><label for="b5">Empty states: no favorites / no sessions / no episodes</label></li>
+        <li><input type="checkbox" id="b6"><label for="b6">Personalization intake (name capture — today hardcoded)</label></li>
+      </ul>
+    </div>
+
+    <div class="cl-group">
+      <h3>Engineering blockers</h3>
+      <ul class="cl" data-cl>
+        <li><input type="checkbox" id="b7"><label for="b7">Native build — wrap web prototype into a real iOS binary <span class="ctag">critical</span></label></li>
+        <li><input type="checkbox" id="b8"><label for="b8">Precompile JSX — remove in-browser Babel</label></li>
+        <li><input type="checkbox" id="b9"><label for="b9">Real OAuth round-trip (Apple + Google) tested on device</label></li>
+        <li><input type="checkbox" id="b10"><label for="b10">Decide guest path: enable Supabase anonymous auth or remove</label></li>
+        <li><input type="checkbox" id="b11"><label for="b11">Deploy Substack proxy (FEED_ENDPOINT Edge Function)</label></li>
+        <li><input type="checkbox" id="b12"><label for="b12">Real podcast playback (replace simulated scrubber)</label></li>
+        <li><input type="checkbox" id="b13"><label for="b13">Audio robustness: blocked AudioContext · silent switch · call interruption · headphone unplug</label></li>
+      </ul>
+    </div>
+
+    <div class="cl-group">
+      <h3>Pre-flight assets</h3>
+      <ul class="cl" data-cl>
+        <li><input type="checkbox" id="b14"><label for="b14">App icon · launch screen · marketing screenshots</label></li>
+        <li><input type="checkbox" id="b15"><label for="b15">Accessibility audit — VoiceOver · Dynamic Type · contrast</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ 4 · QA PLAN ══════════ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>QA Plan</h2></div>
+    <table>
+      <thead><tr><th style="width:130px">Dimension</th><th>What to test</th><th style="width:180px">Tool / Config</th></tr></thead>
+      <tbody>
+        <tr><td><b>Devices</b></td><td>iPhone SE (375pt) · 15/16 (393pt) · 16 Pro Max (430pt) · iPad if universal</td><td>Xcode Simulator + ≥2 physical devices</td></tr>
+        <tr><td><b>OS</b></td><td>iOS 16 / 17 / 18 behavior parity</td><td>Simulator runtimes</td></tr>
+        <tr><td><b>Display</b></td><td>Dark/Light · Dynamic Type XS→XXXL · Reduce Motion · Increase Contrast</td><td>Settings → Accessibility</td></tr>
+        <tr><td><b>Network</b></td><td>Offline · slow-3G · mid-request drop → retry paths</td><td>Network Link Conditioner / Charles</td></tr>
+        <tr><td><b>Flows</b></td><td>Splash→Auth→Protocol→Tabs · play→countdown→Session Complete · locked-tap→Paywall · logout→Auth</td><td>Manual scripted runs</td></tr>
+        <tr><td><b>Edge cases</b></td><td>Backgrounding mid-playback · headphone unplug · silent switch · call interruption · double-tap CTA · RSS failure · expired session</td><td>Physical device</td></tr>
+        <tr><td><b>Accessibility</b></td><td>Tap targets ≥44pt · focus order · labels · contrast ratios</td><td>Accessibility Inspector · axe</td></tr>
+        <tr><td><b>Audio</b></td><td>Binaural L/R separation · gain ramp · auto-stop accuracy · no orphan oscillators</td><td>Device + headphones</td></tr>
+        <tr><td><b>Performance</b></td><td>Cold start · scroll jank · memory growth over long session</td><td>Instruments (Time Profiler / Allocations)</td></tr>
+        <tr><td><b>Responsiveness</b></td><td>Layout from 375→430pt · safe-area insets · notch / Dynamic Island</td><td>Simulator size matrix</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══════════ 5 · FINAL STATUS ══════════ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Final Status — App Store Submission Blockers</h2></div>
+    <table>
+      <thead><tr><th class="num-cell">#</th><th>Blocker</th><th style="width:200px">Guideline / Reason</th></tr></thead>
+      <tbody>
+        <tr><td class="num-cell">1</td><td><b>No native binary</b> — currently a web prototype</td><td>Submittable build required</td></tr>
+        <tr><td class="num-cell">2</td><td><b>No real IAP</b> — unlock is simulated</td><td>3.1.1 — StoreKit + ASC products + receipt validation</td></tr>
+        <tr><td class="num-cell">3</td><td><b>Sign in with Apple</b> required if Google login ships</td><td>4.8 / 4.0</td></tr>
+        <tr><td class="num-cell">4</td><td><b>In-app account deletion</b></td><td>5.1.1(v) — mandatory when accounts exist</td></tr>
+        <tr><td class="num-cell">5</td><td><b>Privacy nutrition labels</b> + working policy links</td><td>5.1 (policy URLs exist; labels needed)</td></tr>
+        <tr><td class="num-cell">6</td><td><b>Health-claim review</b> of binaural / "frequency" wording</td><td>1.4.1 — keep wellness framing, no medical claims</td></tr>
+        <tr><td class="num-cell">7</td><td><b>Content rights</b> — imagery + audio/podcast assets</td><td>5.2</td></tr>
+        <tr><td class="num-cell">8</td><td><b>Subscription management</b> — "Manage subscription" inert</td><td>3.1.2 — deep-link + functional restore</td></tr>
+        <tr><td class="num-cell">9</td><td><b>Store metadata</b> — icon · screenshots · description · age rating</td><td>Submission requirements</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <span class="ck">Bottom line</span>
+      <p>The happy-path UX is <b>Beta-shippable after Tasks 3–4</b>. App Store <b>sale is gated on the engineering track</b> (native build, real IAP/auth, account deletion, privacy labels, health-claim review) — none of which are cosmetic.</p>
+    </div>
+  </section>
+
+  <div class="docfoot">
+    <span>ECHO.|| — MVP Closing Report · Pre-Beta</span>
+    <span>Management asset · separate from application code</span>
+  </div>
+
+</div>
+
+<script>
+  // Local persistence for the PM checklist — self-contained, no app coupling.
+  (function(){
+    var KEY = 'echo-dashboard-checks';
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+    var boxes = document.querySelectorAll('.cl input[type=checkbox]');
+    boxes.forEach(function(b){
+      if (saved[b.id]) b.checked = true;
+      b.addEventListener('change', function(){
+        saved[b.id] = b.checked;
+        try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){}
+      });
+    });
+    window.resetChecks = function(){
+      boxes.forEach(function(b){ b.checked = false; });
+      saved = {};
+      try { localStorage.removeItem(KEY); } catch(e){}
+    };
+  })();
+</script>
+</body>
+</html>
