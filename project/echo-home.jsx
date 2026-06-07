@@ -17,6 +17,12 @@ const QUICK = [
   { id: 'theta', label: 'Reset', hz: '6 Hz',  img: 'img/eyes-closed.png' },
 ];
 
+const TIME_REC = {
+  morning:   { id: 'alpha', reason: 'Prime your mind for the day.' },
+  afternoon: { id: 'beta',  reason: 'Sustain focus and deep output.' },
+  evening:   { id: 'theta', reason: 'Decompress and wind down.' },
+};
+
 function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, favs = [], onToggleFav }) {
   const [toast, setToast] = React.useState('');
   const [openSec, setOpenSec] = React.useState({ binaural: true, ambient: false });
@@ -38,11 +44,10 @@ function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, fav
     } catch (e) { /* cancelled */ }
   };
 
-  // Neural Streak — 7 days, demo pattern (Mon-index). In production this reads `sessions`.
-  const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const todayIdx = (now.getDay() + 6) % 7;           // Mon=0 … Sun=6
-  const isActive = (i) => [0, 1, 2, 4].includes(i) || i === todayIdx;
-  const streakCount = DAYS.filter((_, i) => isActive(i)).length;
+  // Today's Protocol — time-aware recommendation
+  const rec = TIME_REC[partOfDay] || TIME_REC.morning;
+  const recFreq = freqById(rec.id);
+  const timeLabel = partOfDay.charAt(0).toUpperCase() + partOfDay.slice(1);
 
   // Full Protocol Library, grouped — binaural (headphones) vs ambient, premium flagged.
   const binaural = FREQS.filter(f => f.type === 'binaural');
@@ -176,23 +181,30 @@ function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, fav
         {openSec.ambient && <div id="lib-ambient" className="lib-acc-body">{ambient.map(FreqRow)}</div>}
       </div>
 
-      {/* ── Neural Streak (Consistency Protocol) ── */}
-      <div className="section" style={{ marginTop: 26 }}>
-        <div className="streak">
-          <div className="streak-top">
-            <span className="kicker">Consistency Protocol</span>
-            <span className="streak-count">{streakCount} / 7 days</span>
-          </div>
-          <div className="streak-days">
-            {DAYS.map((d, i) => (
-              <div key={i} className={'sday' + (isActive(i) ? ' on' : '') + (i === todayIdx ? ' today' : '')}>
-                <span className="sdot" />
-                <span className="slabel">{d}</span>
+      {/* ── Today's Protocol — time-aware recommendation ── */}
+      {recFreq && (
+        <div className="section" style={{ marginTop: 26 }}>
+          <div className="today-protocol" onClick={() => onOpenPlayer(recFreq)} role="button" aria-label={`Today's protocol: ${recFreq.name}. Tap to open.`}>
+            <div className="tp-top">
+              <span className="kicker">Today's Protocol</span>
+              <span className="tp-time">{timeLabel}</span>
+            </div>
+            <div className="tp-body">
+              <div className="tp-img">
+                <img crossOrigin="anonymous" src={recFreq.img} alt="" />
               </div>
-            ))}
+              <div className="tp-info">
+                <div className="tp-name">{recFreq.name}</div>
+                <div className="tp-sub">{recFreq.sub}</div>
+                <div className="tp-reason">{rec.reason}</div>
+              </div>
+              <button className={'tp-play' + (currentId === recFreq.id ? ' on' : '')} onClick={(e) => { e.stopPropagation(); onOpenPlayer(recFreq); }} aria-label={`Begin ${recFreq.name} session`}>
+                {currentId === recFreq.id ? '■' : '▶'}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="foot">echo.|| · native synthesis · not a medical device</div>
       {toast ? <div className="home-toast">{toast}</div> : null}
