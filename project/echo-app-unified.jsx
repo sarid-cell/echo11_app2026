@@ -121,7 +121,7 @@ function Auth({ onDone }) {
       </div>
 
       <div className="auth-legal">
-        By continuing you agree to our <a href="https://echo-11-site.vercel.app/terms" target="_blank" rel="noreferrer">Terms</a> &amp; <a href="https://echo-11-site.vercel.app/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>.
+        By continuing you agree to our <a href="/terms" target="_blank" rel="noreferrer">Terms</a> &amp; <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>.
       </div>
       <button className="auth-guest" disabled={!!busy} onClick={() => run('guest', () => EchoBackend.signInAnonymously())} aria-label="Continue as guest">
         {busy === 'guest' ? 'One moment…' : 'Continue as guest →'}
@@ -173,9 +173,9 @@ function Protocol({ onBegin, onSkip }) {
 
       <div className="protocol-cta">
         <button className="btn solid" onClick={onBegin} disabled={!agreed} aria-disabled={!agreed} aria-label="Agree and continue">I Understand — Continue</button>
-        <a className="protocol-legal" href="https://echo-11-site.vercel.app/terms" target="_blank" rel="noreferrer">Terms of Service</a>
+        <a className="protocol-legal" href="/terms" target="_blank" rel="noreferrer">Terms of Service</a>
         <span className="protocol-legal-dot" aria-hidden="true">·</span>
-        <a className="protocol-legal" href="https://echo-11-site.vercel.app/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>
+        <a className="protocol-legal" href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a>
       </div>
     </div>
   );
@@ -341,13 +341,13 @@ function App() {
 
       {/* now playing (persists across tabs) */}
       {now && (
-        <div className="now-bar">
+        <div className="now-bar" onClick={() => openPlayer(now)} style={{ cursor: 'pointer' }} role="button" aria-label={`Now playing: ${now.name}. Tap to open player.`}>
           <div className="eq"><i /><i /><i /></div>
           <div className="nmid">
             <div className="nname">{now.name}</div>
             <div className="nmeta">Playing · {now.hz} Hz</div>
           </div>
-          <button className="nstop" onClick={() => { setCurrentId(null); EchoAudio.stop(); }}>Stop</button>
+          <button className="nstop" aria-label="Pause" onClick={(e) => { e.stopPropagation(); toggleFreq(now); }}>❙❙</button>
         </div>
       )}
 
