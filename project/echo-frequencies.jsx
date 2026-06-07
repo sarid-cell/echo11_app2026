@@ -40,23 +40,31 @@ function _getCtx() { if (!_ctx) _ctx = new (window.AudioContext || window.webkit
 function freqStart(f) {
   freqStop();
   const c = _getCtx();
-  if (c.state === 'suspended') c.resume();
-  const gain = c.createGain();
-  gain.gain.setValueAtTime(0, c.currentTime);
-  gain.gain.linearRampToValueAtTime(0.32, c.currentTime + 0.3);
-  gain.connect(c.destination);
-  if (f.type === 'binaural') {
-    const merger = c.createChannelMerger(2); merger.connect(gain);
-    const oL = c.createOscillator(); oL.type = 'sine'; oL.frequency.value = f.cL; oL.start();
-    const oR = c.createOscillator(); oR.type = 'sine'; oR.frequency.value = f.cR; oR.start();
-    const pL = c.createStereoPanner(); pL.pan.value = -1;
-    const pR = c.createStereoPanner(); pR.pan.value = 1;
-    oL.connect(pL); pL.connect(merger, 0, 0);
-    oR.connect(pR); pR.connect(merger, 0, 1);
-    _nodes = { oL, oR, gain };
+  const _startOscillators = () => {
+    const gain = c.createGain();
+    gain.gain.setValueAtTime(0, c.currentTime);
+    gain.gain.linearRampToValueAtTime(0.32, c.currentTime + 0.3);
+    gain.connect(c.destination);
+    if (f.type === 'binaural') {
+      const merger = c.createChannelMerger(2); merger.connect(gain);
+      const oL = c.createOscillator(); oL.type = 'sine'; oL.frequency.value = f.cL; oL.start();
+      const oR = c.createOscillator(); oR.type = 'sine'; oR.frequency.value = f.cR; oR.start();
+      const pL = c.createStereoPanner(); pL.pan.value = -1;
+      const pR = c.createStereoPanner(); pR.pan.value = 1;
+      oL.connect(pL); pL.connect(merger, 0, 0);
+      oR.connect(pR); pR.connect(merger, 0, 1);
+      _nodes = { oL, oR, gain };
+    } else {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f.cL; o.connect(gain); o.start();
+      _nodes = { o, gain };
+    }
+  };
+  // On mobile (iOS Safari, Chrome Android) the AudioContext starts suspended
+  // and resume() is async — oscillators must not start until it resolves.
+  if (c.state === 'suspended') {
+    c.resume().then(_startOscillators);
   } else {
-    const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f.cL; o.connect(gain); o.start();
-    _nodes = { o, gain };
+    _startOscillators();
   }
 }
 function freqStop() {

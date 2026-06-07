@@ -1,5 +1,8 @@
 {
   "routes": [
-    { "src": "/", "dest": "/echo11-app.html" }
+    { "src": "/privacy",    "dest": "/project/legal/privacy.html" },
+    { "src": "/terms",      "dest": "/project/legal/terms.html" },
+    { "src": "/disclaimer", "dest": "/project/legal/disclaimer.html" },
+    { "src": "/",           "dest": "/echo11-app.html" }
   ]
 }
