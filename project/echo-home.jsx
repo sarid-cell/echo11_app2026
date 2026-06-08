@@ -23,7 +23,9 @@ const TIME_REC = {
   evening:   { id: 'theta', reason: 'Decompress and wind down.' },
 };
 
-function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, favs = [], onToggleFav }) {
+const MOOD_EMOJI = { calm: '😌', focused: '🎯', neutral: '😐', tired: '😓' };
+
+function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, favs = [], onToggleFav, sessions = [] }) {
   const [toast, setToast] = React.useState('');
   const [openSec, setOpenSec] = React.useState({ binaural: true, ambient: false });
   const toggleSec = (k) => setOpenSec(o => ({ ...o, [k]: !o[k] }));
@@ -135,6 +137,30 @@ function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, fav
             </button>
           ))}
         </div>
+      </div>
+
+      {/* ── Today's Sessions — post-session log ── */}
+      <div className="section" style={{ marginTop: 22 }}>
+        <div className="kicker">Today</div>
+        {sessions.length === 0 ? (
+          <div className="today-empty">Your first session today will appear here.</div>
+        ) : (
+          <div className="today-card">
+            {sessions.map((s, i) => {
+              const d = new Date(s.ts);
+              const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+              const mins = Math.max(1, Math.round(s.secs / 60));
+              return (
+                <div key={s.ts} className={'today-row' + (i === sessions.length - 1 ? ' last' : '')}>
+                  <span className="today-time">{time}</span>
+                  <span className="today-name">{s.name}</span>
+                  <span className="today-dur">{mins} min</span>
+                  {s.mood && <span className="today-mood">{MOOD_EMOJI[s.mood] || ''}</span>}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* ── Saved — quick access to favorited frequencies. Lives directly under

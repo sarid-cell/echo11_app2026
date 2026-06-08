@@ -47,7 +47,7 @@ function MoodIcon({ id }) {
   return null;
 }
 
-function PlayerScreen({ freq, playing, onToggle, onClose, saved, onToggleFav }) {
+function PlayerScreen({ freq, playing, onToggle, onClose, onSessionComplete, saved, onToggleFav }) {
   const [dur, setDur] = React.useState('loop');
   const [left, setLeft] = React.useState(null);     // seconds remaining (null = loop)
   const [completed, setCompleted] = React.useState(null); // { secs } once a timed session finishes
@@ -137,7 +137,7 @@ function PlayerScreen({ freq, playing, onToggle, onClose, saved, onToggleFav }) 
             </div>
           </div>
           <div className="sc-actions">
-            <button className="sc-done" onClick={onClose}>Done</button>
+            <button className="sc-done" onClick={() => { onSessionComplete && onSessionComplete(freq.id, completed.secs, mood); onClose(); }}>Done</button>
             <button className="sc-again" onClick={listenAgain} aria-label={`Listen to ${freq.name} again`}>
               <Icon name="play" size={15} /> Listen again
             </button>

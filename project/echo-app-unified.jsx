@@ -286,6 +286,26 @@ function App() {
     setPlClosing(false); setPlayer(f);
   };
   const closePlayer = () => { setPlClosing(true); setTimeout(() => { setPlayer(null); setPlClosing(false); }, 320); };
+
+  const [sessions, setSessions] = React.useState(() => {
+    try {
+      const all = JSON.parse(localStorage.getItem('echo:history') || '[]');
+      const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+      return all.filter(s => s.ts >= midnight.getTime());
+    } catch (_) { return []; }
+  });
+
+  const saveSession = (freqId, secs, mood) => {
+    const f = freqById(freqId);
+    if (!f || !secs) return;
+    const entry = { id: freqId, name: f.name, secs, mood, ts: Date.now() };
+    try {
+      const all = JSON.parse(localStorage.getItem('echo:history') || '[]');
+      localStorage.setItem('echo:history', JSON.stringify([entry, ...all].slice(0, 30)));
+    } catch (_) {}
+    const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    setSessions(prev => [entry, ...prev.filter(s => s.ts >= midnight.getTime())]);
+  };
   // SOS → push straight into the Player on a calming 6 Hz theta reset.
   const openSOS = () => openPlayer(freqById('theta'));
   // Quick-state card → push into the Player on that category's lead frequency.
@@ -317,7 +337,7 @@ function App() {
         {stage === 'auth' && <Auth onDone={(m) => { setAuthMethod(m); setStage('protocol'); }} />}
         {stage === 'protocol' && <Protocol onBegin={() => setStage('app')} onSkip={() => setStage('app')} />}
         {stage === 'app' && view === 'signal' && (
-          <HomeDashboard currentId={currentId} onToggle={toggleFreq} unlocked={unlocked} onOpenPlayer={openPlayer} onSOS={openSOS} favs={favs} onToggleFav={toggleFav} />
+          <HomeDashboard currentId={currentId} onToggle={toggleFreq} unlocked={unlocked} onOpenPlayer={openPlayer} onSOS={openSOS} favs={favs} onToggleFav={toggleFav} sessions={sessions} />
         )}
         {stage === 'app' && view === 'insights' && <InsightsScreen go={go} />}
         {/* Listen tab is the Podcast Hub — strictly CTRL+HUMAN, no frequencies. */}
@@ -354,7 +374,7 @@ function App() {
       {/* player full-screen modal */}
       {player && (
         <div className={'player-modal' + (plClosing ? ' closing' : '')}>
-          <PlayerScreen freq={player} playing={currentId === player.id} onToggle={toggleFreq} onClose={closePlayer} saved={favs.includes(player.id)} onToggleFav={() => toggleFav(player)} />
+          <PlayerScreen freq={player} playing={currentId === player.id} onToggle={toggleFreq} onClose={closePlayer} onSessionComplete={saveSession} saved={favs.includes(player.id)} onToggleFav={() => toggleFav(player)} />
         </div>
       )}
 

@@ -461,6 +461,16 @@
 .sc-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; margin-top: 24px; }
 .sc-share { background: none; border: none; cursor: pointer; color: #82A9FF; font-family: var(--font-ui); font-size: 13px; font-weight: 500; padding: 8px 0; margin-top: 4px; transition: opacity .15s; }
 .sc-share:active { opacity: .6; }
+
+/* ── Today's Sessions card ── */
+.today-empty { border: 1px dashed var(--line); border-radius: 16px; padding: 22px 16px; text-align: center; font-family: var(--font-ui); font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+.today-card { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); overflow: hidden; margin-top: 10px; }
+.today-row { display: flex; align-items: center; gap: 10px; padding: 13px 16px; border-bottom: 1px solid var(--line-2); }
+.today-row.last { border-bottom: 0; }
+.today-time { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .4px; flex-shrink: 0; width: 36px; }
+.today-name { flex: 1; font-family: var(--font-ui); font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.today-dur { font-family: var(--font-mono); font-size: 11px; color: var(--muted); background: var(--surface-2); border-radius: 99px; padding: 3px 9px; flex-shrink: 0; }
+.today-mood { font-size: 15px; flex-shrink: 0; line-height: 1; }
 .sc-done {
   width: 100%; border: none; cursor: pointer; background: #F4F2EE; color: #0B0B0B; border-radius: 99px;
   padding: 17px; font-family: var(--font-ui); font-weight: 600; font-size: 15px; transition: transform .15s;
