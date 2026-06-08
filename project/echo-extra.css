@@ -446,7 +446,21 @@
 .sc-dur { font-family: var(--font-ui); font-weight: 300; font-size: 16.5px; line-height: 1.5; color: rgba(244,242,238,.72); margin: 14px 0 0; text-wrap: pretty; }
 .sc-dur b { color: #F4F2EE; font-weight: 500; }
 .sc-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: rgba(244,242,238,.5); margin-top: 18px; }
-.sc-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; margin-top: 36px; }
+.sc-mood-section { width: 100%; max-width: 300px; margin-top: 32px; text-align: center; }
+.sc-mood-q { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: rgba(244,242,238,.45); margin-bottom: 14px; }
+.sc-mood-row { display: flex; gap: 8px; justify-content: center; }
+.sc-mood-btn {
+  display: flex; align-items: center; gap: 6px; padding: 9px 13px;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 99px; color: rgba(244,242,238,.65); cursor: pointer;
+  font-family: var(--font-ui); font-size: 13px; font-weight: 500;
+  transition: border-color .18s, color .18s, background .18s;
+}
+.sc-mood-btn:active { opacity: .75; }
+.sc-mood-btn.on { border-color: #82A9FF; color: #82A9FF; background: rgba(130,169,255,.1); }
+.sc-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; margin-top: 24px; }
+.sc-share { background: none; border: none; cursor: pointer; color: #82A9FF; font-family: var(--font-ui); font-size: 13px; font-weight: 500; padding: 8px 0; margin-top: 4px; transition: opacity .15s; }
+.sc-share:active { opacity: .6; }
 .sc-done {
   width: 100%; border: none; cursor: pointer; background: #F4F2EE; color: #0B0B0B; border-radius: 99px;
   padding: 17px; font-family: var(--font-ui); font-weight: 600; font-size: 15px; transition: transform .15s;

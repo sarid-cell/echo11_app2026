@@ -31,15 +31,32 @@ const DURATIONS = [
   { id: 'loop', label: 'Loop', secs: null },
 ];
 
+const MOODS = [
+  { id: 'calm',    label: 'Calm' },
+  { id: 'focused', label: 'Focused' },
+  { id: 'neutral', label: 'Neutral' },
+  { id: 'tired',   label: 'Tired' },
+];
+
+function MoodIcon({ id }) {
+  const s = { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '1.7', strokeLinecap: 'round', strokeLinejoin: 'round' };
+  if (id === 'calm')    return React.createElement('svg', s, React.createElement('path', { d: 'M12 2C6.5 2 4 7 4 10c0 5 4 9 8 12 4-3 8-7 8-12 0-3-2.5-8-8-8z' }));
+  if (id === 'focused') return React.createElement('svg', s, React.createElement('circle', { cx: '12', cy: '12', r: '9' }), React.createElement('circle', { cx: '12', cy: '12', r: '3', fill: 'currentColor' }));
+  if (id === 'neutral') return React.createElement('svg', s, React.createElement('line', { x1: '5', y1: '9', x2: '19', y2: '9' }), React.createElement('line', { x1: '5', y1: '15', x2: '19', y2: '15' }));
+  if (id === 'tired')   return React.createElement('svg', s, React.createElement('path', { d: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' }));
+  return null;
+}
+
 function PlayerScreen({ freq, playing, onToggle, onClose, saved, onToggleFav }) {
   const [dur, setDur] = React.useState('loop');
   const [left, setLeft] = React.useState(null);     // seconds remaining (null = loop)
   const [completed, setCompleted] = React.useState(null); // { secs } once a timed session finishes
+  const [mood, setMood] = React.useState(null);
   const band = bandOf(freq.beat);
   const isBinaural = freq.type === 'binaural';
 
   // Opening a different frequency resets any prior completion screen.
-  React.useEffect(() => { setCompleted(null); }, [freq.id]);
+  React.useEffect(() => { setCompleted(null); setMood(null); }, [freq.id]);
 
   // countdown when a fixed duration is selected and audio is playing
   React.useEffect(() => {
@@ -79,6 +96,16 @@ function PlayerScreen({ freq, playing, onToggle, onClose, saved, onToggleFav }) 
   if (completed) {
     const mins = Math.max(1, Math.round(completed.secs / 60));
     const durLabel = `${mins} ${mins === 1 ? 'minute' : 'minutes'}`;
+
+    const shareSession = async () => {
+      const text = `Just completed ${durLabel} of ${freq.name} with echo.|| ✦`;
+      if (navigator.share) {
+        try { await navigator.share({ text }); } catch (_) {}
+      } else {
+        try { await navigator.clipboard.writeText(text); } catch (_) {}
+      }
+    };
+
     return (
       <div className="player session-complete">
         <div className="player-head">
@@ -98,12 +125,24 @@ function PlayerScreen({ freq, playing, onToggle, onClose, saved, onToggleFav }) 
           <div className="sc-meta">
             {isBinaural ? `${freq.cL}/${freq.cR} Hz · ${freq.beat} Hz ${band}` : `${freq.hz} Hz · pure tone`}
           </div>
+          <div className="sc-mood-section">
+            <div className="sc-mood-q">How do you feel?</div>
+            <div className="sc-mood-row" role="group" aria-label="Mood selection">
+              {MOODS.map(m => (
+                <button key={m.id} className={'sc-mood-btn' + (mood === m.id ? ' on' : '')} onClick={() => setMood(mood === m.id ? null : m.id)} aria-pressed={mood === m.id}>
+                  <MoodIcon id={m.id} />
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="sc-actions">
             <button className="sc-done" onClick={onClose}>Done</button>
             <button className="sc-again" onClick={listenAgain} aria-label={`Listen to ${freq.name} again`}>
               <Icon name="play" size={15} /> Listen again
             </button>
           </div>
+          <button className="sc-share" onClick={shareSession}>Share this session →</button>
         </div>
         <div className="player-foot">echo.|| · for wellbeing, not a medical device</div>
       </div>
