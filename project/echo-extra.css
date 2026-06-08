@@ -470,7 +470,7 @@
 .today-time { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .4px; flex-shrink: 0; width: 36px; }
 .today-name { flex: 1; font-family: var(--font-ui); font-size: 14px; font-weight: 500; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .today-dur { font-family: var(--font-mono); font-size: 11px; color: var(--muted); background: var(--surface-2); border-radius: 99px; padding: 3px 9px; flex-shrink: 0; }
-.today-mood { font-size: 15px; flex-shrink: 0; line-height: 1; }
+.today-mood { font-family: var(--font-mono); font-size: 10px; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
 .sc-done {
   width: 100%; border: none; cursor: pointer; background: #F4F2EE; color: #0B0B0B; border-radius: 99px;
   padding: 17px; font-family: var(--font-ui); font-weight: 600; font-size: 15px; transition: transform .15s;

@@ -23,7 +23,7 @@ const TIME_REC = {
   evening:   { id: 'theta', reason: 'Decompress and wind down.' },
 };
 
-const MOOD_EMOJI = { calm: '😌', focused: '🎯', neutral: '😐', tired: '😓' };
+const MOOD_LABEL = { calm: 'Calm', focused: 'Focused', neutral: 'Neutral', tired: 'Tired' };
 
 function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, favs = [], onToggleFav, sessions = [] }) {
   const [toast, setToast] = React.useState('');
@@ -155,7 +155,7 @@ function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, fav
                   <span className="today-time">{time}</span>
                   <span className="today-name">{s.name}</span>
                   <span className="today-dur">{mins} min</span>
-                  {s.mood && <span className="today-mood">{MOOD_EMOJI[s.mood] || ''}</span>}
+                  {s.mood && <span className="today-mood">{MOOD_LABEL[s.mood] || ''}</span>}
                 </div>
               );
             })}

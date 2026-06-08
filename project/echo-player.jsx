@@ -26,8 +26,8 @@ const CLINICAL_PURE = {
 };
 
 const DURATIONS = [
-  { id: 15, label: '15m', secs: 15 * 60 },
-  { id: 30, label: '30m', secs: 30 * 60 },
+  { id: 15, label: '15m', secs: 5 },
+  { id: 30, label: '30m', secs: 5 },
   { id: 'loop', label: 'Loop', secs: null },
 ];
 
