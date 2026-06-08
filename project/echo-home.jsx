@@ -144,23 +144,32 @@ function HomeDashboard({ currentId, onToggle, unlocked, onOpenPlayer, onSOS, fav
         <div className="kicker">Today</div>
         {sessions.length === 0 ? (
           <div className="today-empty">Your first session today will appear here.</div>
-        ) : (
-          <div className="today-card">
-            {sessions.map((s, i) => {
-              const d = new Date(s.ts);
-              const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-              const mins = Math.max(1, Math.round(s.secs / 60));
-              return (
-                <div key={s.ts} className={'today-row' + (i === sessions.length - 1 ? ' last' : '')}>
-                  <span className="today-time">{time}</span>
-                  <span className="today-name">{s.name}</span>
-                  <span className="today-dur">{mins} min</span>
-                  {s.mood && <span className="today-mood">{MOOD_LABEL[s.mood] || ''}</span>}
+        ) : (() => {
+          const visible = sessions.slice(0, 3);
+          const hasMore = sessions.length > 3;
+          return (
+            <div className="today-card">
+              {visible.map((s, i) => {
+                const d = new Date(s.ts);
+                const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+                const mins = Math.max(1, Math.round(s.secs / 60));
+                return (
+                  <div key={s.ts} className={'today-row' + (!hasMore && i === visible.length - 1 ? ' last' : '')}>
+                    <span className="today-time">{time}</span>
+                    <span className="today-name">{s.name}</span>
+                    <span className="today-dur">{mins} min</span>
+                    {s.mood && <span className="today-mood">{MOOD_LABEL[s.mood] || ''}</span>}
+                  </div>
+                );
+              })}
+              {hasMore && (
+                <div className="today-more">
+                  View full history →
                 </div>
-              );
-            })}
-          </div>
-        )}
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       {/* ── Saved — quick access to favorited frequencies. Lives directly under
