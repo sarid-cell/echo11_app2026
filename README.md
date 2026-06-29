@@ -1,25 +1,45 @@
-# CODING AGENTS: READ THIS FIRST
+# echo.|| — Frequency Wellness App
 
-This is a **handoff bundle** from Claude Design (claude.ai/design).
+echo.|| (echo11) is a frequency/binaural-beats wellness app — a React SPA (JSX
+transformed in-browser via Babel, no build step) that plays focus, sleep,
+healing, and abundance audio frequencies, with Supabase for auth and
+entitlements.
 
-A user mocked up designs in HTML/CSS/JS using an AI design tool, then exported this bundle so a coding agent can implement the designs for real.
+Live at [echo11.space](https://www.echo11.space/).
 
-## What you should do — IMPORTANT
+## Running locally
 
-**Read the chat transcripts first.** There are 5 chat transcript(s) in `chats/`. The transcripts show the full back-and-forth between the user and the design assistant — they tell you **what the user actually wants** and **where they landed** after iterating. Don't skip them. The final HTML files are the output, but the chat is where the intent lives.
+There is no build step — the app loads React, ReactDOM, and Babel from CDN
+and transforms JSX in the browser. Serve the repo root with any static file
+server and open `/echo11-app.html` (routing matches `vercel.json`):
 
-**Read `project/echo11-app.html` in full.** The user had this file open when they triggered the handoff, so it's almost certainly the primary design they want built. Read it top to bottom — don't skim. Then **follow its imports**: open every file it pulls in (shared components, CSS, scripts) so you understand how the pieces fit together before you start implementing.
+```bash
+npx serve .
+```
 
-**If anything is ambiguous, ask the user to confirm before you start implementing.** It's much cheaper to clarify scope up front than to build the wrong thing.
+## Project structure
 
-## About the design files
+- `echo11-app.html` — app entry point, loads modules from `project/` in order
+- `project/echo-*.jsx` — app screens/components (data, UI, home, player, paywall, settings, Supabase integration)
+- `project/echo-*.css` — styles
+- `project/echo-config.js` — Supabase URL/anon key (see `project/SUPABASE_SETUP.md`)
+- `project/img/`, `project/media/` — image and audio assets
+- `project/legal/` — privacy, terms, disclaimer pages (routed via `vercel.json`)
+- `project/supabase/` — database schema
+- `vercel.json` — routing for the deployed site
 
-The design medium is **HTML/CSS/JS** — these are prototypes, not production code. Your job is to **recreate them pixel-perfectly** in whatever technology makes sense for the target codebase (React, Vue, native, whatever fits). Match the visual output; don't copy the prototype's internal structure unless it happens to fit.
+## Deployment
 
-**Don't render these files in a browser or take screenshots unless the user asks you to.** Everything you need — dimensions, colors, layout rules — is spelled out in the source. Read the HTML and CSS directly; a screenshot won't tell you anything they don't.
+Deployed on Vercel. `vercel.json` routes `/` to `echo11-app.html` and the
+legal pages to `project/legal/`.
 
-## Bundle contents
+**Note:** the site currently ships `robots.txt` (disallow all) and
+`noindex` meta tags while the app is still being finished, to keep it out
+of Google search results. Remove these once the app is ready to be
+discovered publicly.
 
-- `README.md` — this file
-- `chats/` — conversation transcripts (read these!)
-- `project/` — the `echo11 space site app` project files (HTML prototypes, assets, components)
+## Background
+
+This repo originated as a design handoff from Claude Design
+(claude.ai/design) — see `chats/` for the original design conversations if
+you need context on past design decisions.
