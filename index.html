@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <title>echo.|| — App</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- webfonts, async: render never blocks on a font CDN; system stack shows first -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.2.5/index.min.css" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.2.5/index.min.css" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap" media="print" onload="this.media='all'" />
+<noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.2.5/index.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.2.5/index.min.css" />
+</noscript>
 <link rel="stylesheet" href="echo11-app.css" />
 <link rel="stylesheet" href="echo11-web.css" />
 <!-- Bonus book (annual members) — bundled as a blob for standalone export -->
@@ -42,7 +54,7 @@
     <!-- ░░ SIGNAL / HOME ░░ -->
     <section class="view" id="view-home" data-screen-label="Echo (Home)">
       <div class="hero">
-        <video class="hero-media" autoplay muted loop playsinline preload="metadata" data-respect-reduce poster="img/hero-portrait.png">
+        <video class="hero-media" autoplay muted loop playsinline preload="metadata" data-respect-reduce poster="img/hero-portrait.jpg">
           <source src="media/hero.mp4" type="video/mp4" />
         </video>
         <div class="hero-veil" aria-hidden="true"></div>
@@ -50,7 +62,7 @@
         <div class="hero-foot">
           <span class="live" id="eyebrow"><i aria-hidden="true"></i> Night echo · 22 frequencies</span>
           <div class="greet">
-            <h1 id="greet-h">Good night, <b>Shira</b></h1>
+            <h1 id="greet-h">Good night<b>.</b></h1>
             <div class="coord" id="coord">Founding listener · Nº 011</div>
             <div class="beta-line">Everything is unlocked — your listening shapes what echo becomes.</div>
           </div>
@@ -172,9 +184,9 @@
     <section class="view" id="view-profile" hidden data-screen-label="Profile">
       <button class="backbtn prof-back" id="profile-back" aria-label="Back"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
       <div class="prof-head">
-        <span class="prof-av"><img src="img/astro-profile.png" alt="" /></span>
+        <span class="prof-av"><img src="img/astro-profile.png" alt="" loading="lazy" decoding="async" /></span>
         <div class="prof-id">
-          <h2>Shira</h2>
+          <h2>Founding Listener</h2>
           <div class="pmeta"><span class="pro-pill">Founding Beta</span> <span id="prof-founder">Founding Listener Nº 011 · since 2026</span></div>
         </div>
       </div>
@@ -259,7 +271,7 @@
     <!-- ░░ THE SCIENCE — explainer screen ░░ -->
     <section class="view" id="view-science" hidden data-screen-label="The Science">
       <div class="sci-hero">
-        <img src="img/blueprint.png" alt="" />
+        <img src="img/blueprint.png" alt="" loading="lazy" decoding="async" />
         <span class="sh-scrim" aria-hidden="true"></span>
         <button class="backbtn sh-back" id="science-back" aria-label="Back"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
         <div class="sh-body"><span class="kicker" style="color:#fff;">The Science</span><h1>The third frequency</h1></div>
@@ -459,6 +471,7 @@
         <span class="mini-txt"><b id="mini-name">Alpha Clarity</b><span id="mini-time">00:00 / 15:00</span></span>
       </button>
       <button class="mini-play" id="mini-play" aria-label="Pause"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+      <button class="mini-close" id="mini-close" aria-label="End session"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
 
     <!-- ░░ TOAST · save / share confirmations ░░ -->
@@ -581,7 +594,7 @@
 
     <!-- ░░ AUTH / ONBOARDING — sign-in gate ░░ -->
     <div class="auth" id="auth" hidden aria-label="Sign in to echo.||">
-      <img class="auth-bg" src="img/astro-woman.png" alt="" />
+      <img class="auth-bg" src="img/astro-woman.jpg" alt="" />
       <div class="auth-veil" aria-hidden="true"></div>
       <div class="auth-scrim" aria-hidden="true"></div>
 
@@ -614,7 +627,7 @@
 
     <!-- ░░ SPLASH / boot ░░ -->
     <div class="splash" id="splash" role="img" aria-label="echo.|| booting">
-      <video class="splash-video" id="splash-video" autoplay muted loop playsinline preload="metadata" poster="img/astro-woman.png">
+      <video class="splash-video" id="splash-video" autoplay muted loop playsinline preload="metadata" poster="img/astro-woman.jpg">
         <source src="media/splash.mp4" type="video/mp4" />
       </video>
       <div class="splash-veil" aria-hidden="true"></div>
@@ -667,7 +680,7 @@
     document.getElementById('node-grid').innerHTML = list.map(function(f,i){
       var idx = String(i+1).padStart(2,'0');
       return '<button class="node" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
-        + '<img src="'+f.img+'" alt="'+f.n+'"/>'
+        + '<img src="'+f.img+'" alt="'+f.n+'" loading="lazy" decoding="async"/>'
         + '<span class="nscrim"></span><span class="nring"></span><span class="ntick tl"></span>'
         + '<span class="ncore"></span><span class="nhz">'+f.hz+'</span>'
         + '<span class="nidx">N.'+idx+'</span>'
@@ -686,7 +699,7 @@
     var x='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
     row.innerHTML=items.map(function(f){
       return '<button class="saved-card" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
-        + '<img src="'+f.img+'" alt=""/><span class="sc-scrim"></span>'
+        + '<img src="'+f.img+'" alt="" loading="lazy" decoding="async"/><span class="sc-scrim"></span>'
         + '<span class="sc-hz">'+f.hz+'</span><span class="sc-name">'+f.n+'</span>'
         + '<span class="sc-rm" data-rm="'+f.n+'" role="button" aria-label="Remove '+f.n+' from saved">'+x+'</span>'
         + '</button>';
@@ -706,14 +719,14 @@
 
   function renderGallery(seg){
     document.getElementById('week-quote').innerHTML =
-      '<img src="img/veil.png" alt=""/><span class="qscrim"></span>'
+      '<img src="img/veil.png" alt="" loading="lazy" decoding="async"/><span class="qscrim"></span>'
       + '<span class="qbody"><span class="qweek">'+ECHO.WEEK_QUOTE.week+' · this week</span>'
       + '<div class="qtext">'+ECHO.WEEK_QUOTE.text+'</div></span>';
     var list = ECHO.WALLPAPERS.filter(function(w){ return seg==='all'?true:(seg==='pro'?w.pro:!w.pro); });
     document.querySelectorAll('#gal-seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.seg===seg); });
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
-      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><span class="wdl">'+dl+'</span></div>';
+      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><span class="wdl">'+dl+'</span></div>';
     }).join('');
     var check='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
     document.querySelectorAll('#gal-grid .wp[data-free]').forEach(function(el){
@@ -737,10 +750,36 @@
         + '<div class="ai-body"><p>Not enough echo yet. Complete <b>a few sessions</b> and your agent will start reading your patterns — time of day, duration and band — then suggest what to tune next.</p></div>'
         + aiDisc;
     } else {
-      var ai = ECHO.buildAI();
+      /* honest analysis: everything below is computed from the user's own
+         localStorage history - never from canned demo numbers */
+      var morning=0, evening=0, binCount=0, toneCount=0, totalMin=0;
+      storedHist.forEach(function(h){
+        var hr=new Date(h.ts).getHours();
+        if(hr<12) morning++; else if(hr>=17) evening++;
+        if((h.cat||'binaural')==='binaural') binCount++; else toneCount++;
+        totalMin+=(parseInt(h.min,10)||0);
+      });
+      var avg=Math.max(1,Math.round(totalMin/sessions));
+      var when = evening>sessions*0.6 ? 'mostly in the <b>evening</b>'
+               : morning>sessions*0.6 ? 'mostly in the <b>morning</b>'
+               : 'spread <b>across the day</b>';
+      var band = binCount>toneCount ? 'binaural protocols' : (toneCount>binCount ? 'pure tones' : 'both families evenly');
+      var summary='Across <b>'+sessions+' session'+(sessions===1?'':'s')+'</b> you listen '+when
+        +', leaning on <b>'+band+'</b>. Sessions average <b>'+avg+' min</b>'
+        +(avg<20?' — nudging a couple to 20 would deepen entrainment.':' — a solid entrainment window.');
+      var listened={}; storedHist.forEach(function(h){ listened[h.name]=1; });
+      var anchors=[
+        {n:'Beta Focus',    hz:'18 Hz', why:'A daytime focus block to balance the wind-down.'},
+        {n:'Delta Sleep',   hz:'2 Hz',  why:'Close the night instead of stopping at theta.'},
+        {n:'Gamma Insight', hz:'40 Hz', why:'One peak-cognition session for the week.'},
+        {n:'Alpha Clarity', hz:'10 Hz', why:'The calm-focus baseline worth returning to.'},
+        {n:'The Universe',  hz:'432 Hz',why:'A speaker-safe reset between headphone sessions.'}
+      ];
+      var recs=anchors.filter(function(a){ return !listened[a.n]; }).slice(0,3);
+      if(recs.length<3) recs=recs.concat(anchors.slice(0,3-recs.length));
       document.getElementById('ai-panel').innerHTML = aiTop
-        + '<div class="ai-body"><p>'+ai.summary+'</p></div>'
-        + '<div class="ai-rec">'+ai.recs.map(function(r){ return '<button class="ai-recrow" data-recname="'+r.n+'" aria-label="Play '+r.n+' — '+r.hz+'"><span class="arr"></span><span class="ari"><b>'+r.n+'</b><span>'+r.why+'</span></span><span class="arhz">'+r.hz+'</span></button>'; }).join('')+'</div>'
+        + '<div class="ai-body"><p>'+summary+'</p></div>'
+        + '<div class="ai-rec">'+recs.map(function(r){ return '<button class="ai-recrow" data-recname="'+r.n+'" aria-label="Play '+r.n+' — '+r.hz+'"><span class="arr"></span><span class="ari"><b>'+r.n+'</b><span>'+r.why+'</span></span><span class="arhz">'+r.hz+'</span></button>'; }).join('')+'</div>'
         + aiDisc;
     }
     function freqByName(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0] || {}; }
@@ -750,7 +789,7 @@
     if(!allHist.length){ document.getElementById('hist-list').innerHTML='<div class="hist-empty">Your sessions will appear here.</div>'; return; }
     document.getElementById('hist-list').innerHTML = allHist.map(function(h){
       var feel = h.feel ? ' · <span class="hfeel">felt '+h.feel+'</span>' : '';
-      return '<div class="hrow"><span class="hthumb"><img src="'+h.img+'" alt=""/></span>'
+      return '<div class="hrow"><span class="hthumb"><img src="'+h.img+'" alt="" loading="lazy" decoding="async"/></span>'
         + '<span class="hmid"><span class="hname">'+h.n+'</span><span class="hsub">'+h.hz+' · '+h.when+feel+'</span></span>'
         + '<span class="hdur"><b>'+h.min+' min</b>'+(h.cat==='binaural'?'Binaural':'Pure tone')+'</span></div>';
     }).join('');
@@ -821,7 +860,9 @@
     var pl=document.getElementById('player');
     if(pl && !pl.hidden) pl.style.visibility='hidden';   // hide the live player beneath; audio keeps playing
     requestAnimationFrame(function(){ sciView.classList.add('in'); });
+    if(typeof window.__overlayOpened==='function') window.__overlayOpened();
   }
+  window.__closeScience = function(){ if(sciSheet) closeScienceSheet(); };
   function closeScienceSheet(){
     if(typeof window.__echoSilenceDemo==='function') window.__echoSilenceDemo();
     sciView.classList.remove('in');
@@ -834,7 +875,7 @@
   document.getElementById('science-open').addEventListener('click', function(){ showView('science'); });
   document.getElementById('srow-science').addEventListener('click', function(){ showView('science'); });
   document.getElementById('science-back').addEventListener('click', function(){
-    if(sciSheet){ closeScienceSheet(); }     // back to the player, audio never stopped
+    if(sciSheet){ closeScienceSheet(); if(typeof window.__overlayClosed==='function') window.__overlayClosed(); }     // back to the player, audio never stopped
     else { showView('home'); }
   });
 
@@ -954,7 +995,7 @@
     var sp = document.getElementById('splash'); if(!sp) return;
     var vid = document.getElementById('splash-video');
     var done = false, started = Date.now();
-    var MIN = 1500;
+    var MIN = 1200;
     function finish(){
       if(done) return; done = true;
       clearTimeout(maxT);
@@ -962,22 +1003,12 @@
       sp.classList.add('hide');                // …then cross-fade the splash away
       setTimeout(function(){ sp.hidden = true; }, 950);
     }
-    // Safety fallback ONLY for when 'ended' never fires (e.g. autoplay blocked).
-    // Sized to OUTLAST the clip so the splash always holds for the full video.
-    var maxT = setTimeout(finish, 12000);
-    function armCap(){
-      if(vid && isFinite(vid.duration) && vid.duration > 0){
-        clearTimeout(maxT);
-        maxT = setTimeout(finish, vid.duration * 1000 + 1500);
-      }
-    }
+    // Web cap: on the web the splash is a boot moment, not a film — route
+    // after 4s no matter what the 8.8s video is doing (it keeps looping
+    // behind the cross-fade). A dead video routes even sooner.
+    var maxT = setTimeout(finish, 4000);
     if(vid){
-      vid.addEventListener('loadedmetadata', armCap);
-      armCap();
-      vid.addEventListener('ended', finish);   // ← normal path: route when the video finishes
-      // loop is on (iOS-safe autoplay) so 'ended' won't fire — route at the end of the first pass instead.
-      vid.addEventListener('timeupdate', function(){ if(isFinite(vid.duration) && vid.duration>0 && vid.currentTime >= vid.duration - 0.25) finish(); });
-      vid.addEventListener('error', function(){ clearTimeout(maxT); setTimeout(finish, 1600); });
+      vid.addEventListener('error', function(){ clearTimeout(maxT); setTimeout(finish, 1200); });
       var p = vid.play && vid.play();
       if(p && p.catch) p.catch(function(){ /* autoplay blocked → cap handles it */ });
     }
@@ -1153,7 +1184,7 @@
   }
   function applyFreqs(){ if(!actx||!oscL) return; var t=actx.currentTime; oscL.frequency.setValueAtTime(prof.fL,t); oscR.frequency.setValueAtTime(prof.fR,t); }
 
-  var elapsed=0, playing=false, tick=null, firstListen=false, capDone=true, capIdx=-1, ending=false;
+  var elapsed=0, playing=false, tick=null, firstListen=false, capDone=true, capIdx=-1, ending=false, startedAt=0, finishArmed=false;
   var curFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};   // the frequency the player is currently on
   function persistOpen(){ lset(OPEN_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,elapsed:elapsed,session:isFinite(SESSION)?SESSION:0})); }
   function clearOpen(){ try{ localStorage.removeItem(OPEN_KEY); }catch(e){} }
@@ -1219,9 +1250,11 @@
   }
   function loop(){
     if(!playing) return;
-    elapsed++;
+    // wall clock, not tick counting: browsers throttle background timers
+    // to >=1/min, so a counter drifts the moment the screen locks
+    elapsed=Math.max(elapsed, Math.floor((Date.now()-startedAt)/1000));
     if(isFinite(SESSION)){
-      if(elapsed===Math.max(1,SESSION-15)) beginFinish();   // last 15s: gentle fade + orb slows toward rest
+      if(elapsed>=Math.max(1,SESSION-15) && !finishArmed){ finishArmed=true; beginFinish(); }   // last 15s: gentle fade + orb slows toward rest
       if(elapsed>=SESSION){ elapsed=SESSION; render(); completeSession(); return; }
     }
     render(); try{localStorage.setItem(EL_KEY,String(elapsed));}catch(e){}
@@ -1231,8 +1264,11 @@
   function setIcons(on){ playBtn.innerHTML=on?PAUSE:PLAY; playBtn.setAttribute('aria-label',on?'Pause':'Play'); miniPlay.innerHTML=on?MPAUSE:MPLAY; miniPlay.setAttribute('aria-label',on?'Pause':'Play'); }
   function play(){
     if(ending) return;
+    buildAudio();
+    if(!actx){ toast('Audio isn\u2019t available in this browser'); return; }   // never a running timer with no sound
     playing=true; player.classList.add('playing'); mini.classList.add('playing'); setIcons(true);
-    buildAudio(); applyFreqs(); if(actx&&actx.state==='suspended') actx.resume();
+    startedAt=Date.now()-elapsed*1000;
+    applyFreqs(); if(actx.state==='suspended') actx.resume();
     fadeIn();
     clearInterval(tick); tick=setInterval(loop,1000);
     resetIdle();
@@ -1447,7 +1483,7 @@
 
   function openPlayer(opts){
     opts=opts||{};
-    ending=false;
+    ending=false; finishArmed=false;
     if(completeEl) completeEl.hidden=true;
     var open = opts.resume ? ljson(OPEN_KEY) : null;
     if(opts.resume && open){ curFreq={name:open.name,hz:open.hz,cat:open.cat}; }
@@ -1470,17 +1506,38 @@
     faded=false; setAmb(true); render();
     hideMini();
     player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); });
+    overlayOpened();
     play();
   }
-  function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); }
+  function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); overlayOpened(); }
   function minimizePlayer(){ clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
   function stopPlayer(){ pause(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
+
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden && playing){ loop(); } });
+  /* Browser back = close the top overlay, never leave the app mid-session.
+     One history entry is pushed per overlay open; back pops it and the
+     popstate handler dismisses the overlay (player minimizes - audio
+     keeps playing). Back on the bare Home leaves the site as normal. */
+  var histDepth=0;
+  function overlayOpened(){ try{ history.pushState({echo:++histDepth},''); }catch(e){} }
+  function overlayClosed(){ if(histDepth>0){ histDepth--; try{ history.back(); }catch(e){} } }
+  window.__overlayOpened=overlayOpened; window.__overlayClosed=overlayClosed;
+  window.addEventListener('popstate', function(){
+    if(histDepth>0) histDepth--;
+    var sci=document.getElementById('view-science');
+    var br=document.getElementById('bookreader');
+    if(br && !br.hidden){ if(typeof window.__closeBook==='function') window.__closeBook(); return; }
+    if(sci && sci.classList.contains('as-sheet') && sci.classList.contains('in')){ if(typeof window.__closeScience==='function') window.__closeScience(); return; }
+    if(!player.hidden && player.style.visibility!=='hidden'){ if(typeof showView==='function') showView('home'); minimizePlayer(); return; }
+  });
 
   playBtn.addEventListener('click', function(){ playing?pause():play(); });
   miniPlay.addEventListener('click', function(e){ e.stopPropagation(); playing?pause():play(); });
   miniOpen.addEventListener('click', expandPlayer);
+  var miniClose=document.getElementById('mini-close');
+  if(miniClose) miniClose.addEventListener('click', function(e){ e.stopPropagation(); stopPlayer(); if(typeof renderHome==='function') renderHome(); });   // session stays resumable from Home; no overlayClosed - mini isn't a history entry
   ambBtn.addEventListener('click', function(){ setAmb(!ambOn); });
-  minBtn.addEventListener('click', function(){ if(typeof showView==='function') showView('home'); minimizePlayer(); });   // chevron → home + mini-player, audio continues
+  minBtn.addEventListener('click', function(){ if(typeof showView==='function') showView('home'); minimizePlayer(); overlayClosed(); });   // chevron → home + mini-player, audio continues
   whyBtn.addEventListener('click', function(){ if(typeof openScienceSheet==='function') openScienceSheet(); });   // overlay sheet over the player; audio keeps playing
 
   // triggers — the hero CTA is the SINGLE primary action; its mode flips with home state
@@ -1567,7 +1624,7 @@
     var rec=recForHour(new Date().getHours());
     homeRecFreq={name:rec.name,hz:rec.hz,cat:rec.cat};
     // greeting + eyebrow always derive from the device clock
-    if(gid('greet-h')) gid('greet-h').innerHTML=rec.greet+', <b>Shira</b>';
+    if(gid('greet-h')) gid('greet-h').innerHTML=rec.greet+'<b>.</b>';
     if(gid('eyebrow')) gid('eyebrow').innerHTML='<i aria-hidden="true"></i> '+rec.word+' echo · 22 frequencies';
     // streak tile from persisted values
     if(gid('streak-n'))    gid('streak-n').textContent=lnum(STREAK_KEY,0);
@@ -1867,7 +1924,11 @@
     BR.hidden=false; requestAnimationFrame(function(){ BR.classList.add('open'); });
     loadPage(start); setMeta(start);
     document.addEventListener('keydown', onKey);
+    if(typeof window.__overlayOpened==='function') window.__overlayOpened();
   }
+  window.__closeBook = function(){ closeBook(); };
+  var __brClose=document.getElementById('br-close');
+  if(__brClose) __brClose.addEventListener('click', function(){ if(typeof window.__overlayClosed==='function') window.__overlayClosed(); }, true);
   function closeBook(){
     BR.classList.remove('open');
     document.removeEventListener('keydown', onKey);
@@ -1935,10 +1996,11 @@
   (function(){
     var K='echo:founderNo', n=null;
     try{ n=parseInt(localStorage.getItem(K),10); }catch(e){}
-    if(!n||n<1){ n=11; try{ localStorage.setItem(K,String(n)); }catch(e){} }
-    var no='Nº '+('000'+n).slice(-3);
-    var c=document.getElementById('coord'); if(c) c.textContent='Founding listener · '+no;
-    var pf=document.getElementById('prof-founder'); if(pf) pf.textContent='Founding Listener '+no+' · since 2026';
+    /* no server, no join order - a numbered serial here would be an invented
+       one, and every tester would see a different lie. Number returns with
+       the backend. */
+    var c=document.getElementById('coord'); if(c) c.textContent='Founding listener';
+    var pf=document.getElementById('prof-founder'); if(pf) pf.textContent='Founding Listener · since 2026';
   })();
 })();
 </script>
