@@ -80,3 +80,12 @@ body{background:var(--bg);}
    action in the thumb zone. */
 .auth-inner{flex:1;}
 .auth-providers{margin-top:auto;}
+
+/* ───────── mini-player: end-session control ─────────
+   stopPlayer() was reachable only from the completion screen; the ×
+   ends the audio from the mini-player. The open session stays in
+   localStorage, so Home still offers Resume. */
+.mini-close{flex-shrink:0;width:40px;height:40px;margin-right:4px;border:none;border-radius:50%;
+  background:transparent;color:var(--faint);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:color .15s,transform .12s;}
+.mini-close:active{transform:scale(.94);color:var(--ink);}

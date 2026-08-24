@@ -3,10 +3,10 @@
    Brand: #E9E9E7 canvas · #161616 ink · #2C5BD0 azure · Geist
    3D glass · large accessible type · Apple-store ready
    ════════════════════════════════════════════════════════════ */
-@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.2.5/index.min.css');
-@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.2.5/index.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@300;400&display=swap');
+/* Font @imports moved to async <link> tags in index.html: as @imports they
+   serialized behind this file's download, render-blocked first paint, and
+   held DOMContentLoaded hostage to two third-party CDNs. Every face below
+   falls back cleanly to the system stack while the webfonts stream in. */
 
 :root{
   --bg:#E9E9E7;
