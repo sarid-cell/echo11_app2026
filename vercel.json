@@ -2,7 +2,7 @@
   "routes": [
     { "src": "/privacy",    "dest": "/legal/privacy.html" },
     { "src": "/terms",      "dest": "/legal/terms.html" },
-    { "src": "/disclaimer", "dest": "/project/legal/disclaimer.html" },
+    { "src": "/disclaimer", "dest": "/legal/disclaimer.html" },
     { "src": "/",           "dest": "/index.html" }
   ]
 }

@@ -89,3 +89,14 @@ body{background:var(--bg);}
   background:transparent;color:var(--faint);cursor:pointer;display:flex;align-items:center;justify-content:center;
   transition:color .15s,transform .12s;}
 .mini-close:active{transform:scale(.94);color:var(--ink);}
+
+/* ───────── science: the Gateway report opens the real document ─────────
+   The exhibit used to be a dead mock; the link (and the paper itself, via
+   the JS below in index.html) opens the declassified PDF in the system
+   viewer - the one PDF path that works everywhere, including iOS. */
+.ex-open{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;margin-top:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--azure);text-decoration:none;font-weight:600;}
+.ex-open span{color:var(--faint);letter-spacing:1px;}
+.ex-open:active{opacity:.7;}
+.sci-exhibit .ex-paper{cursor:pointer;}

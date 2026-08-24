@@ -333,6 +333,7 @@
               <p class="ex-line dim">███ ███████ ███ █████ ████ ████████ ███ ████</p>
             </div>
             <span class="ex-cap">Declassified under FOIA, 2003.</span>
+            <a class="ex-open" href="media/gateway-process.pdf" target="_blank" rel="noopener">Read the declassified report <span aria-hidden="true">— PDF, 24 pages</span></a>
           </div>
         </div>
 
@@ -872,6 +873,8 @@
       if(pl) pl.style.visibility='';                      // restore the running player exactly as it was
     }, 460);
   }
+  (function(){ var ex=document.querySelector('#cia-exhibit .ex-paper');
+    if(ex) ex.addEventListener('click', function(){ window.open('media/gateway-process.pdf','_blank','noopener'); }); })();
   document.getElementById('science-open').addEventListener('click', function(){ showView('science'); });
   document.getElementById('srow-science').addEventListener('click', function(){ showView('science'); });
   document.getElementById('science-back').addEventListener('click', function(){
