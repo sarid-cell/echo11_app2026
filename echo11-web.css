@@ -31,3 +31,13 @@
     box-shadow:none;
   }
 }
+
+/* ───────── auth: guest-only layout ─────────
+   Stripping Apple/Google/email left one CTA where five controls used to
+   stack, so the block ended mid-screen with dead canvas beneath it.
+   Let .auth-inner fill the remaining height and push the CTA to the
+   bottom — the headline stays anchored under the hero fade, and the
+   primary action lands in the thumb zone. */
+
+.auth-inner{flex:1;}
+.auth-providers{margin-top:auto;}

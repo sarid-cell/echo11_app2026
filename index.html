@@ -601,29 +601,12 @@
         <div class="auth-head">
           <span class="auth-kick"><span class="ln" aria-hidden="true"></span>Binaural frequencies</span>
           <h1 class="auth-title">Twenty minutes<br />to a clearer brain.</h1>
-          <p class="auth-sub">22 frequencies that settle the nervous system and sharpen how you think, learn and focus. Sign in to keep your echo in sync across every device.</p>
+          <p class="auth-sub">22 frequencies that settle the nervous system and sharpen how you think, learn and focus.</p>
         </div>
 
         <div class="auth-providers">
-          <button class="auth-provider apple" id="auth-apple" aria-label="Continue with Apple">
-            <svg class="pic" viewBox="0 0 24 24" fill="currentColor"><path d="M16.36 12.78c.02 2.46 2.16 3.28 2.18 3.29-.02.06-.34 1.17-1.13 2.32-.68.99-1.39 1.97-2.5 1.99-1.1.02-1.45-.65-2.7-.65-1.26 0-1.65.63-2.69.67-1.08.04-1.9-1.07-2.58-2.06-1.4-2.02-2.47-5.72-1.03-8.21.71-1.24 1.99-2.02 3.37-2.04 1.06-.02 2.07.72 2.72.72.65 0 1.87-.89 3.15-.76.54.02 2.05.22 3.01 1.64-.08.05-1.8 1.05-1.78 3.16M14.3 5.36c.57-.69.96-1.65.85-2.61-.83.03-1.83.55-2.42 1.24-.53.61-1 1.59-.87 2.53.92.07 1.87-.47 2.44-1.16"/></svg>
-            Continue with Apple
-          </button>
-          <button class="auth-provider google" id="auth-google" aria-label="Continue with Google">
-            <svg class="pic" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.23c0-.74-.07-1.45-.19-2.13H12v4.03h5.89a5.04 5.04 0 0 1-2.18 3.31v2.75h3.53c2.07-1.9 3.26-4.71 3.26-7.96"/><path fill="#34A853" d="M12 23c2.95 0 5.43-.98 7.24-2.65l-3.53-2.75c-.98.66-2.23 1.05-3.71 1.05-2.85 0-5.27-1.93-6.13-4.52H2.22v2.84A11 11 0 0 0 12 23"/><path fill="#FBBC05" d="M5.87 14.13a6.6 6.6 0 0 1 0-4.26V7.03H2.22a11 11 0 0 0 0 9.94z"/><path fill="#EA4335" d="M12 5.35c1.61 0 3.05.55 4.18 1.64l3.13-3.13C17.43 2.1 14.95 1 12 1 7.7 1 3.99 3.47 2.22 7.03l3.65 2.84C6.73 7.28 9.15 5.35 12 5.35"/></svg>
-            Continue with Google
-          </button>
+          <button class="auth-submit" id="auth-guest">Begin listening</button>
         </div>
-
-        <div class="auth-divider"><span class="ln" aria-hidden="true"></span><span>or</span><span class="ln" aria-hidden="true"></span></div>
-
-        <div class="auth-field">
-          <label class="auth-label" for="auth-email">Email</label>
-          <input class="auth-input" id="auth-email" type="email" inputmode="email" autocapitalize="none" autocomplete="email" placeholder="you@email.com" aria-label="Email address" />
-          <button class="auth-submit" id="auth-email-btn" aria-label="Continue with email">Continue with email</button>
-        </div>
-
-        <button class="auth-explore" id="auth-guest" aria-label="Explore without an account">Explore without an account</button>
 
         <p class="auth-legal">By continuing you agree to our <a href="legal/terms.html" target="_blank" rel="noopener">Terms</a> &amp; <a href="legal/privacy.html" target="_blank" rel="noopener">Privacy&nbsp;Policy</a></p>
       </div>
@@ -956,20 +939,7 @@
   // Completing any sign-in method → persist + drop into the app on Home.
   function completeAuth(method){ setSignedIn(method); showView('home'); device.scrollTop = 0; hideAuth(); }
 
-  document.getElementById('auth-apple').addEventListener('click', function(){ completeAuth('apple'); });
-  document.getElementById('auth-google').addEventListener('click', function(){ completeAuth('google'); });
   document.getElementById('auth-guest').addEventListener('click', function(){ completeAuth('guest'); });
-  (function(){
-    var input = document.getElementById('auth-email');
-    var btn = document.getElementById('auth-email-btn');
-    function submit(){
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.value.trim())){ input.classList.add('invalid'); input.focus(); return; }
-      completeAuth('email');
-    }
-    btn.addEventListener('click', submit);
-    input.addEventListener('input', function(){ input.classList.remove('invalid'); });
-    input.addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
-  })();
 
   // Sign out (Profile) → end the session and return to the onboarding gate.
   var signoutBtn = document.getElementById('signout');
@@ -1046,7 +1016,7 @@
   var STREAK_KEY='echo:streak', WEEK_KEY='echo:minWeek', BEST_KEY='echo:best', CHK_KEY='echo:checkin';
   var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced in Library
   var HIST_KEY='echo:history';       // array of completed sessions {name,hz,cat,min,ts,feel}, newest first
-  var SESS_KEY='echo:sessions';      // sessions rows, Supabase-shaped {protocol,hz,band,minutes,mood,completed,started_at} — syncs after signup
+  var SESS_KEY='echo:sessions';      // sessions rows, kept in localStorage only — guest-only beta, nothing syncs
   function lget(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
   function lset(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
   function ljson(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
@@ -1330,7 +1300,7 @@
   // keep the old name as an alias for the length-menu's immediate-end path
   function endSession(){ completeSession(); }
   /* mood is written on Done — never on tap — together with completed:true, so the
-     record matches the sessions row Claude Code writes to Supabase (mood enum:
+     record shape kept stable for a future server (mood enum:
      calmer | same | sharper | null). Guest mode keeps the same shape locally. */
   function logSession(){
     var mins=isFinite(SESSION)?Math.max(1,Math.round(SESSION/60)):Math.max(1,Math.round(elapsed/60));
