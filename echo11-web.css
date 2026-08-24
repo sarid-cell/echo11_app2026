@@ -1,0 +1,43 @@
+/* ════════════════════════════════════════════════════════════
+   echo11-web.css — web-beta shim
+
+   echo11-app.css is kept byte-identical to the Claude Design bundle
+   so it can be re-synced without losing local edits. Everything the
+   web build needs on top of it lives here.
+
+   The bundle renders the app as a 393x852 device mockup on a desktop
+   "stage" — correct for design review, wrong on a real phone, where
+   the 393px frame plus its 14px bezel and the body's 40px side padding
+   overflow the viewport. Below 700px the device frame becomes the
+   viewport instead. Nothing inside the frame changes.
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 700px){
+  body{
+    display:block;
+    padding:0;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+
+  .stage{gap:0;}
+  .stage-label{display:none;}
+
+  .device{
+    width:100vw;
+    height:100vh;
+    height:100dvh;
+    border-radius:0;
+    box-shadow:none;
+  }
+}
+
+/* ───────── auth: guest-only layout ─────────
+   Stripping Apple/Google/email left one CTA where five controls used to
+   stack, so the block ended mid-screen with dead canvas beneath it.
+   Let .auth-inner fill the remaining height and push the CTA to the
+   bottom — the headline stays anchored under the hero fade, and the
+   primary action lands in the thumb zone. */
+
+.auth-inner{flex:1;}
+.auth-providers{margin-top:auto;}
