@@ -1,17 +1,29 @@
 /* ════════════════════════════════════════════════════════════
-   echo11-web.css — web-beta shim
+   echo11-web.css — web-app shim
 
    echo11-app.css is kept byte-identical to the Claude Design bundle
-   so it can be re-synced without losing local edits. Everything the
-   web build needs on top of it lives here.
+   so it can be re-synced without losing local edits. Everything that
+   turns the bundle's DESKTOP MOCKUP PRESENTATION into a real web app
+   lives here.
 
-   The bundle renders the app as a 393x852 device mockup on a desktop
-   "stage" — correct for design review, wrong on a real phone, where
-   the 393px frame plus its 14px bezel and the body's 40px side padding
-   overflow the viewport. Below 700px the device frame becomes the
-   viewport instead. Nothing inside the frame changes.
+   The bundle renders the app as a 393x852 iPhone mockup floating on a
+   gray "stage", complete with a painted iOS status bar (9:41, battery).
+   Right for design review, wrong for production: on a phone the frame
+   overflows the viewport, and on desktop it reads as a prototype, not
+   a product.
    ════════════════════════════════════════════════════════════ */
 
+/* ── every size: drop the mockup theater ─────────────────────
+   The painted iOS status bar stays as empty space (52px) because a
+   dozen rules position content 114px below the device top; removing
+   the element would shift every screen. Hiding its content keeps the
+   geometry and reads as breathing room. */
+.stage-label{display:none;}
+.flowcard{display:none;}   /* the bundle's design-notes aside — review artifact, not product */
+.statusbar,.auth-statusbar{visibility:hidden;}
+body{background:var(--bg);}
+
+/* ── phones and small tablets: the app IS the viewport ─────── */
 @media (max-width: 700px){
   body{
     display:block;
@@ -21,7 +33,6 @@
   }
 
   .stage{gap:0;}
-  .stage-label{display:none;}
 
   .device{
     width:100vw;
@@ -32,12 +43,40 @@
   }
 }
 
-/* ───────── auth: guest-only layout ─────────
-   Stripping Apple/Google/email left one CTA where five controls used to
-   stack, so the block ended mid-screen with dead canvas beneath it.
-   Let .auth-inner fill the remaining height and push the CTA to the
-   bottom — the headline stays anchored under the hero fade, and the
-   primary action lands in the thumb zone. */
+/* ── desktop: a real app column, not a phone-in-a-frame ──────
+   The design system is built for a 393px column; stretching it to
+   full desktop width would break every layout. A full-height centered
+   column on the same canvas color is the standard mobile-web-app
+   presentation. Hairlines give the column definition without reading
+   as a device bezel. */
+@media (min-width: 701px){
+  body{
+    padding:0;
+    align-items:stretch;
+    gap:0;
+  }
 
+  .stage{
+    flex:1;
+    width:100%;
+    gap:0;
+    justify-content:center;
+  }
+
+  .device{
+    width:393px;
+    height:100vh;
+    height:100dvh;
+    border-radius:0;
+    box-shadow:1px 0 0 var(--line-2), -1px 0 0 var(--line-2),
+      0 0 60px -20px rgba(22,22,22,.12);
+  }
+}
+
+/* ───────── auth: guest-only layout ─────────
+   Stripping Apple/Google/email left one CTA where five controls used
+   to stack. Let .auth-inner fill the remaining height and push the CTA
+   to the bottom — headline anchored under the hero fade, primary
+   action in the thumb zone. */
 .auth-inner{flex:1;}
 .auth-providers{margin-top:auto;}
