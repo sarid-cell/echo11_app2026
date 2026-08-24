@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>echo.|| — App</title>
+<link rel="stylesheet" href="echo11-app.css" />
+<link rel="stylesheet" href="echo11-web.css" />
+<!-- Bonus book (annual members) — bundled as a blob for standalone export -->
+<meta name="ext-resource-dependency" content="media/echo-volume-one.pdf" data-resource-id="book" />
+</head>
+<body>
+<div class="stage">
+  <span class="stage-label">echo.|| · binaural frequencies for a clearer brain</span>
+
+  <div class="device" data-screen="home" data-atmos="daylight" data-img="mono" data-accent="azure">
+
+    <!-- ░░ PERSISTENT CHROME ░░ -->
+    <div class="chrome">
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="sb-icons" aria-hidden="true">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".4"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 3.5c2 0 3.8.8 5.1 2M3.4 5.5A7.2 7.2 0 0 1 8.5 3.5M1 5.2A10.4 10.4 0 0 1 8.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx=".75" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+      <div class="appheader">
+        <span class="wordmark" aria-label="echo.11">echo<span class="mk" aria-hidden="true"><i></i><i></i></span></span>
+        <div class="hgroup">
+          <button class="resetbtn" id="reset-open" aria-label="Calm reset — grounding breath">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z" opacity=".35"/><circle cx="12" cy="9" r="2.4"/></svg>
+          </button>
+          <button class="iconbtn avatar" id="profile-open" aria-label="Profile">
+            <img src="img/astro-profile.png" alt="" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ░░ SIGNAL / HOME ░░ -->
+    <section class="view" id="view-home" data-screen-label="Echo (Home)">
+      <div class="hero">
+        <video class="hero-media" autoplay muted loop playsinline preload="metadata" data-respect-reduce poster="img/hero-portrait.png">
+          <source src="media/hero.mp4" type="video/mp4" />
+        </video>
+        <div class="hero-veil" aria-hidden="true"></div>
+        <div class="hero-scrim" aria-hidden="true"></div>
+        <div class="hero-foot">
+          <span class="live" id="eyebrow"><i aria-hidden="true"></i> Night echo · 22 frequencies</span>
+          <div class="greet">
+            <h1 id="greet-h">Good night, <b>Shira</b></h1>
+            <div class="coord" id="coord">Founding listener · Nº 011</div>
+            <div class="beta-line">Everything is unlocked — your listening shapes what echo becomes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <div class="begin-wrap">
+          <button class="begin" id="begin-signal" data-mode="begin" aria-label="Begin tonight's echo">
+            <span class="begin-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg></span>
+            <span class="begin-lbl"><span class="begin-label" id="begin-label">Begin tonight's echo</span> <span class="begin-hz" id="begin-hz">· 10 Hz</span></span>
+          </button>
+          <p class="begin-note" id="begin-note">A steady tone, not music — give it 60 seconds.</p>
+        </div>
+
+        <div id="resume-block" hidden>
+          <span class="seclabel" id="resume-label">Last session</span>
+          <div class="tonight" id="tonight">
+            <div class="now glass" id="resume-card" data-cat="binaural">
+              <button class="now-play" id="resume-play" aria-label="Replay Alpha Clarity"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg></button>
+              <div class="now-col">
+                <span class="now-tag"><span class="nt-label" id="resume-tag">Last session</span><span class="nt-time" id="resume-time">15:00 / 15:00</span></span>
+                <div class="now-text">
+                  <h3 id="resume-name">Alpha Clarity</h3>
+                  <span class="now-meta" id="resume-meta">200 / 210 Hz · 10 Hz beat</span>
+                </div>
+                <div class="now-prog" id="now-prog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+            </div>
+            <div class="metric glass" id="streak-card">
+              <span class="mlab">Day streak</span>
+              <span class="mbig"><b id="streak-n">0</b></span>
+              <span class="msub" id="streak-week">0 min this week</span>
+              <span class="msub" id="streak-best">Best: 0 days</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="intro">Two pure tones, one in each ear — and your brain builds a <b>third frequency that doesn't exist in the room</b>. <em>That's the instrument.</em> Twenty minutes a day settles the nervous system and sharpens how you think, learn and focus.</p>
+
+        <span class="seclabel">Choose your category</span>
+        <div class="cats">
+          <button class="cat" data-cat="binaural" aria-label="Open Binaural Synchronization">
+            <img class="cat-bg" src="img/cat-binaural.png" alt="" />
+            <span class="cat-scrim" aria-hidden="true"></span>
+            <span class="cat-glass" aria-hidden="true"></span>
+            <span class="cat-body">
+              <span class="cat-tag"><span class="px"></span> 11 protocols · headphones</span>
+              <span>
+                <span class="cat-name">Binaural<br>Synchronization</span>
+                <span class="cat-meta"><span class="cat-chip">2–40 Hz</span><span>Sleep · focus · genius</span></span>
+              </span>
+            </span>
+            <span class="cat-go" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+
+          <button class="cat" data-cat="tone" aria-label="Open Pure-Tone Resonance">
+            <img class="cat-bg" src="img/cat-tone.png" alt="" />
+            <span class="cat-scrim" aria-hidden="true"></span>
+            <span class="cat-glass" aria-hidden="true"></span>
+            <span class="cat-body">
+              <span class="cat-tag"><span class="px"></span> 11 protocols · any device</span>
+              <span>
+                <span class="cat-name">Pure-Tone<br>Resonance</span>
+                <span class="cat-meta"><span class="cat-chip">174–963 Hz</span><span>Solfeggio · ease</span></span>
+              </span>
+            </span>
+            <span class="cat-go" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+        </div>
+
+        <button class="science glass" id="science-open">
+          <span class="si" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 8.5A2 2 0 0 0 6.8 21h10.4a2 2 0 0 0 1.7-3L14 9V3"/><path d="M8 15h8"/></svg></span>
+          <span class="st"><b>What are binaural beats?</b><span>The science · Monroe · Gateway</span></span>
+          <span class="sarrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+        </button>
+
+        <div class="disc">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+          <p>Wellness &amp; cognitive-training tool — <b>not a medical device</b>, not a diagnosis or treatment. Use stereo headphones for binaural protocols. Don't use while driving. <a href="legal/disclaimer.html" target="_blank" rel="noopener">Safe-use &amp; disclaimer</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ LIBRARY ░░ -->
+    <section class="view" id="view-library" hidden data-screen-label="Library">
+      <div class="lib-head">
+        <div class="htext"><h2 class="screen-title">The Archive</h2><p class="screen-sub">22 frequencies, two ways to tune.</p></div>
+        <div class="chips" id="lib-chips" role="tablist">
+          <button class="chip on" data-filter="all">All <span class="ct">22</span></button>
+          <button class="chip" data-filter="binaural">Binaural</button>
+          <button class="chip" data-filter="tone">Pure Tone</button>
+        </div>
+        <span class="lib-note" id="lib-note">All · 22 frequencies</span>
+      </div>
+      <div class="saved-sec" id="saved-sec" hidden>
+        <span class="seclabel saved-lbl">Saved</span>
+        <div class="saved-row" id="saved-row"></div>
+      </div>
+      <div class="nodegrid" id="node-grid"></div>
+    </section>
+
+    <!-- ░░ GALLERY ░░ -->
+    <section class="view" id="view-gallery" hidden data-screen-label="Gallery">
+      <div class="gal-head">
+        <div class="htext"><h2 class="screen-title">Gallery</h2><p class="screen-sub">Lock-screen stills — a new line every week.</p></div>
+      </div>
+      <div class="quote" id="week-quote"></div>
+      <div class="seg" id="gal-seg">
+        <button class="on" data-seg="all">All</button>
+        <button data-seg="free">Open</button>
+        <button data-seg="pro">Founding</button>
+      </div>
+      <div class="galgrid" id="gal-grid"></div>
+    </section>
+
+    <!-- ░░ PROFILE ░░ -->
+    <section class="view" id="view-profile" hidden data-screen-label="Profile">
+      <button class="backbtn prof-back" id="profile-back" aria-label="Back"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="prof-head">
+        <span class="prof-av"><img src="img/astro-profile.png" alt="" /></span>
+        <div class="prof-id">
+          <h2>Shira</h2>
+          <div class="pmeta"><span class="pro-pill">Founding Beta</span> <span id="prof-founder">Founding Listener Nº 011 · since 2026</span></div>
+        </div>
+      </div>
+
+      <div class="prof-stats" id="prof-stats"></div>
+
+      <div class="prof-sec">
+        <div class="sec-head"><span class="seclabel">Your echo agent</span></div>
+        <div class="ai" id="ai-panel"></div>
+      </div>
+
+      <div class="prof-sec">
+        <div class="sec-head"><span class="seclabel">Listening history</span></div>
+        <div class="hist" id="hist-list"></div>
+      </div>
+
+      <div class="prof-sec">
+        <div class="sec-head"><span class="seclabel">Founding bonus</span><span class="bonus-flag" id="bonus-flag">Unlocked</span></div>
+        <button class="bookcard" id="book-open" aria-label="Open the bonus book — echo, Volume One">
+          <span class="bk-cover" aria-hidden="true">
+            <span class="bk-cover-top">echo<span class="bk-cover-mk"><i></i><i></i></span></span>
+            <span class="bk-cover-rule"></span>
+            <span class="bk-cover-vol">Volume One</span>
+            <span class="bk-cover-foot">Shira Sarid</span>
+            <span class="bk-cover-lock" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+          </span>
+          <span class="bk-body">
+            <span class="bk-kick">Digital book · 111 pages</span>
+            <span class="bk-title">Decoding the Algorithm of Human&nbsp;Resilience</span>
+            <span class="bk-by">The full story of echo — diary, manifesto &amp; field guide.</span>
+            <span class="bk-cta" id="bk-cta">Open the book
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </span>
+        </button>
+      </div>
+
+      <div class="prof-sec">
+        <div class="sub">
+          <span class="sub-k">Membership</span>
+          <h3>Founding beta</h3>
+          <p>All 22 frequencies, the full gallery, the bonus book and your echo agent — everything is open while the founding beta runs.</p>
+          <p class="legal">Your listening shapes what echo becomes — and founding listeners hear what comes next, first.
+            <span class="lk">
+              <a href="legal/terms.html" target="_blank" rel="noopener">Terms (EULA)</a>
+              <a href="legal/privacy.html" target="_blank" rel="noopener">Privacy</a>
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="prof-sec last">
+        <div class="slist">
+          <a class="srow" id="srow-science">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 8.5A2 2 0 0 0 6.8 21h10.4a2 2 0 0 0 1.7-3L14 9V3"/></svg></span>
+            <span class="sname">The science of echo</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" href="legal/disclaimer.html" target="_blank" rel="noopener">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg></span>
+            <span class="sname">Safe-use &amp; medical disclaimer</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" href="legal/privacy.html" target="_blank" rel="noopener">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+            <span class="sname">Privacy policy</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" href="legal/terms.html" target="_blank" rel="noopener">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v16H7zM10 9h4M10 13h4"/></svg></span>
+            <span class="sname">Terms of use (EULA)</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" id="signout" href="#">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5M20 12H9M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/></svg></span>
+            <span class="sname">Sign out</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow danger" id="delete-account" href="#">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13M9 7V4h6v3"/></svg></span>
+            <span class="sname">Delete my account</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ THE SCIENCE — explainer screen ░░ -->
+    <section class="view" id="view-science" hidden data-screen-label="The Science">
+      <div class="sci-hero">
+        <img src="img/blueprint.png" alt="" />
+        <span class="sh-scrim" aria-hidden="true"></span>
+        <button class="backbtn sh-back" id="science-back" aria-label="Back"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="sh-body"><span class="kicker" style="color:#fff;">The Science</span><h1>The third frequency</h1></div>
+      </div>
+      <div class="sci-content">
+        <p class="sci-lead">Play a tone in one ear and a slightly different tone in the other. Your brain can't separate them — so it generates a <em>third, phantom beat</em> equal to the difference, and its own rhythm begins to drift toward it.</p>
+
+        <div class="sci-eq sci-demo" id="sci-demo" aria-label="Binaural beat demo. Tap the left and right ear to hear how a 10 Hz beat appears only when both play together.">
+          <div class="sd-bar">
+            <span class="sd-eq">200 Hz <span class="sd-dot">·</span> 210 Hz <span class="sd-arrow" aria-hidden="true">→</span> <b id="sd-diff">10 Hz</b></span>
+            <span class="sd-phones"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="7" rx="1.4"/><rect x="17" y="13" width="4" height="7" rx="1.4"/></svg> Headphones</span>
+          </div>
+          <div class="sd-ears">
+            <button class="sd-ear" id="sd-left" aria-pressed="false" aria-label="Left ear — 200 hertz, plays in the left channel only">
+              <span class="sd-pan">L</span>
+              <span class="sd-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="t-hz">200 Hz</span>
+              <span class="t-ear">Left ear</span>
+            </button>
+            <button class="sd-ear" id="sd-right" aria-pressed="false" aria-label="Right ear — 210 hertz, plays in the right channel only">
+              <span class="sd-pan">R</span>
+              <span class="sd-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="t-hz">210 Hz</span>
+              <span class="t-ear">Right ear</span>
+            </button>
+          </div>
+          <div class="sd-res" id="sd-res">
+            <b class="sd-beat" id="sd-beat">10 Hz</b>
+            <span class="sd-cap" id="sd-cap">Tap both ears — together they make a beat.</span>
+          </div>
+        </div>
+
+        <div class="sci-block card">
+          <span class="sb-k"><span style="width:5px;height:5px;border-radius:50%;background:var(--azure);display:inline-block;"></span> Auditory entrainment</span>
+          <h3>Tuning the brain like an instrument</h3>
+          <p>The brain tends to fall into step with a steady external rhythm — a process called entrainment. echo maps each protocol to a target band: <b>delta</b> for sleep, <b>theta</b> for meditation, <b>alpha</b> for calm clarity, <b>beta</b> for focus, and <b>gamma</b> for peak cognition.</p>
+          <p>Twenty minutes of simply listening calms the nervous system — and, with practice, many listeners report easier focus and calmer attention.</p>
+        </div>
+
+        <div class="sci-block card">
+          <span class="sb-k"><span style="width:5px;height:5px;border-radius:50%;background:var(--azure);display:inline-block;"></span> The Monroe Institute</span>
+          <h3>Hemi-Sync &amp; the Gateway work</h3>
+          <p>Robert Monroe's research foundation pioneered "Hemi-Sync" — using binaural audio to coax the two hemispheres into a single, coherent state. It became the basis for its Gateway training programs, the lineage echo draws from.</p>
+        </div>
+
+        <div class="sci-block card">
+          <span class="sb-k"><span style="width:5px;height:5px;border-radius:50%;background:var(--azure);display:inline-block;"></span> The CIA Gateway report</span>
+          <h3>Declassified, 2003</h3>
+          <p>A 1983 US Army / CIA analysis of the Gateway Process examined hemispheric synchronization and consciousness. Now declassified, it remains a serious institutional touchstone for the field — the inspiration behind echo's approach.</p>
+          <div class="sci-exhibit" id="cia-exhibit">
+            <div class="ex-paper">
+              <div class="ex-meta"><span>APPROVED FOR RELEASE</span><span>CIA-RDP96-00788R001700210016-5</span></div>
+              <div class="ex-title">ANALYSIS AND ASSESSMENT<br/>OF THE GATEWAY PROCESS</div>
+              <p class="ex-line dim">prepared by the U.S. Army Operational Group — 1983. the following examines the mechanism by which</p>
+              <p class="ex-line ex-reveal">
+                <span class="ex-text">the technique induces a state of hemispheric synchronization, in which the mind becomes coherent and intensely focused.</span>
+                <span class="ex-redact" aria-hidden="true"><span class="ex-redact-lbl">REDACTED</span></span>
+              </p>
+              <p class="ex-line dim">███ ███████ ███ █████ ████ ████████ ███ ████</p>
+            </div>
+            <span class="ex-cap">Declassified under FOIA, 2003.</span>
+          </div>
+        </div>
+
+        <p class="sci-cite"><b>Educational context, not clinical claims.</b> echo is a wellness and cognitive-training tool. Effects vary between people and the science of entrainment is still developing. echo does not diagnose, treat, or cure any condition. <a href="legal/disclaimer.html" target="_blank" rel="noopener" style="color:var(--azure);font-weight:600;text-decoration:none;">Read the full disclaimer</a></p>
+      </div>
+    </section>
+
+    <!-- ░░ TAB BAR ░░ -->
+    <nav class="tabbar" aria-label="Primary">
+      <button class="tab on" data-tab="home" aria-label="Echo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a12 12 0 0 0 0 17M20.5 3.5a12 12 0 0 1 0 17"/></svg>
+        <span class="tlab">ECHO</span>
+      </button>
+      <button class="tab" data-tab="library" aria-label="Library">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.4"/></svg>
+        <span class="tlab">LIBRARY</span>
+      </button>
+      <button class="tab" data-tab="gallery" aria-label="Gallery">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg>
+        <span class="tlab">GALLERY</span>
+      </button>
+      <button class="tab" data-tab="science" aria-label="Science">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2.5l2-6 3 13 3-19 3 16 2-4H22"/></svg>
+        <span class="tlab">SCIENCE</span>
+      </button>
+    </nav>
+
+    <!-- ░░ PLAYER · guided first listen ░░ -->
+    <div class="player" id="player" hidden role="dialog" aria-label="Now playing — Alpha Clarity" aria-modal="true" data-signal="binaural">
+      <div class="pl-photo" aria-hidden="true"><img id="pl-photo-img" src="img/face-up.png" alt="" /></div>
+      <div class="pl-scrim" aria-hidden="true"></div>
+      <div class="pl-plate" id="pl-plate">N.03</div>
+      <button class="player-min" id="player-min" aria-label="Minimize player">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="player-actions">
+        <button class="pl-act" id="pl-save" aria-pressed="false" aria-label="Save this frequency">
+          <svg class="ic-off" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v16l-6-4-6 4z"/></svg>
+          <svg class="ic-on" width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h12v16l-6-4-6 4z"/></svg>
+        </button>
+        <button class="pl-act" id="pl-share" aria-label="Share this frequency">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg>
+        </button>
+      </div>
+
+      <div class="player-stage">
+        <div class="pbreath" id="pbreath" aria-hidden="true">
+          <span class="pb-ripple w1"></span><span class="pb-ripple w2"></span><span class="pb-ripple w3"></span>
+          <span class="pb-ring r1"></span>
+          <span class="pb-ring r2"></span>
+          <span class="pb-src l"></span><span class="pb-src r"></span>
+          <span class="pb-core"><span class="pb-refract"></span><span class="pb-rim"></span><span class="pb-grain"></span></span>
+        </div>
+      </div>
+
+      <div class="pl-capzone">
+        <div class="pl-caption" id="pl-caption" aria-live="polite"></div>
+      </div>
+
+      <div class="pl-info">
+        <span class="pl-sig" id="pl-sig"><span class="sd" aria-hidden="true"></span>Binaural · Headphones</span>
+        <h2 class="pl-name" id="pl-name">Alpha Clarity</h2>
+        <div class="pl-freq" id="pl-freq">200 Hz · 210 Hz → 10 Hz</div>
+        <div class="pl-intent" id="pl-intent">relaxed focus · creative clarity</div>
+        <div class="pl-timer">
+          <span id="pl-elapsed">00:00</span>
+          <span class="pl-total-wrap">
+            <button class="pl-total" id="pl-total" aria-haspopup="true" aria-expanded="false" aria-label="Session length — 15 minutes">15 min<span class="pl-caret" aria-hidden="true">▾</span></button>
+            <div class="pl-lenmenu" id="pl-lenmenu" hidden role="menu" aria-label="Session length">
+              <button data-min="5" role="menuitemradio">5</button>
+              <button data-min="10" role="menuitemradio">10</button>
+              <button data-min="15" role="menuitemradio">15</button>
+              <button data-min="20" role="menuitemradio">20</button>
+              <button data-min="30" role="menuitemradio">30</button>
+              <button data-min="45" role="menuitemradio">45</button>
+              <button data-min="inf" role="menuitemradio" aria-label="No limit">∞</button>
+            </div>
+          </span>
+        </div>
+        <div class="pl-track" aria-hidden="true">
+          <span class="pl-fill" id="pl-fill"></span>
+          <span class="pl-tick" id="pl-tick"><span class="pl-tick-dot"></span></span>
+        </div>
+        <div class="pl-shift" id="pl-shift">descending → 10 Hz · min 3</div>
+      </div>
+
+      <div class="pl-controls">
+        <div class="pl-row">
+          <button class="pl-amb on" id="pl-amb" aria-pressed="true" aria-label="Ambience layer"><span class="dot" aria-hidden="true"></span>Ambience</button>
+          <button class="pl-play" id="pl-play" aria-label="Pause"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+          <span aria-hidden="true"></span>
+        </div>
+        <button class="pl-why" id="pl-why">why does it sound like this?</button>
+      </div>
+
+      <!-- completion state — quiet check-in, same layout language -->
+      <div class="pl-complete" id="pl-complete" hidden>
+        <button class="player-min plc-min" id="plc-min" aria-label="Done — close and save this session">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="plc-stage">
+          <div class="pbreath rest" aria-hidden="true">
+            <span class="pb-ring r1"></span>
+            <span class="pb-ring r2"></span>
+            <span class="pb-src l"></span><span class="pb-src r"></span>
+            <span class="pb-core"><span class="pb-refract"></span><span class="pb-rim"></span></span>
+            <span class="plc-check" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+          </div>
+        </div>
+        <div class="plc-info">
+          <h2 class="plc-title">Session complete</h2>
+          <div class="plc-sub" id="plc-sub">Alpha Clarity · 15 min</div>
+        </div>
+        <div class="plc-checkin">
+          <span class="plc-q">How do you feel?</span>
+          <div class="plc-pills" role="group" aria-label="How do you feel?">
+            <button class="plc-pill" data-feel="calmer" aria-pressed="false">calmer</button>
+            <button class="plc-pill" data-feel="same" aria-pressed="false">same</button>
+            <button class="plc-pill" data-feel="sharper" aria-pressed="false">sharper</button>
+          </div>
+        </div>
+        <div class="plc-foot">
+          <div class="plc-foot-top">
+            <span class="plc-streak" id="plc-streak">Day 5 <span class="plc-dot" aria-hidden="true"></span></span>
+            <span class="plc-next" id="plc-next">same time tomorrow</span>            <span class="plc-upnext" id="plc-upnext" hidden></span>
+          </div>
+          <button class="plc-done" id="plc-done">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ░░ MINI-PLAYER · audio continues while minimized ░░ -->
+    <div class="miniplayer" id="miniplayer" hidden>
+      <button class="mini-main" id="mini-open" aria-label="Open player">
+        <span class="mini-orb" aria-hidden="true"></span>
+        <span class="mini-txt"><b id="mini-name">Alpha Clarity</b><span id="mini-time">00:00 / 15:00</span></span>
+      </button>
+      <button class="mini-play" id="mini-play" aria-label="Pause"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+    </div>
+
+    <!-- ░░ TOAST · save / share confirmations ░░ -->
+    <div class="echo-toast" id="echo-toast" role="status" aria-live="polite" hidden></div>
+
+    <!-- ░░ BONUS BOOK · flip-book reader (annual members) ░░ -->
+    <div class="bookreader" id="bookreader" hidden role="dialog" aria-modal="true" aria-label="echo — Volume One">
+      <div class="br-grain" aria-hidden="true"></div>
+      <div class="br-top">
+        <button class="br-close" id="br-close" aria-label="Close book">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <span class="br-id"><span class="br-id-word">echo</span><span class="br-id-sep">·</span>Volume One</span>
+        <span class="br-count"><b id="br-cur">1</b><i>/</i><span id="br-total">111</span></span>
+      </div>
+
+      <div class="br-stage" id="br-stage">
+        <div class="br-book" id="br-book">
+          <div class="br-page" id="br-page">
+            <div class="br-loading" id="br-loading"><span class="br-spin" aria-hidden="true"></span><span class="br-loading-lbl">Opening…</span></div>
+            <iframe class="br-frame" id="br-frame" title="echo — Volume One" referrerpolicy="no-referrer"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <div class="br-controls">
+        <button class="br-nav" id="br-prev" aria-label="Previous page">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <div class="br-scrub">
+          <input type="range" id="br-range" min="1" max="111" value="1" aria-label="Jump to page" />
+          <span class="br-scrub-lbl" id="br-lbl">Cover</span>
+        </div>
+        <button class="br-nav" id="br-next" aria-label="Next page">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ░░ CALM RESET overlay ░░ -->
+    <div class="resetscrim" id="reset-scrim">
+      <div class="breath" id="breath" aria-hidden="true"><div class="bring"></div><div class="bcore"></div></div>
+      <span class="reset-kick">Calm Reset</span>
+      <h2>Find your <b>baseline</b></h2>
+      <p>A 4·7·8 grounding breath. Let everything else go quiet and follow the light — in as it grows, out as it falls.</p>
+      <div class="reset-cue" id="reset-cue">Breathe in…</div>
+      <div class="reset-timer" id="reset-timer">2:00</div>
+      <div class="reset-actions">
+        <button class="reset-btn" id="reset-close">Close</button>
+        <button class="reset-btn solid" id="reset-toggle">Pause</button>
+      </div>
+    </div>
+
+    <!-- ░░ HEADPHONE & SAFETY SHEET · one-time, before the first binaural session ░░ -->
+    <div class="hpsheet" id="hpsheet" hidden role="dialog" aria-modal="true" aria-label="Headphones on">
+      <div class="hp-scrim" id="hp-scrim"></div>
+      <div class="hp-card">
+        <span class="hp-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="7" rx="1.4"/><rect x="17" y="13" width="4" height="7" rx="1.4"/></svg></span>
+        <h2 class="hp-title">Headphones on</h2>
+        <p class="hp-body">Binaural frequencies work by sending a slightly different tone to each ear — your brain creates the beat. Without stereo headphones, the effect doesn't happen.</p>
+        <div class="hp-safe">
+          <span class="hp-safe-k">Before you begin</span>
+          <ul>
+            <li>Keep the volume comfortable.</li>
+            <li>Don't listen while driving or operating machinery.</li>
+            <li>If you have epilepsy, a seizure disorder, or a pacemaker, talk to your doctor first.</li>
+          </ul>
+        </div>
+        <p class="hp-foot">echo is a wellness tool, not a medical device. It does not diagnose or treat any condition.</p>
+        <p class="hp-welcome">You're one of the first to hear this. Welcome to the founding beta.</p>
+        <button class="hp-btn" id="hp-ready">I'm ready</button>
+        <button class="hp-link hp-notnow" id="hp-notnow">Not now</button>
+        <a class="hp-link" href="legal/disclaimer.html" target="_blank" rel="noopener">Read the full disclaimer</a>
+      </div>
+    </div>
+
+    <!-- ░░ DELETE ACCOUNT · confirmation sheet ░░ -->
+    <div class="hpsheet" id="delsheet" hidden role="dialog" aria-modal="true" aria-label="Delete your account">
+      <div class="hp-scrim" id="del-scrim"></div>
+      <div class="hp-card">
+        <h2 class="hp-title">Delete your account?</h2>
+        <p class="hp-body">This permanently removes your account data from this device — listening history, streaks, saved frequencies and preferences. This can't be undone.</p>
+        <button class="hp-btn danger" id="del-confirm">Delete everything</button>
+        <button class="hp-link" id="del-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <style id="beta-fixes">
+    .beta-line{margin-top:12px;max-width:32ch;font-family:'Outfit',var(--ui);font-size:clamp(1rem,1.8vw,1.25rem);line-height:1.6;font-weight:300;letter-spacing:.1px;color:rgba(255,255,255,.92);text-shadow:0 1px 14px rgba(0,0,0,.4);text-wrap:pretty;}
+    .pro-pill{text-transform:uppercase;letter-spacing:.6px;}
+    .greet .coord{text-transform:uppercase;}
+    .hist-empty{padding:14px 2px 4px;font-size:13.5px;color:var(--faint);}
+    button.ai-recrow{width:100%;font:inherit;text-align:left;color:inherit;}
+    .srow.danger .sic{background:rgba(168,67,58,.1);color:#A8433A;}
+    .srow.danger .sname{color:#A8433A;}
+    .hpsheet{position:absolute;inset:0;z-index:340;display:flex;align-items:flex-end;opacity:0;transition:opacity .3s ease;}
+    .hpsheet[hidden]{display:none;}
+    .hpsheet.open{opacity:1;}
+    .hp-scrim{position:absolute;inset:0;background:rgba(20,24,30,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+    .hp-card{position:relative;width:100%;background:var(--surface);border-radius:26px 26px 0 0;padding:26px 22px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.25);transform:translateY(26px);transition:transform .34s cubic-bezier(.3,.9,.3,1);display:flex;flex-direction:column;gap:14px;}
+    .hpsheet.open .hp-card{transform:translateY(0);}
+    .hp-ico{width:44px;height:44px;border-radius:14px;background:var(--azure-tint);color:var(--azure);display:flex;align-items:center;justify-content:center;}
+    .hp-title{font-family:var(--serif);font-weight:500;font-size:26px;letter-spacing:-.4px;color:var(--ink);}
+    .hp-body{font-size:14.5px;line-height:1.55;color:var(--muted);text-wrap:pretty;}
+    .hp-safe{border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+    .hp-safe-k{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--azure);}
+    .hp-safe ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+    .hp-safe li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.45;color:var(--muted);}
+    .hp-safe li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--azure);}
+    .hp-foot{font-size:12px;line-height:1.5;color:var(--faint);}
+    .hp-btn{width:100%;height:52px;border:0;border-radius:99px;background:var(--azure);color:#fff;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 10px 24px -10px rgba(62,128,176,.55);transition:transform .14s ease, filter .2s;}
+    .hp-btn:hover{filter:brightness(1.06);}
+    .hp-btn:active{transform:scale(.98);}
+    .hp-btn.danger{background:#A8433A;box-shadow:0 10px 24px -10px rgba(168,67,58,.5);}
+    .hp-link{align-self:center;background:none;border:0;font-size:13px;font-weight:600;color:var(--azure);cursor:pointer;text-decoration:none;padding:4px;}
+    .hp-welcome{font-family:'Outfit',var(--ui);font-weight:300;font-size:14.5px;line-height:1.55;color:var(--ink-2);}
+    .hp-notnow{color:var(--muted);font-weight:400;margin-top:-6px;}
+    .hp-notnow:hover{color:var(--ink);}
+    </style>
+
+    <!-- ░░ AUTH / ONBOARDING — sign-in gate ░░ -->
+    <div class="auth" id="auth" hidden aria-label="Sign in to echo.||">
+      <img class="auth-bg" src="img/astro-woman.png" alt="" />
+      <div class="auth-veil" aria-hidden="true"></div>
+      <div class="auth-scrim" aria-hidden="true"></div>
+
+      <div class="auth-statusbar">
+        <span>9:41</span>
+        <span class="sb-icons" aria-hidden="true">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".4"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 3.5c2 0 3.8.8 5.1 2M3.4 5.5A7.2 7.2 0 0 1 8.5 3.5M1 5.2A10.4 10.4 0 0 1 8.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8.5" cy="9.5" r="1.4" fill="currentColor"/></svg>
+          <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="1" y="1" width="21" height="10" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="3" y="3" width="16" height="6" rx="1.5" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx=".75" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+      <div class="auth-brand">
+        <span class="wordmark" aria-label="echo.11">echo<span class="mk" aria-hidden="true"><i></i><i></i></span></span>
+      </div>
+
+      <div class="auth-inner">
+        <div class="auth-head">
+          <span class="auth-kick"><span class="ln" aria-hidden="true"></span>Binaural frequencies</span>
+          <h1 class="auth-title">Twenty minutes<br />to a clearer brain.</h1>
+          <p class="auth-sub">22 frequencies that settle the nervous system and sharpen how you think, learn and focus. Sign in to keep your echo in sync across every device.</p>
+        </div>
+
+        <div class="auth-providers">
+          <button class="auth-provider apple" id="auth-apple" aria-label="Continue with Apple">
+            <svg class="pic" viewBox="0 0 24 24" fill="currentColor"><path d="M16.36 12.78c.02 2.46 2.16 3.28 2.18 3.29-.02.06-.34 1.17-1.13 2.32-.68.99-1.39 1.97-2.5 1.99-1.1.02-1.45-.65-2.7-.65-1.26 0-1.65.63-2.69.67-1.08.04-1.9-1.07-2.58-2.06-1.4-2.02-2.47-5.72-1.03-8.21.71-1.24 1.99-2.02 3.37-2.04 1.06-.02 2.07.72 2.72.72.65 0 1.87-.89 3.15-.76.54.02 2.05.22 3.01 1.64-.08.05-1.8 1.05-1.78 3.16M14.3 5.36c.57-.69.96-1.65.85-2.61-.83.03-1.83.55-2.42 1.24-.53.61-1 1.59-.87 2.53.92.07 1.87-.47 2.44-1.16"/></svg>
+            Continue with Apple
+          </button>
+          <button class="auth-provider google" id="auth-google" aria-label="Continue with Google">
+            <svg class="pic" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.23c0-.74-.07-1.45-.19-2.13H12v4.03h5.89a5.04 5.04 0 0 1-2.18 3.31v2.75h3.53c2.07-1.9 3.26-4.71 3.26-7.96"/><path fill="#34A853" d="M12 23c2.95 0 5.43-.98 7.24-2.65l-3.53-2.75c-.98.66-2.23 1.05-3.71 1.05-2.85 0-5.27-1.93-6.13-4.52H2.22v2.84A11 11 0 0 0 12 23"/><path fill="#FBBC05" d="M5.87 14.13a6.6 6.6 0 0 1 0-4.26V7.03H2.22a11 11 0 0 0 0 9.94z"/><path fill="#EA4335" d="M12 5.35c1.61 0 3.05.55 4.18 1.64l3.13-3.13C17.43 2.1 14.95 1 12 1 7.7 1 3.99 3.47 2.22 7.03l3.65 2.84C6.73 7.28 9.15 5.35 12 5.35"/></svg>
+            Continue with Google
+          </button>
+        </div>
+
+        <div class="auth-divider"><span class="ln" aria-hidden="true"></span><span>or</span><span class="ln" aria-hidden="true"></span></div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="auth-email">Email</label>
+          <input class="auth-input" id="auth-email" type="email" inputmode="email" autocapitalize="none" autocomplete="email" placeholder="you@email.com" aria-label="Email address" />
+          <button class="auth-submit" id="auth-email-btn" aria-label="Continue with email">Continue with email</button>
+        </div>
+
+        <button class="auth-explore" id="auth-guest" aria-label="Explore without an account">Explore without an account</button>
+
+        <p class="auth-legal">By continuing you agree to our <a href="legal/terms.html" target="_blank" rel="noopener">Terms</a> &amp; <a href="legal/privacy.html" target="_blank" rel="noopener">Privacy&nbsp;Policy</a></p>
+      </div>
+    </div>
+
+    <!-- ░░ SPLASH / boot ░░ -->
+    <div class="splash" id="splash" role="img" aria-label="echo.|| booting">
+      <video class="splash-video" id="splash-video" autoplay muted loop playsinline preload="metadata" poster="img/astro-woman.png">
+        <source src="media/splash.mp4" type="video/mp4" />
+      </video>
+      <div class="splash-veil" aria-hidden="true"></div>
+      <div class="splash-mark">
+        <span class="splash-word" aria-hidden="true">echo<span class="splash-mk"><i></i><i></i></span></span>
+        <span class="splash-tag">binaural frequencies for a clearer brain</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ DESIGN NOTES ════════ -->
+<aside class="flowcard">
+  <span class="fc-mark">echo.|| · canonical app</span>
+  <h3>Light system, combined</h3>
+  <div class="flowstep"><span class="n">1</span><p>Original-site palette restored — <b>Cloud Dancer + Geist</b>, blue accent — with depth and 3D liquid-glass buttons, large accessible type.</p></div>
+  <div class="flowstep"><span class="n">2</span><p>Video hero on top; below it, the <b>22 frequencies split into two big category cards</b> (Binaural / Pure-Tone).</p></div>
+  <div class="flowstep"><span class="n">3</span><p>Podcast is gone — replaced by a <b>Gallery</b> of open &amp; founding lock-screen stills with a weekly empowering line.</p></div>
+  <div class="flowstep"><span class="n">4</span><p>Header: <b>echo</b> logo, an Apple-safe <b>Calm-Reset</b> breath pulse, and a glass <b>profile</b> avatar.</p></div>
+  <div class="flowstep"><span class="n">5</span><p><b>Profile</b> holds listening history + an <b>AI agent</b> that reads your patterns and recommends. <b>The Science</b> explains binaural beats (Monroe / CIA Gateway).</p></div>
+  <p class="note">Try it: open a category, switch Open/Founding in Gallery, tap the breath pulse, or open Profile to see the agent.</p>
+</aside>
+
+<script src="echo11-app-data.js"></script>
+<script>
+  var device = document.querySelector('.device');
+  var views = { home:'view-home', library:'view-library', gallery:'view-gallery', profile:'view-profile', science:'view-science' };
+  var tabFor = { home:'home', library:'library', gallery:'gallery', science:'science', profile:null };
+
+  function showView(name){
+    if(typeof window.__echoSilenceDemo==='function') window.__echoSilenceDemo();   // never let the demo bleed across views
+    Object.values(views).forEach(function(id){ document.getElementById(id).hidden = true; });
+    document.getElementById(views[name]).hidden = false;
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('on', t.dataset.tab===tabFor[name]); });
+    device.setAttribute('data-screen', name==='science'?'science':name);
+    device.classList.remove('scrolled');
+    document.getElementById(views[name]).scrollTop = 0;
+    if(name==='home' && typeof window.__echoRenderHome==='function') window.__echoRenderHome();   // keep home state fresh on every visit
+    if(name==='library') renderSaved();                  // saved frequencies surface at the top of the Archive
+    if(name==='profile') renderProfile();                // reflect any newly-completed sessions in history
+  }
+
+
+  function renderNodes(filter){
+    var list = ECHO.FREQS.filter(function(f){ return filter==='all' ? true : f.cat===filter; });
+    var lab = filter==='all'?'All':(filter==='binaural'?'Binaural':'Pure Tone');
+    document.getElementById('lib-note').textContent = lab + ' · ' + list.length + ' frequencies';
+    document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.classList.toggle('on', c.dataset.filter===filter); });
+    document.getElementById('node-grid').innerHTML = list.map(function(f,i){
+      var idx = String(i+1).padStart(2,'0');
+      return '<button class="node" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
+        + '<img src="'+f.img+'" alt="'+f.n+'"/>'
+        + '<span class="nscrim"></span><span class="nring"></span><span class="ntick tl"></span>'
+        + '<span class="ncore"></span><span class="nhz">'+f.hz+'</span>'
+        + '<span class="nidx">N.'+idx+'</span>'
+        + '<span class="nbody"><span class="nname">'+f.n+'</span><span class="nsub">'+f.sub+'</span></span>'
+        + '</button>';
+    }).join('');
+  }
+
+  function renderSaved(){
+    var sec=document.getElementById('saved-sec'), row=document.getElementById('saved-row');
+    if(!sec||!row) return;
+    var names=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:saved')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
+    var items=names.map(function(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0]; }).filter(Boolean);
+    if(!items.length){ sec.hidden=true; row.innerHTML=''; return; }
+    sec.hidden=false;
+    var x='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    row.innerHTML=items.map(function(f){
+      return '<button class="saved-card" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
+        + '<img src="'+f.img+'" alt=""/><span class="sc-scrim"></span>'
+        + '<span class="sc-hz">'+f.hz+'</span><span class="sc-name">'+f.n+'</span>'
+        + '<span class="sc-rm" data-rm="'+f.n+'" role="button" aria-label="Remove '+f.n+' from saved">'+x+'</span>'
+        + '</button>';
+    }).join('');
+  }
+  window.__echoRenderSaved=renderSaved;
+  document.getElementById('saved-row').addEventListener('click', function(e){
+    var rm=e.target.closest('[data-rm]');
+    if(rm){ e.stopPropagation();
+      var names=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:saved')); return Array.isArray(v)?v:[]; }catch(e2){ return []; } })().filter(function(n){ return n!==rm.dataset.rm; });
+      localStorage.setItem('echo:saved', JSON.stringify(names));
+      renderSaved(); if(typeof window.__echoSyncSave==='function') window.__echoSyncSave();
+      return; }
+    var card=e.target.closest('.saved-card');
+    if(card && typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:card.dataset.fname,hz:card.dataset.fhz,cat:card.dataset.fcat}});
+  });
+
+  function renderGallery(seg){
+    document.getElementById('week-quote').innerHTML =
+      '<img src="img/veil.png" alt=""/><span class="qscrim"></span>'
+      + '<span class="qbody"><span class="qweek">'+ECHO.WEEK_QUOTE.week+' · this week</span>'
+      + '<div class="qtext">'+ECHO.WEEK_QUOTE.text+'</div></span>';
+    var list = ECHO.WALLPAPERS.filter(function(w){ return seg==='all'?true:(seg==='pro'?w.pro:!w.pro); });
+    document.querySelectorAll('#gal-seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.seg===seg); });
+    var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
+    document.getElementById('gal-grid').innerHTML = list.map(function(w){
+      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><span class="wdl">'+dl+'</span></div>';
+    }).join('');
+    var check='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
+    document.querySelectorAll('#gal-grid .wp[data-free]').forEach(function(el){
+      el.addEventListener('click', function(){ var b=el.querySelector('.wdl'); if(!b)return; b.innerHTML=check; b.style.background='#fff'; b.style.color='var(--azure)'; setTimeout(function(){ b.innerHTML=dl; b.style.background=''; b.style.color=''; },1400); });
+    });
+  }
+
+  function renderProfile(){
+    var storedHist = (function(){ try{ var v=JSON.parse(localStorage.getItem('echo:history')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
+    function pnum(k){ var v=null; try{ v=localStorage.getItem(k); }catch(e){} var n=parseInt(v||'0',10); return isNaN(n)?0:n; }
+    var streak=pnum('echo:streak'), week=pnum('echo:minWeek'), sessions=storedHist.length;
+    document.getElementById('prof-stats').innerHTML =
+      '<div class="pstat glass"><span class="v">'+streak+'<em> d</em></span><span class="k">Streak</span></div>'
+      + '<div class="pstat glass"><span class="v">'+week+'<em> m</em></span><span class="k">This week</span></div>'
+      + '<div class="pstat glass"><span class="v">'+sessions+'</span><span class="k">Sessions</span></div>';
+    var aiTop = '<div class="ai-top"><span class="ai-orb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="3.2"/></svg></span>'
+      + '<div class="ai-meta"><b>echo agent</b><span>Reads time · duration · band</span></div></div>';
+    var aiDisc = '<p class="ai-disc">Patterns &amp; suggestions only — your echo agent is a wellness guide, not medical advice. Analysis runs on your listening data.</p>';
+    if(sessions < 3){
+      document.getElementById('ai-panel').innerHTML = aiTop
+        + '<div class="ai-body"><p>Not enough echo yet. Complete <b>a few sessions</b> and your agent will start reading your patterns — time of day, duration and band — then suggest what to tune next.</p></div>'
+        + aiDisc;
+    } else {
+      var ai = ECHO.buildAI();
+      document.getElementById('ai-panel').innerHTML = aiTop
+        + '<div class="ai-body"><p>'+ai.summary+'</p></div>'
+        + '<div class="ai-rec">'+ai.recs.map(function(r){ return '<button class="ai-recrow" data-recname="'+r.n+'" aria-label="Play '+r.n+' — '+r.hz+'"><span class="arr"></span><span class="ari"><b>'+r.n+'</b><span>'+r.why+'</span></span><span class="arhz">'+r.hz+'</span></button>'; }).join('')+'</div>'
+        + aiDisc;
+    }
+    function freqByName(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0] || {}; }
+    function dayDiff(ts){ var a=new Date(); a.setHours(0,0,0,0); var b=new Date(ts); b.setHours(0,0,0,0); return Math.round((a-b)/86400000); }
+    function histWhen(ts){ var d=new Date(ts); var hh=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); var dd=dayDiff(ts); var day=dd<=0?'Today':dd===1?'Yesterday':dd+' days ago'; return day+' · '+hh; }
+    var allHist = storedHist.map(function(h){ var f=freqByName(h.name); return { n:h.name, hz:h.hz, cat:h.cat||f.cat||'binaural', min:h.min, when:histWhen(h.ts), img:f.img||'img/face-up.png', feel:h.feel }; });
+    if(!allHist.length){ document.getElementById('hist-list').innerHTML='<div class="hist-empty">Your sessions will appear here.</div>'; return; }
+    document.getElementById('hist-list').innerHTML = allHist.map(function(h){
+      var feel = h.feel ? ' · <span class="hfeel">felt '+h.feel+'</span>' : '';
+      return '<div class="hrow"><span class="hthumb"><img src="'+h.img+'" alt=""/></span>'
+        + '<span class="hmid"><span class="hname">'+h.n+'</span><span class="hsub">'+h.hz+' · '+h.when+feel+'</span></span>'
+        + '<span class="hdur"><b>'+h.min+' min</b>'+(h.cat==='binaural'?'Binaural':'Pure tone')+'</span></div>';
+    }).join('');
+  }
+
+  // tabs
+  document.querySelectorAll('.tab').forEach(function(t){ t.addEventListener('click', function(){ showView(t.dataset.tab); }); });
+  document.getElementById('profile-open').addEventListener('click', function(){ showView('profile'); });
+  document.getElementById('profile-back').addEventListener('click', function(){ showView('home'); });
+
+  // AI agent recommendations → open the player on that frequency
+  document.getElementById('ai-panel').addEventListener('click', function(e){
+    var row=e.target.closest('[data-recname]'); if(!row) return;
+    var f=ECHO.FREQS.filter(function(x){ return x.n===row.getAttribute('data-recname'); })[0]; if(!f) return;
+    if(typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:f.n,hz:f.hz,cat:f.cat}});
+  });
+
+  // Delete account — confirmation sheet → clear all echo data, back to the auth gate
+  (function(){
+    var row=document.getElementById('delete-account'), sheet=document.getElementById('delsheet');
+    if(!row||!sheet) return;
+    function hide(){ sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380); }
+    row.addEventListener('click', function(e){ e.preventDefault(); sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); }); });
+    document.getElementById('del-cancel').addEventListener('click', hide);
+    document.getElementById('del-scrim').addEventListener('click', hide);
+    document.getElementById('del-confirm').addEventListener('click', function(){
+      try{ var ks=[]; for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k&&k.indexOf('echo:')===0&&k.indexOf('echo:audit')!==0) ks.push(k); } ks.forEach(function(k){ localStorage.removeItem(k); }); }catch(e){}
+      location.reload();
+    });
+  })();
+
+  // home scroll → glass header
+  document.getElementById('view-home').addEventListener('scroll', function(e){
+    if(device.getAttribute('data-screen')!=='home') return;
+    device.classList.toggle('scrolled', e.target.scrollTop > 130);
+  });
+
+  // hero video respects Reduce Motion → static poster frame (always muted; no loop when reduced)
+  (function(){
+    var v=document.querySelector('.hero-media'); if(!v) return;
+    v.muted=true;
+    var rm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
+    function apply(){
+      if(rm&&rm.matches){ v.removeAttribute('autoplay'); v.loop=false; try{v.pause();v.currentTime=0;}catch(e){} }
+      else { v.loop=true; var p=v.play&&v.play(); if(p&&p.catch) p.catch(function(){}); }
+    }
+    apply(); if(rm&&rm.addEventListener) rm.addEventListener('change', apply);
+  })();
+
+  // category cards + resume → library filtered
+  document.querySelectorAll('[data-cat]').forEach(function(card){
+    card.addEventListener('click', function(e){ if(e.target.closest('.now-play')) return; renderNodes(card.dataset.cat); showView('library'); });
+  });
+  document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.addEventListener('click', function(){ renderNodes(c.dataset.filter); }); });
+  document.querySelectorAll('#gal-seg button').forEach(function(b){ b.addEventListener('click', function(){ renderGallery(b.dataset.seg); }); });
+
+  // plan toggle
+  document.querySelectorAll('.plan').forEach(function(p){ p.addEventListener('click', function(){ document.querySelectorAll('.plan').forEach(function(x){ x.classList.toggle('on', x===p); }); }); });
+
+  // science screen — tab + home/profile cards open it as a normal page; the player's "why?" opens it as an overlay SHEET (audio keeps playing)
+  var sciView = document.getElementById('view-science');
+  var sciSheet = false;
+  function openScienceSheet(){
+    sciSheet = true;
+    sciView.hidden = false;
+    sciView.classList.add('as-sheet');
+    sciView.scrollTop = 0;
+    var pl=document.getElementById('player');
+    if(pl && !pl.hidden) pl.style.visibility='hidden';   // hide the live player beneath; audio keeps playing
+    requestAnimationFrame(function(){ sciView.classList.add('in'); });
+  }
+  function closeScienceSheet(){
+    if(typeof window.__echoSilenceDemo==='function') window.__echoSilenceDemo();
+    sciView.classList.remove('in');
+    setTimeout(function(){
+      sciView.classList.remove('as-sheet'); sciView.hidden = true; sciSheet = false;
+      var pl=document.getElementById('player');
+      if(pl) pl.style.visibility='';                      // restore the running player exactly as it was
+    }, 460);
+  }
+  document.getElementById('science-open').addEventListener('click', function(){ showView('science'); });
+  document.getElementById('srow-science').addEventListener('click', function(){ showView('science'); });
+  document.getElementById('science-back').addEventListener('click', function(){
+    if(sciSheet){ closeScienceSheet(); }     // back to the player, audio never stopped
+    else { showView('home'); }
+  });
+
+  /* ── interactive binaural demo: 200 Hz hard-left, 210 Hz hard-right; both together = real 10 Hz beat ── */
+  (function(){
+    var demo=document.getElementById('sci-demo'); if(!demo) return;
+    var leftBtn=document.getElementById('sd-left'), rightBtn=document.getElementById('sd-right');
+    var res=document.getElementById('sd-res'), cap=document.getElementById('sd-cap');
+    var dctx=null, L=null, R=null, state={left:false,right:false};
+    function build(){
+      if(dctx) return;
+      var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      dctx=new AC();
+      function ear(freq,pan){
+        var osc=dctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+        var g=dctx.createGain(); g.gain.value=0;
+        var p=dctx.createStereoPanner? dctx.createStereoPanner() : null;
+        if(p){ p.pan.value=pan; osc.connect(g); g.connect(p); p.connect(dctx.destination); }
+        else { osc.connect(g); g.connect(dctx.destination); }   // graceful mono fallback
+        osc.start();
+        return g;
+      }
+      L=ear(200,-1); R=ear(210,1);
+    }
+    function setEar(g,on){ if(!g||!dctx) return; var t=dctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t); g.gain.linearRampToValueAtTime(on?0.085:0.0001, t+0.08); }
+    function refresh(){
+      leftBtn.setAttribute('aria-pressed', state.left?'true':'false');
+      rightBtn.setAttribute('aria-pressed', state.right?'true':'false');
+      var both=state.left&&state.right;
+      res.classList.toggle('both', both);
+      if(both) cap.textContent="you're hearing a tone that isn't there";
+      else if(state.left) cap.textContent='200 Hz · left channel only';
+      else if(state.right) cap.textContent='210 Hz · right channel only';
+      else cap.textContent='Tap both ears — together they make a beat.';
+    }
+    function toggle(which){
+      build(); if(dctx&&dctx.state==='suspended') dctx.resume();
+      state[which]=!state[which];
+      setEar(which==='left'?L:R, state[which]);
+      refresh();
+    }
+    leftBtn.addEventListener('click', function(){ toggle('left'); });
+    rightBtn.addEventListener('click', function(){ toggle('right'); });
+    // stop the demo whenever the Science view leaves the screen, so it never bleeds into the player
+    function silence(){ state.left=state.right=false; setEar(L,false); setEar(R,false); refresh(); if(dctx&&dctx.state==='running') dctx.suspend(); }
+    window.__echoSilenceDemo=silence;
+  })();
+
+  /* ── CIA exhibit: slide the redaction bar away when it scrolls into view ── */
+  (function(){
+    var ex=document.getElementById('cia-exhibit'); if(!ex) return;
+    if(!('IntersectionObserver' in window)){ ex.classList.add('reveal'); return; }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ ex.classList.add('reveal'); io.disconnect(); } });
+    }, {threshold:0.55});
+    io.observe(ex);
+  })();
+
+  // calm reset
+  var resetScrim=document.getElementById('reset-scrim'), breath=document.getElementById('breath'), cueEl=document.getElementById('reset-cue'), timerEl=document.getElementById('reset-timer'), toggleBtn=document.getElementById('reset-toggle');
+  var phases=[['Breathe in…',4],['Hold',7],['Breathe out…',8]]; // 4-7-8
+  var pi=0, pt=0, remain=120, running=false, tick=null;
+  function fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  function step(){
+    if(!running) return;
+    pt--; remain--;
+    if(remain<=0){ stopReset(true); return; }
+    timerEl.textContent=fmt(remain);
+    if(pt<=0){ pi=(pi+1)%phases.length; pt=phases[pi][1]; cueEl.textContent=phases[pi][0]; }
+  }
+  function startReset(){ pi=0; pt=phases[0][1]; remain=120; running=true; cueEl.textContent=phases[0][0]; timerEl.textContent=fmt(remain); toggleBtn.textContent='Pause'; breath.classList.add('run'); clearInterval(tick); tick=setInterval(step,1000); }
+  function stopReset(done){ running=false; clearInterval(tick); breath.classList.remove('run'); if(done){ cueEl.textContent='Grounded'; } resetScrim.classList.remove('open'); }
+  document.getElementById('reset-open').addEventListener('click', function(){ resetScrim.classList.add('open'); startReset(); });
+  document.getElementById('reset-close').addEventListener('click', function(){ stopReset(false); });
+  toggleBtn.addEventListener('click', function(){ running=!running; toggleBtn.textContent=running?'Pause':'Resume'; breath.classList.toggle('run',running); });
+
+  // boot — pre-render the app behind the splash
+  renderNodes('all'); renderGallery('all'); renderProfile(); showView('home');
+
+  /* ─── AUTH STATE + ROUTING ─────────────────────────────────────
+     The splash holds while its boot video plays, then routes:
+       • signed in  → Home (app)
+       • signed out → Onboarding / sign-in
+     Auth state persists across reloads in localStorage. */
+  var AUTH_KEY = 'echo:auth';
+  function isSignedIn(){ try{ return localStorage.getItem(AUTH_KEY) === '1'; }catch(e){ return false; } }
+  function setSignedIn(method){ try{ localStorage.setItem(AUTH_KEY,'1'); if(method) localStorage.setItem('echo:authMethod', method); }catch(e){} }
+  function clearAuth(){ try{ localStorage.removeItem(AUTH_KEY); localStorage.removeItem('echo:authMethod'); }catch(e){} }
+
+  var authEl = document.getElementById('auth');
+  function showAuth(){ authEl.hidden = false; requestAnimationFrame(function(){ authEl.classList.add('in'); }); }
+  function hideAuth(){
+    authEl.classList.remove('in'); authEl.classList.add('out');
+    setTimeout(function(){ authEl.hidden = true; authEl.classList.remove('out'); }, 560);
+  }
+
+  // Decide destination once the splash has finished. Signed-out users get the
+  // onboarding screen revealed underneath the fading splash; signed-in users
+  // fall straight through to Home (already rendered behind the splash).
+  function routeFromSplash(){ if(!isSignedIn()) showAuth(); }
+
+  // Completing any sign-in method → persist + drop into the app on Home.
+  function completeAuth(method){ setSignedIn(method); showView('home'); device.scrollTop = 0; hideAuth(); }
+
+  document.getElementById('auth-apple').addEventListener('click', function(){ completeAuth('apple'); });
+  document.getElementById('auth-google').addEventListener('click', function(){ completeAuth('google'); });
+  document.getElementById('auth-guest').addEventListener('click', function(){ completeAuth('guest'); });
+  (function(){
+    var input = document.getElementById('auth-email');
+    var btn = document.getElementById('auth-email-btn');
+    function submit(){
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.value.trim())){ input.classList.add('invalid'); input.focus(); return; }
+      completeAuth('email');
+    }
+    btn.addEventListener('click', submit);
+    input.addEventListener('input', function(){ input.classList.remove('invalid'); });
+    input.addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
+  })();
+
+  // Sign out (Profile) → end the session and return to the onboarding gate.
+  var signoutBtn = document.getElementById('signout');
+  if(signoutBtn) signoutBtn.addEventListener('click', function(e){ e.preventDefault(); clearAuth(); showView('home'); showAuth(); });
+  window.echoSignOut = function(){ clearAuth(); location.reload(); };  // console helper
+
+  /* ─── SPLASH: wait for the boot video to finish, THEN route ─────
+     Routing happens only after the animation completes — never a
+     premature jump. A safety cap covers a video that can't autoplay,
+     and a tap skips ahead once a short minimum hold has elapsed. */
+  (function(){
+    var sp = document.getElementById('splash'); if(!sp) return;
+    var vid = document.getElementById('splash-video');
+    var done = false, started = Date.now();
+    var MIN = 1500;
+    function finish(){
+      if(done) return; done = true;
+      clearTimeout(maxT);
+      routeFromSplash();                       // decide destination first…
+      sp.classList.add('hide');                // …then cross-fade the splash away
+      setTimeout(function(){ sp.hidden = true; }, 950);
+    }
+    // Safety fallback ONLY for when 'ended' never fires (e.g. autoplay blocked).
+    // Sized to OUTLAST the clip so the splash always holds for the full video.
+    var maxT = setTimeout(finish, 12000);
+    function armCap(){
+      if(vid && isFinite(vid.duration) && vid.duration > 0){
+        clearTimeout(maxT);
+        maxT = setTimeout(finish, vid.duration * 1000 + 1500);
+      }
+    }
+    if(vid){
+      vid.addEventListener('loadedmetadata', armCap);
+      armCap();
+      vid.addEventListener('ended', finish);   // ← normal path: route when the video finishes
+      // loop is on (iOS-safe autoplay) so 'ended' won't fire — route at the end of the first pass instead.
+      vid.addEventListener('timeupdate', function(){ if(isFinite(vid.duration) && vid.duration>0 && vid.currentTime >= vid.duration - 0.25) finish(); });
+      vid.addEventListener('error', function(){ clearTimeout(maxT); setTimeout(finish, 1600); });
+      var p = vid.play && vid.play();
+      if(p && p.catch) p.catch(function(){ /* autoplay blocked → cap handles it */ });
+    }
+    sp.addEventListener('click', function(){ if(Date.now()-started >= MIN) finish(); });
+  })();
+</script>
+
+<!-- ░░ iOS AUTOPLAY SAFETY NET ░░ -->
+<script>
+/* If iOS blocked inline autoplay, the very first user gesture anywhere starts
+   any still-paused <video>. Reduce Motion is respected: looping videos stay on
+   their poster frame and are never force-played. Errors are caught and ignored. */
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function kick(){
+    document.querySelectorAll('video').forEach(function(v){
+      if(reduce && (v.loop || v.hasAttribute('data-respect-reduce'))) return;                 // reduced motion → keep the poster
+      if(v.paused){ try{ var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+    });
+  }
+  ['touchstart','pointerdown','click'].forEach(function(ev){
+    window.addEventListener(ev, kick, {once:true, passive:true});
+  });
+})();
+</script>
+
+<!-- ░░ PLAYER ENGINE · binaural audio + guided first-listen ░░ -->
+<script>
+(function(){
+  var FL_KEY='echo:firstListen';     // 'done' once the guided captions have been seen
+  var SS_KEY='echo:sessionStarted';  // '1' once any session has been opened (gates Resume card)
+  var EL_KEY='echo:plElapsed';       // seconds elapsed, for Resume
+  /* ── persistence (beta · localStorage, no backend) ── */
+  var OPEN_KEY='echo:open';          // JSON {name,hz,cat,elapsed,session} while a session is mid-way; absent = none open
+  var LAST_KEY='echo:last';          // JSON {name,hz,cat,ts,min} of the last COMPLETED session
+  var STREAK_KEY='echo:streak', WEEK_KEY='echo:minWeek', BEST_KEY='echo:best', CHK_KEY='echo:checkin';
+  var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced in Library
+  var HIST_KEY='echo:history';       // array of completed sessions {name,hz,cat,min,ts,feel}, newest first
+  var SESS_KEY='echo:sessions';      // sessions rows, Supabase-shaped {protocol,hz,band,minutes,mood,completed,started_at} — syncs after signup
+  function lget(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
+  function lset(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function ljson(k){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){ return null; } }
+  function lnum(k,d){ var n=parseInt(lget(k,''+d),10); return isNaN(n)?d:n; }
+  // no seeded demo data — new users start at zero and earn every number
+
+  var player=document.getElementById('player');
+  if(!player) return;
+  var capEl=document.getElementById('pl-caption');
+  var elapsedEl=document.getElementById('pl-elapsed');
+  var totalEl=document.getElementById('pl-total');
+  var lenmenu=document.getElementById('pl-lenmenu');
+  var fillEl=document.getElementById('pl-fill');
+  var tickEl=document.getElementById('pl-tick');
+  var nameEl=document.getElementById('pl-name');
+  var freqEl=document.getElementById('pl-freq');
+  var playBtn=document.getElementById('pl-play');
+  var ambBtn=document.getElementById('pl-amb');
+  var minBtn=document.getElementById('player-min');
+  var whyBtn=document.getElementById('pl-why');
+  var saveBtn=document.getElementById('pl-save');
+  var shareBtn=document.getElementById('pl-share');
+  var toastEl=document.getElementById('echo-toast');
+  var intentEl=document.getElementById('pl-intent');
+  var plateEl=document.getElementById('pl-plate');
+  var sigEl=document.getElementById('pl-sig');
+  var shiftEl=document.getElementById('pl-shift');
+  var photoEl=document.getElementById('pl-photo-img');
+  var completeEl=document.getElementById('pl-complete');
+  var plcSub=document.getElementById('plc-sub');
+  var plcStreak=document.getElementById('plc-streak');
+  var plcDone=document.getElementById('plc-done');
+  var plcPills=completeEl?completeEl.querySelectorAll('.plc-pill'):[];
+  var mini=document.getElementById('miniplayer');
+  var miniOpen=document.getElementById('mini-open');
+  var miniPlay=document.getElementById('mini-play');
+  var miniName=document.getElementById('mini-name');
+  var miniTime=document.getElementById('mini-time');
+
+  var PLAY='<svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg>';
+  var PAUSE='<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+  var MPLAY='<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg>';
+  var MPAUSE='<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+
+  var CAPS=[
+    'This is not music.',
+    'Your left ear hears 200 Hz.',
+    'Your right ear hears 210 Hz.',
+    "The 10 Hz between them doesn't exist in the room.",
+    "Your brain is creating it. That's the instrument."
+  ];
+
+  /* ── BAND_THEMES · the single source of truth for band accent + motion metaphor.
+     accent/pale tint the glass orb (one hue per protocol, nothing else);
+     tempo is the FULL animation cycle in seconds and is NEVER derived from the
+     audio frequency — minimum 5s, photosensitivity-safe and Guideline 1.4 safe. ── */
+  var BAND_THEMES={
+    delta:{ accent:'#4B53B8', pale:'#C9CDF6', tempo:15, motion:'slow heavy breath' },
+    theta:{ accent:'#7A4FC0', pale:'#DCC9F3', tempo:12, motion:'asymmetric drift' },
+    alpha:{ accent:'#3E80B0', pale:'#CFF6FF', tempo:9,  motion:'calm fluid glow' },
+    beta: { accent:'#4E7290', pale:'#CFE0EF', tempo:7,  motion:'tighter alert pulse' },
+    gamma:{ accent:'#8F7B4A', pale:'#F5EEDC', tempo:11, motion:'fine shimmer' },
+    tone: { accent:'#7A7166', pale:'#F1ECE3', tempo:10, motion:'concentric ripple' }
+  };
+  /* photographic plates come from the Archive catalog; faces anchor to the top
+     third so the orb never lands on the eyes */
+  var CATALOG=(window.ECHO&&window.ECHO.FREQS)?window.ECHO.FREQS:[];
+  var FOCAL={'img/face-up.png':'26%','img/eyes-closed.png':'26%','img/eyes-open.png':'24%','img/gaze-dark.png':'22%',
+    'img/calm-closed.png':'27%','img/astro-gaze.png':'26%','img/astro-rest.png':'32%','img/clear-helmet.png':'24%',
+    'img/standing.png':'20%','img/cape-back.png':'26%','img/veil.png':'30%','img/helmet-field.png':'32%','img/hero-portrait.png':'22%'};
+  /* horizontal framing for plates whose subject sits off-centre in the portrait crop */
+  var FOCAL_X={'img/face-up.png':'72%','img/helmet-field.png':'38%','img/eyes-open.png':'56%','img/gaze-dark.png':'56%',
+    'img/astro-gaze.png':'44%','img/standing.png':'44%','img/cape-sun.png':'56%','img/door.png':'50%'};
+  function plateRec(name){ for(var i=0;i<CATALOG.length;i++){ if(CATALOG[i].n===name) return {idx:i+1,img:CATALOG[i].img}; } return null; }
+  /* per-frequency purpose tag (lowercase). Falls back to band intent for any unmapped freq. */
+  var INTENT={
+    'Delta Sleep':'deep rest · recovery','Theta Drift':'drifting calm · dream states','Alpha Clarity':'relaxed focus · creative clarity',
+    'Beta Focus':'alert focus · productivity','Gamma Insight':'peak cognition · insight','SMR Steady':'calm alertness · steadiness',
+    'Lucid Theta':'dreaming · lucidity','Schumann':'grounding · earth resonance','The Genius Point':'flow · the genius point',
+    'Deep Renewal':'restorative rest','The Echo':'homecoming · the echo',
+    'Release':'foundation · ease','Cellular':'restoration · repair','Liberation':'letting go · release','Change':'facilitating change',
+    'The Universe':'alignment · natural tuning','Repair':'renewal · the heart','Connection':'empathy · connection',
+    'Intuition':'clarity · expression','Awakening':'intuition · insight','Abundance':'abundance · expansion','Tesla 369':'energy · vitality'
+  };
+  var BAND_INTENT={delta:'deep rest · recovery',theta:'meditation · dream states',alpha:'relaxed focus · creative clarity',beta:'alert focus · productivity',gamma:'peak cognition · insight',tone:'resonance · restoration'};
+  function profile(freq){
+    freq=freq||{name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};
+    var v=parseFloat(freq.hz)||10, p={name:freq.name};
+    if(freq.cat==='tone'){ p.beat=0; p.fL=v; p.fR=v; p.band='tone'; p.freqText=v+' Hz · pure tone'; }
+    else { p.beat=v; p.fL=200; p.fR=200+v; p.band=v<4?'delta':v<8?'theta':v<13?'alpha':v<=30?'beta':'gamma';
+           p.freqText='200 Hz · '+(200+v)+' Hz → '+v+' Hz'; }
+    // motion is a slow metaphor of the band — cycle comes from BAND_THEMES, never from the beat
+    p.tempo = (BAND_THEMES[p.band]||BAND_THEMES.alpha).tempo;
+    p.signal = freq.cat==='tone' ? 'tone' : 'binaural';
+    p.hzNum = v;
+    var rec = plateRec(freq.name);
+    p.plate = 'N.'+String(rec?rec.idx:1).padStart(2,'0');
+    p.img = (rec&&rec.img) || 'img/face-up.png';
+    p.focal = FOCAL[p.img] || '50%';
+    p.focalX = FOCAL_X[p.img] || '50%';
+    p.intent = INTENT[freq.name] || BAND_INTENT[p.band] || 'resonance';
+    return p;
+  }
+  /* live phase narration under the slider — one line, mono, never a claim */
+  function shiftLine(){
+    var last = isFinite(SESSION) && elapsed >= SESSION-60;
+    if(prof.band==='tone'){
+      if(last) return 'releasing · '+prof.hzNum+' Hz → rest';
+      if(elapsed<180) return 'settling · '+prof.hzNum+' Hz';
+      return 'sustained '+prof.hzNum+' Hz';
+    }
+    if(last) return 'releasing · '+prof.beat+' Hz → rest';
+    if(elapsed<180) return (prof.beat<13?'descending':'ascending')+' → '+prof.beat+' Hz · min 3';
+    return 'holding '+prof.beat+' Hz · '+prof.band;
+  }
+  var prof=profile(null), SESSION=900;
+  function applyProfile(p){
+    prof=p;
+    var h=BAND_THEMES[p.band]||BAND_THEMES.alpha;
+    [player,mini].forEach(function(el){ if(!el) return; el.style.setProperty('--pb-accent',h.accent); el.style.setProperty('--pb-pale',h.pale); });
+    player.style.setProperty('--pb-tempo',p.tempo+'s');
+    player.style.setProperty('--pl-focal',p.focal);
+    player.style.setProperty('--pl-focal-x',p.focalX);
+    player.dataset.band=p.band;
+    player.dataset.signal=p.signal;
+    player.setAttribute('aria-label','Now playing — '+p.name);
+    if(photoEl && photoEl.getAttribute('src')!==p.img) photoEl.setAttribute('src',p.img);
+    if(plateEl) plateEl.textContent=p.plate;
+    if(sigEl) sigEl.innerHTML='<span class="sd" aria-hidden="true"></span>'+(p.signal==='tone'?'Pure tone · any device':'Binaural · headphones');
+    nameEl.textContent=p.name; freqEl.textContent=p.freqText; miniName.textContent=p.name;
+    if(intentEl) intentEl.textContent=p.intent;
+    if(shiftEl) shiftEl.textContent=shiftLine();
+    applyFreqs();
+  }
+  function applyFreqs(){ if(!actx||!oscL) return; var t=actx.currentTime; oscL.frequency.setValueAtTime(prof.fL,t); oscR.frequency.setValueAtTime(prof.fR,t); }
+
+  var elapsed=0, playing=false, tick=null, firstListen=false, capDone=true, capIdx=-1, ending=false;
+  var curFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};   // the frequency the player is currently on
+  function persistOpen(){ lset(OPEN_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,elapsed:elapsed,session:isFinite(SESSION)?SESSION:0})); }
+  function clearOpen(){ try{ localStorage.removeItem(OPEN_KEY); }catch(e){} }
+  function fmt(s){ s=Math.max(0,Math.floor(s)); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+
+  /* ── Web Audio: carriers panned hard L/R + soft ambience bed.
+        Fade-in over 15s — ambience first, the pure tones rising underneath. ── */
+  var actx=null, master, toneGain, ambGain, oscL, oscR, ambSrc, ambOn=true, faded=false;
+  function buildAudio(){
+    if(actx) return;
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    actx=new AC();
+    master=actx.createGain(); master.gain.value=0.9; master.connect(actx.destination);
+    toneGain=actx.createGain(); toneGain.gain.value=0.0001; toneGain.connect(master);
+    ambGain=actx.createGain(); ambGain.gain.value=0.0001; ambGain.connect(master);
+    oscL=actx.createOscillator(); oscL.type='sine'; oscL.frequency.value=prof.fL;
+    oscR=actx.createOscillator(); oscR.type='sine'; oscR.frequency.value=prof.fR;
+    if(actx.createStereoPanner){
+      var pL=actx.createStereoPanner(); pL.pan.value=-1; oscL.connect(pL); pL.connect(toneGain);
+      var pR=actx.createStereoPanner(); pR.pan.value=1; oscR.connect(pR); pR.connect(toneGain);
+    } else { oscL.connect(toneGain); oscR.connect(toneGain); }
+    oscL.start(); oscR.start();
+    // ambience: gently low-passed brown-ish noise
+    var len=Math.floor(actx.sampleRate*4), buf=actx.createBuffer(1,len,actx.sampleRate), d=buf.getChannelData(0), last=0;
+    for(var i=0;i<len;i++){ var w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.2; }
+    ambSrc=actx.createBufferSource(); ambSrc.buffer=buf; ambSrc.loop=true;
+    var lp=actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=480; lp.Q.value=0.6;
+    ambSrc.connect(lp); lp.connect(ambGain); ambSrc.start();
+  }
+  function fadeIn(){
+    if(!actx||faded) return; faded=true;
+    var t=actx.currentTime;
+    if(master){ master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(0.9,t); }   // restore after any sleep fade-out
+    ambGain.gain.cancelScheduledValues(t);
+    ambGain.gain.setValueAtTime(0.0001,t);
+    ambGain.gain.linearRampToValueAtTime(ambOn?0.12:0.0001, t+6);   // ambience first (0→6s)
+    toneGain.gain.cancelScheduledValues(t);
+    toneGain.gain.setValueAtTime(0.0001,t);
+    toneGain.gain.setValueAtTime(0.0001,t+3);
+    toneGain.gain.linearRampToValueAtTime(0.085, t+15);             // tones rise underneath (3→15s)
+  }
+  function setAmb(on){
+    ambOn=on; ambBtn.classList.toggle('on',on); ambBtn.setAttribute('aria-pressed',on?'true':'false');
+    if(actx&&faded){ var t=actx.currentTime; ambGain.gain.cancelScheduledValues(t); ambGain.gain.setTargetAtTime(on?0.12:0.0001,t,0.4); }
+  }
+
+  /* ── captions: only on the very first listen (always the Alpha 200/210 session) ── */
+  function updateCaptions(){
+    if(!firstListen||capDone) return;
+    if(elapsed>=35){ capDone=true; capEl.classList.remove('show'); return; }
+    var idx=Math.floor(elapsed/7);
+    if(idx!==capIdx && idx<CAPS.length){
+      capIdx=idx; capEl.classList.remove('show');
+      setTimeout(function(){ if(playing&&Math.floor(elapsed/7)===idx&&!capDone){ capEl.textContent=CAPS[idx]; capEl.classList.add('show'); } },260);
+    }
+  }
+  function render(){
+    elapsedEl.textContent=fmt(elapsed);
+    fillEl.style.width=isFinite(SESSION)?Math.min(100,elapsed/SESSION*100)+'%':'0%';
+    miniTime.textContent=fmt(elapsed)+' / '+(isFinite(SESSION)?fmt(SESSION):'∞');
+    if(shiftEl){ var sl=shiftLine(); if(shiftEl.textContent!==sl) shiftEl.textContent=sl; }
+    updateCaptions();
+  }
+  function loop(){
+    if(!playing) return;
+    elapsed++;
+    if(isFinite(SESSION)){
+      if(elapsed===Math.max(1,SESSION-15)) beginFinish();   // last 15s: gentle fade + orb slows toward rest
+      if(elapsed>=SESSION){ elapsed=SESSION; render(); completeSession(); return; }
+    }
+    render(); try{localStorage.setItem(EL_KEY,String(elapsed));}catch(e){}
+    persistOpen();
+  }
+
+  function setIcons(on){ playBtn.innerHTML=on?PAUSE:PLAY; playBtn.setAttribute('aria-label',on?'Pause':'Play'); miniPlay.innerHTML=on?MPAUSE:MPLAY; miniPlay.setAttribute('aria-label',on?'Pause':'Play'); }
+  function play(){
+    if(ending) return;
+    playing=true; player.classList.add('playing'); mini.classList.add('playing'); setIcons(true);
+    buildAudio(); applyFreqs(); if(actx&&actx.state==='suspended') actx.resume();
+    fadeIn();
+    clearInterval(tick); tick=setInterval(loop,1000);
+    resetIdle();
+  }
+  function pause(){
+    playing=false; player.classList.remove('playing'); mini.classList.remove('playing'); setIcons(false);
+    if(actx&&actx.state==='running') actx.suspend();
+    clearInterval(tick); clearTimeout(idleT); player.classList.remove('dim');
+  }
+
+  /* ── end of session: final 15s fade + slowing orb, then the quiet completion view ── */
+  function beginFinish(){
+    if(actx&&master){ var t=actx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value,t); master.gain.linearRampToValueAtTime(0.0001,t+15); }
+    player.style.setProperty('--pb-tempo','22s');   // pulse visibly slows toward rest
+  }
+  function completeSession(){
+    ending=true; playing=false; clearInterval(tick); clearTimeout(idleT);
+    player.classList.remove('playing','dim'); mini.classList.remove('playing'); setIcons(false);
+    if(actx&&master){ var t=actx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value,t); master.gain.linearRampToValueAtTime(0.0001,t+1.6); }
+    setTimeout(function(){ if(actx&&actx.state==='running') actx.suspend(); }, 1700);
+    try{ localStorage.setItem(EL_KEY,'0'); }catch(e){}
+    /* persistence: clear the open session, record it as the last completed, advance streak + minutes */
+    clearOpen();
+    var mins=isFinite(SESSION)?Math.max(1,Math.round(SESSION/60)):Math.max(1,Math.round(elapsed/60));
+    lset(LAST_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,ts:Date.now(),min:mins}));
+    /* append this session to the listening history (newest first); feel is filled in when a pill is tapped */
+    pendingHistTs=Date.now();
+    var hist=ljson(HIST_KEY)||[]; if(!Array.isArray(hist)) hist=[];
+    hist.unshift({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,min:mins,ts:pendingHistTs,feel:null});
+    lset(HIST_KEY, JSON.stringify(hist.slice(0,50)));
+    normalizeStats();                                   // streak + weekly minutes are derived, never incremented blind
+    plcSub.textContent=prof.name+' · '+(isFinite(SESSION)?Math.round(SESSION/60)+' min':fmt(elapsed));
+    renderPlcStreak();
+    setNextLine();
+    setUpNext();
+    pendingFeel=null;
+    plcPills.forEach(function(b){ b.classList.remove('on'); b.setAttribute('aria-pressed','false'); });
+    player.classList.add('complete-on');
+    completeEl.hidden=false;
+  }
+  var pendingHistTs=null, pendingFeel=null;
+  /* sign-off is time-aware by local clock and never promises an hour that has passed:
+     morning → "tomorrow morning", midday → the neutral line, evening/night → "tomorrow evening". */
+  function setNextLine(){
+    var el=document.getElementById('plc-next'); if(!el) return;
+    var h=new Date().getHours();
+    el.textContent = h<12 ? 'see you tomorrow morning' : h<18 ? 'see you tomorrow' : 'see you tomorrow evening';
+  }
+  /* ── optional "up next" line · flagged for beta A/B. Reads a real successor from the
+     wind-down sequence; protocols with no successor (all pure tones) hide the line
+     entirely rather than show a placeholder. ── */
+  var SHOW_NEXT_PROTOCOL=true;
+  var NEXT_SEQ={'Beta Focus':'Alpha Clarity','Gamma Insight':'Alpha Clarity','SMR Steady':'Alpha Clarity',
+    'The Genius Point':'Alpha Clarity','Alpha Clarity':'Delta Sleep','Theta Drift':'Delta Sleep',
+    'Lucid Theta':'Delta Sleep','Schumann':'Theta Drift','The Echo':'Delta Sleep'};
+  function setUpNext(){
+    var el=document.getElementById('plc-upnext'); if(!el) return;
+    var next = SHOW_NEXT_PROTOCOL ? NEXT_SEQ[curFreq.name] : null;
+    var rec = next ? plateRec(next) : null;
+    if(!rec){ el.hidden=true; el.textContent=''; return; }
+    el.textContent='tomorrow · N.'+String(rec.idx).padStart(2,'0')+' '+next;
+    el.hidden=false;
+  }
+  function renderPlcStreak(){ if(plcStreak) plcStreak.innerHTML='Day '+Math.max(1,lnum(STREAK_KEY,0))+' <span class="plc-dot" aria-hidden="true"></span>'; }
+  // keep the old name as an alias for the length-menu's immediate-end path
+  function endSession(){ completeSession(); }
+  /* mood is written on Done — never on tap — together with completed:true, so the
+     record matches the sessions row Claude Code writes to Supabase (mood enum:
+     calmer | same | sharper | null). Guest mode keeps the same shape locally. */
+  function logSession(){
+    var mins=isFinite(SESSION)?Math.max(1,Math.round(SESSION/60)):Math.max(1,Math.round(elapsed/60));
+    lset(CHK_KEY, JSON.stringify({feel:pendingFeel,ts:Date.now()}));
+    var arr=ljson(HIST_KEY)||[];
+    if(Array.isArray(arr)&&arr.length){
+      var idx=0; if(pendingHistTs){ for(var i=0;i<arr.length;i++){ if(arr[i].ts===pendingHistTs){ idx=i; break; } } }
+      arr[idx].feel=pendingFeel; arr[idx].completed=true; lset(HIST_KEY, JSON.stringify(arr));
+    }
+    var rows=ljson(SESS_KEY)||[]; if(!Array.isArray(rows)) rows=[];
+    rows.unshift({protocol:curFreq.name,hz:curFreq.hz,band:prof.band,minutes:mins,
+                  mood:pendingFeel,completed:true,started_at:new Date(pendingHistTs||Date.now()).toISOString()});
+    lset(SESS_KEY, JSON.stringify(rows.slice(0,100)));
+  }
+  function closeComplete(){ logSession(); completeEl.hidden=true; player.classList.remove('complete-on'); player.style.setProperty('--pb-tempo',prof.tempo+'s'); ending=false; if(typeof renderHome==='function') renderHome(); if(typeof showView==='function') showView('home'); stopPlayer(); }   // Done → back to HOME, not the player
+  /* single-select, always optional: tapping another chip moves the selection, and Done
+     works with nothing chosen. No validation, no nudge — the check-in is never a gate. */
+  if(plcPills.length) plcPills.forEach(function(b){ b.addEventListener('click', function(){
+    pendingFeel = b.dataset.feel;
+    plcPills.forEach(function(o){ var on=o===b; o.classList.toggle('on', on); o.setAttribute('aria-pressed', on?'true':'false'); });
+    b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse');
+  }); });
+  if(plcDone) plcDone.addEventListener('click', closeComplete);
+  /* chevron + swipe-down are the same action as Done — dismiss AND save. Never a cancel. */
+  var plcMin=document.getElementById('plc-min');
+  if(plcMin) plcMin.addEventListener('click', closeComplete);
+  if(completeEl){
+    var scY=null;
+    completeEl.addEventListener('touchstart', function(e){ scY=e.touches[0].clientY; }, {passive:true});
+    completeEl.addEventListener('touchend', function(e){
+      if(scY==null) return;
+      var dy=e.changedTouches[0].clientY-scY; scY=null;
+      if(dy>70) closeComplete();
+    }, {passive:true});
+  }
+
+  /* ── save (bookmark) + share — two quiet actions top-right of the player ── */
+  function toast(msg){
+    if(!toastEl) return;
+    toastEl.textContent=msg; toastEl.hidden=false;
+    requestAnimationFrame(function(){ toastEl.classList.add('show'); });
+    clearTimeout(toast._t); toast._t=setTimeout(function(){ toastEl.classList.remove('show'); setTimeout(function(){ toastEl.hidden=true; },240); }, 1700);
+  }
+  function savedArr(){ var a=ljson(SAVED_KEY); return Array.isArray(a)?a:[]; }
+  function syncSave(){
+    if(!saveBtn) return;
+    var on = savedArr().indexOf(curFreq.name) >= 0;
+    saveBtn.setAttribute('aria-pressed', on?'true':'false');
+    saveBtn.setAttribute('aria-label', on?('Remove '+curFreq.name+' from saved'):('Save '+curFreq.name));
+  }
+  window.__echoSyncSave=syncSave;
+  if(saveBtn) saveBtn.addEventListener('click', function(){
+    var arr=savedArr(), has=arr.indexOf(curFreq.name)>=0;
+    if(has){ arr=arr.filter(function(n){ return n!==curFreq.name; }); }
+    else { arr.push(curFreq.name); }
+    lset(SAVED_KEY, JSON.stringify(arr));
+    syncSave();
+    toast(has?'Removed from Saved':'Saved');
+    if(typeof window.__echoRenderSaved==='function') window.__echoRenderSaved();
+  });
+  if(shareBtn) shareBtn.addEventListener('click', function(){
+    var data={ title:'echo.|| · '+curFreq.name+' · '+curFreq.hz,
+               text: prof.intent+' — twenty minutes to a clearer brain',
+               url: location.href };
+    if(navigator.share){ navigator.share(data).catch(function(){}); return; }
+    var copy = data.url;
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(copy).then(function(){ toast('Link copied'); }, function(){ toast('Link copied'); }); }
+    else { toast('Link copied'); }
+  });
+
+  /* ── night behaviour: dim to 40% after 30s idle. iOS HIG — dimming must never trap
+       the user: the FIRST tap only restores brightness (it does NOT trigger the control
+       underneath), and dim never arms while the length menu or completion view is up. ── */
+  var idleT=null, swallowWake=false, swallowT=null;
+  function dimBlocked(){ return (lenmenu&&!lenmenu.hidden) || (completeEl&&!completeEl.hidden) || ending; }
+  function resetIdle(){
+    player.classList.remove('dim'); clearTimeout(idleT);
+    if(player.classList.contains('open') && playing && !dimBlocked()){
+      idleT=setTimeout(function(){ if(playing && !dimBlocked()) player.classList.add('dim'); }, 30000);
+    }
+  }
+  player.addEventListener('pointerdown', function(e){
+    if(player.classList.contains('dim')){
+      player.classList.remove('dim');               // wake only
+      swallowWake=true; clearTimeout(swallowT); swallowT=setTimeout(function(){ swallowWake=false; }, 700);
+      e.stopPropagation();                          // the control under the finger never fires
+      resetIdle();
+      return;
+    }
+    resetIdle();
+  }, true);
+  player.addEventListener('click', function(e){
+    if(swallowWake){ swallowWake=false; clearTimeout(swallowT); e.stopPropagation(); e.preventDefault(); }
+  }, true);
+
+  /* ── session-length control — explicit "N min ▾" pill opens duration chips (5·10·15·20·30·45·∞) ── */
+  function chipSec(b){ return b.dataset.min==='inf' ? Infinity : parseInt(b.dataset.min,10)*60; }
+  function markChips(){ lenmenu.querySelectorAll('button[data-min]').forEach(function(b){ b.classList.toggle('on', chipSec(b)===SESSION); }); }
+  function setSession(sec){
+    SESSION=sec;
+    var inf=!isFinite(sec);
+    totalEl.innerHTML=(inf?'∞':Math.round(sec/60)+' min')+'<span class="pl-caret" aria-hidden="true">▾</span>';
+    totalEl.setAttribute('aria-label','Session length — '+(inf?'no limit':Math.round(sec/60)+' minutes'));
+    if(tickEl){ tickEl.style.display=inf?'none':''; if(!inf) tickEl.style.left=Math.min(96,180/SESSION*100)+'%'; }
+    markChips();
+    render();
+  }
+  totalEl.addEventListener('click', function(e){ e.stopPropagation(); var open=!lenmenu.hidden; lenmenu.hidden=open; totalEl.setAttribute('aria-expanded',open?'false':'true'); if(!open) markChips(); });
+  lenmenu.querySelectorAll('button[data-min]').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); var sec=chipSec(b); setSession(sec); lenmenu.hidden=true; totalEl.setAttribute('aria-expanded','false'); if(isFinite(sec)&&elapsed>=sec) endSession(); }); });
+  document.addEventListener('click', function(){ if(!lenmenu.hidden){ lenmenu.hidden=true; totalEl.setAttribute('aria-expanded','false'); } });
+
+  /* ── mini-player ── */
+  function showMini(){ mini.hidden=false; requestAnimationFrame(function(){ mini.classList.add('show'); }); }
+  function hideMini(){ mini.classList.remove('show'); setTimeout(function(){ mini.hidden=true; },360); }
+
+  /* ── keep the Home "Resume" card in sync with the live session ── */
+  function refreshResume(state){
+    var prog=document.getElementById('now-prog');
+    var tag=document.querySelector('.now .now-tag');
+    var bars=prog?prog.querySelectorAll('i'):[];
+    if(state==='complete'){
+      bars.forEach(function(b){ b.classList.add('fill'); });
+      if(tag) tag.textContent='Completed · '+(isFinite(SESSION)?fmt(SESSION):'∞');
+      return;
+    }
+    var el=0; try{ el=parseInt(localStorage.getItem(EL_KEY)||'0',10)||0; }catch(e){}
+    var pct=(isFinite(SESSION)&&SESSION>0)?Math.min(1,el/SESSION):0, n=Math.round(pct*bars.length);
+    bars.forEach(function(b,i){ b.classList.toggle('fill', i<n); });
+    if(tag && el>0) tag.textContent='In progress · '+fmt(el)+' / '+(isFinite(SESSION)?fmt(SESSION):'∞');
+  }
+
+  /* ── one-time headphone & safety sheet — gates the FIRST binaural session ── */
+  var HP_KEY='echo:hpSeen', hpPending=null;
+  var hpEl=document.getElementById('hpsheet');
+  function showHP(){ if(!hpEl) return; hpEl.hidden=false; requestAnimationFrame(function(){ hpEl.classList.add('open'); }); }
+  function hideHP(){ if(!hpEl) return; hpEl.classList.remove('open'); setTimeout(function(){ hpEl.hidden=true; },380); }
+  (function(){
+    var ready=document.getElementById('hp-ready'), notNow=document.getElementById('hp-notnow');
+    if(ready) ready.addEventListener('click', function(){ lset(HP_KEY,'done'); hideHP(); var o=hpPending; hpPending=null; if(o){ o.__hpOk=true; openPlayer(o); } });
+    /* the scrim is deliberately inert — a stray tap must never silently cancel the session.
+       The sheet closes only via "I'm ready" (starts) or "Not now" (dismisses, stays one-time). */
+    if(notNow) notNow.addEventListener('click', function(){ hpPending=null; hideHP(); if(typeof showView==='function') showView('home'); });
+  })();
+
+  function openPlayer(opts){
+    opts=opts||{};
+    ending=false;
+    if(completeEl) completeEl.hidden=true;
+    var open = opts.resume ? ljson(OPEN_KEY) : null;
+    if(opts.resume && open){ curFreq={name:open.name,hz:open.hz,cat:open.cat}; }
+    else if(opts.freq){ curFreq={name:opts.freq.name,hz:opts.freq.hz,cat:opts.freq.cat}; }
+    else { curFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'}; }
+    if(curFreq.cat==='binaural' && !opts.__hpOk && lget(HP_KEY,null)!=='done'){ hpPending=opts; showHP(); return; }
+    applyProfile(profile(curFreq));
+    var fl=true; try{ fl=localStorage.getItem(FL_KEY)!=='done'; }catch(e){}
+    firstListen = fl && !opts.resume && prof.fL===200 && prof.fR===210;   // guided captions = first Alpha listen only
+    if(firstListen){ try{localStorage.setItem(FL_KEY,'done');}catch(e){} }
+    capDone=!firstListen; capIdx=-1; capEl.classList.remove('show'); capEl.textContent='';
+    try{ localStorage.setItem(SS_KEY,'1'); }catch(e){}
+    var sess = (opts.resume && open && open.session) ? open.session : 900;
+    setSession(sess);                                   // restore the saved length on resume, else default 15:00
+    if(opts.resume && open){ elapsed=Math.min(open.elapsed||0, isFinite(SESSION)?SESSION-1:599999); }
+    else { elapsed=0; }
+    try{ localStorage.setItem(EL_KEY,String(elapsed)); }catch(e){}
+    persistOpen();
+    if(typeof syncSave==='function') syncSave();   // reflect saved state for this frequency
+    faded=false; setAmb(true); render();
+    hideMini();
+    player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); });
+    play();
+  }
+  function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); }
+  function minimizePlayer(){ clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
+  function stopPlayer(){ pause(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
+
+  playBtn.addEventListener('click', function(){ playing?pause():play(); });
+  miniPlay.addEventListener('click', function(e){ e.stopPropagation(); playing?pause():play(); });
+  miniOpen.addEventListener('click', expandPlayer);
+  ambBtn.addEventListener('click', function(){ setAmb(!ambOn); });
+  minBtn.addEventListener('click', function(){ if(typeof showView==='function') showView('home'); minimizePlayer(); });   // chevron → home + mini-player, audio continues
+  whyBtn.addEventListener('click', function(){ if(typeof openScienceSheet==='function') openScienceSheet(); });   // overlay sheet over the player; audio keeps playing
+
+  // triggers — the hero CTA is the SINGLE primary action; its mode flips with home state
+  var begin=document.getElementById('begin-signal');
+  if(begin) begin.addEventListener('click', function(){
+    if(begin.dataset.mode==='resume') openPlayer({resume:true});
+    else openPlayer({resume:false, freq:homeRecFreq});
+  });
+  var resumePlay=document.getElementById('resume-play');
+  if(resumePlay) resumePlay.addEventListener('click', function(e){ e.stopPropagation(); var l=ljson(LAST_KEY); openPlayer({resume:false, freq:l?{name:l.name,hz:l.hz,cat:l.cat}:null}); });
+
+  // any of the 22 frequencies → the same Player, varied only by hue + motion
+  var grid=document.getElementById('node-grid');
+  if(grid) grid.addEventListener('click', function(e){ var n=e.target.closest('.node'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
+
+  /* ───────── STATS INTEGRITY ─────────────────────────────────────
+     Streak and weekly minutes are DERIVED from the listening history,
+     never incremented blind: a missed day breaks the streak, and the
+     minutes total rolls over at Monday 00:00 local. Runs on app open
+     and after every completed session, so stored values from earlier
+     builds are migrated the first time the app is opened. ───────── */
+  var WEEKID_KEY='echo:weekId';
+  function dayStart(ts){ var d=new Date(ts); return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(); }
+  function prevDay(ts){ var d=new Date(ts); d.setDate(d.getDate()-1); return dayStart(d); }   // DST-safe
+  function weekId(ts){ var d=new Date(ts); d=new Date(d.getFullYear(),d.getMonth(),d.getDate()); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function normalizeStats(){
+    var now=Date.now(), today=dayStart(now), wid=weekId(now);
+    var hist=ljson(HIST_KEY); if(!Array.isArray(hist)) hist=[];
+    var streak=0, mins=0, best=0;
+    if(hist.length){
+      var days={};
+      hist.forEach(function(h){ if(!h||!h.ts) return; days[dayStart(h.ts)]=1; if(weekId(h.ts)===wid) mins+=(parseInt(h.min,10)||0); });
+      var cur=today; if(!days[cur]) cur=prevDay(today);       // a session today OR yesterday keeps the streak alive
+      while(days[cur]){ streak++; cur=prevDay(cur); }         // history is capped at 50 sessions
+      var keys=Object.keys(days).map(Number).sort(function(a,b){return a-b;}), run=0;
+      keys.forEach(function(k,i){ run = (i && keys[i-1]===prevDay(k)) ? run+1 : 1; if(run>best) best=run; });
+      best=Math.max(best,streak);                             // longest consecutive run in history, never below today's
+      lset(BEST_KEY,String(best));
+      lset(WEEKID_KEY,wid);
+      if(days[today]) lset('echo:lastDay', new Date(today).toDateString());
+    } else {
+      var last=lget('echo:lastDay',null), lastTs=last?dayStart(new Date(last).getTime()):NaN;
+      streak=lnum(STREAK_KEY,0);
+      if(isNaN(lastTs) || lastTs<prevDay(today)) streak=0;    // older than yesterday → broken
+      mins=lnum(WEEK_KEY,0);
+      if(lget(WEEKID_KEY,null)!==wid){ mins=0; lset(WEEKID_KEY,wid); }
+    }
+    lset(STREAK_KEY,String(streak));
+    lset(WEEK_KEY,String(mins));
+    if(!hist.length && streak>lnum(BEST_KEY,0)) lset(BEST_KEY,String(streak));   // no history → raise only, never destroy
+    return {streak:streak,mins:mins};
+  }
+
+  /* ───────── FOUNDING BETA WINDOW · one constant, app-wide ───────── */
+  var BETA_END='2026-10-01';
+  window.ECHO_BETA_END=BETA_END;
+  function betaDaysLeft(){ return Math.ceil((new Date(BETA_END+'T23:59:59') - new Date())/86400000); }
+  function betaDateText(){ return new Date(BETA_END+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); }
+  function renderBeta(){
+    var el=document.querySelector('.beta-line'); if(!el) return;
+    var n=betaDaysLeft(), tail='Everything is unlocked \u2014 your listening shapes what echo becomes.';
+    el.textContent = n>0 ? ('The founding beta is open until '+betaDateText()+' \u2014 '+n+' day'+(n===1?'':'s')+' left. '+tail) : tail;
+  }
+  window.__echoRenderBeta=renderBeta;
+
+  /* ───────── HOME STATE · single source of truth, time-aware, persisted ───────── */
+  var homeRecFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};
+  function recForHour(h){
+    if(h>=5 && h<11)  return {name:'Beta Focus',   hz:'18 Hz', cat:'binaural', word:'Morning', greet:'Good morning'};   // focus
+    if(h>=11 && h<17) return {name:'Alpha Clarity', hz:'10 Hz', cat:'binaural', word:'Day',     greet:'Good afternoon'};// clarity
+    if(h>=17 && h<22) return {name:'Theta Drift',   hz:'6 Hz',  cat:'binaural', word:'Evening', greet:'Good evening'};  // wind-down
+    return                   {name:'Delta Sleep',   hz:'2 Hz',  cat:'binaural', word:'Night',   greet:'Good night'};    // sleep
+  }
+  function relTime(ts){
+    var d=Date.now()-ts, day=86400000;
+    if(d<3600000) return Math.max(1,Math.round(d/60000))+' min ago';
+    if(new Date(ts).toDateString()===new Date().toDateString()) return 'today';
+    if(d<2*day) return 'yesterday';
+    return Math.floor(d/day)+' days ago';
+  }
+  function gid(id){ return document.getElementById(id); }
+  function renderHome(){
+    renderBeta();
+    var rec=recForHour(new Date().getHours());
+    homeRecFreq={name:rec.name,hz:rec.hz,cat:rec.cat};
+    // greeting + eyebrow always derive from the device clock
+    if(gid('greet-h')) gid('greet-h').innerHTML=rec.greet+', <b>Shira</b>';
+    if(gid('eyebrow')) gid('eyebrow').innerHTML='<i aria-hidden="true"></i> '+rec.word+' echo · 22 frequencies';
+    // streak tile from persisted values
+    if(gid('streak-n'))    gid('streak-n').textContent=lnum(STREAK_KEY,0);
+    if(gid('streak-week')) gid('streak-week').textContent=lnum(WEEK_KEY,0)+' min this week';
+    if(gid('streak-best')) var nb=lnum(BEST_KEY,0); gid('streak-best').textContent='Best: '+nb+' day'+(nb===1?'':'s');
+
+    var open=ljson(OPEN_KEY), inProgress=!!(open && (!open.session || open.elapsed < open.session));
+    var rb=gid('resume-block'), tnight=gid('tonight');
+    // empty home: no streak yet + nothing to resume/replay → just the Begin CTA
+    if(rb) rb.hidden = !(lnum(STREAK_KEY,0)>0 || (!inProgress && !!ljson(LAST_KEY)));
+
+    if(inProgress){
+      // CTA carries Resume; the now/last card is hidden so only ONE primary action shows
+      begin.dataset.mode='resume';
+      gid('begin-label').innerHTML='Resume <span class="begin-sep">·</span> <span class="begin-fname">'+open.name+'</span>';
+      var left = open.session ? Math.max(1,Math.ceil((open.session-open.elapsed)/60))+' min left' : fmt(open.elapsed)+' in';
+      gid('begin-hz').textContent='· '+left;
+      begin.setAttribute('aria-label','Resume '+open.name+' — '+left);
+      if(gid('begin-note')) gid('begin-note').textContent='Picks up exactly where you paused.';
+      if(tnight) tnight.classList.add('solo');
+      if(gid('resume-label')) gid('resume-label').textContent='This week';
+    } else {
+      // CTA is Begin with the time-recommended frequency; card shows the LAST completed session
+      begin.dataset.mode='begin';
+      gid('begin-label').textContent="Begin tonight's echo";
+      gid('begin-hz').textContent='· '+rec.hz;
+      begin.setAttribute('aria-label',"Begin tonight's echo — "+rec.name+", "+rec.hz);
+      if(gid('begin-note')) gid('begin-note').textContent='A steady tone, not music — give it 60 seconds.';
+      var last=ljson(LAST_KEY);
+      if(last && tnight){
+        tnight.classList.remove('solo');
+        if(gid('resume-label')) gid('resume-label').textContent='Last session';
+        var lp=profile({name:last.name,hz:last.hz,cat:last.cat});
+        if(gid('resume-tag'))  gid('resume-tag').textContent='Last session';
+        if(gid('resume-time')) gid('resume-time').textContent=(last.min||15)+' min · '+relTime(last.ts);  // concrete, never truncated
+        if(gid('resume-name')) gid('resume-name').textContent=last.name;
+        if(gid('resume-meta')) gid('resume-meta').textContent=lp.freqText;
+        if(gid('resume-play')) gid('resume-play').setAttribute('aria-label','Replay '+last.name);
+        var bars=gid('now-prog')?gid('now-prog').querySelectorAll('i'):[];
+        bars.forEach(function(b){ b.classList.add('fill'); });   // a completed session = full bars
+      } else {
+        if(tnight) tnight.classList.add('solo');                 // no history yet → streak tile only
+        if(gid('resume-label')) gid('resume-label').textContent='This week';
+      }
+    }
+  }
+  window.__echoRenderHome=renderHome;
+  normalizeStats();                                     // migrate/repair stored counters before the first paint
+  renderHome();
+  if(typeof renderProfile==='function') renderProfile();
+
+  window.__echoOpenPlayer=openPlayer;
+})();
+</script>
+
+<!-- ░░ TWEAKS PANEL (vanilla · host-protocol wired) ░░ -->
+<div class="twk" id="tweaks" hidden>
+  <div class="twk-hd" id="twk-drag"><span class="twk-dot"><i></i><b>Tweaks</b></span><button class="twk-x" id="twk-close" aria-label="Close tweaks">✕</button></div>
+  <div class="twk-body">
+    <div class="twk-row"><span class="twk-lbl">Atmosphere</span>
+      <div class="twk-seg" data-key="atmosphere">
+        <button data-val="daylight">Daylight</button><button data-val="twilight">Twilight</button><button data-val="obsidian">Obsidian</button>
+      </div>
+    </div>
+    <div class="twk-row"><span class="twk-lbl">Imagery</span>
+      <div class="twk-seg" data-key="imagery">
+        <button data-val="mono">Mono</button><button data-val="azure">Azure</button><button data-val="ink">Ink</button>
+      </div>
+    </div>
+    <div class="twk-row"><span class="twk-lbl">Accent</span>
+      <div class="twk-chips" data-key="accent">
+        <button class="twk-chip" data-val="sky" style="background:#3E80B0" aria-label="Sky"></button>
+        <button class="twk-chip" data-val="steel" style="background:#56789C" aria-label="Steel"></button>
+        <button class="twk-chip" data-val="slate" style="background:#687889" aria-label="Slate"></button>
+        <button class="twk-chip" data-val="butter" style="background:#927611" aria-label="Butter"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "atmosphere": "daylight",
+    "imagery": "mono",
+    "accent": "sky"
+  }/*EDITMODE-END*/;
+  var device = document.querySelector('.device');
+  var panel = document.getElementById('tweaks');
+  var state = Object.assign({}, TWEAK_DEFAULTS);
+  var checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
+
+  function apply(){
+    device.setAttribute('data-atmos', state.atmosphere);
+    device.setAttribute('data-img', state.imagery);
+    device.setAttribute('data-accent', state.accent);
+    panel.querySelectorAll('.twk-seg').forEach(function(seg){
+      var key = seg.getAttribute('data-key');
+      seg.querySelectorAll('button').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-val')===state[key]); });
+    });
+    panel.querySelectorAll('.twk-chips').forEach(function(grp){
+      var key = grp.getAttribute('data-key');
+      grp.querySelectorAll('.twk-chip').forEach(function(b){ var on=b.getAttribute('data-val')===state[key]; b.classList.toggle('on',on); b.innerHTML = on?checkSvg:''; });
+    });
+  }
+  function setTweak(key,val){
+    state[key]=val; apply();
+    var edits={}; edits[key]=val;
+    try{ window.parent.postMessage({type:'__edit_mode_set_keys',edits:edits},'*'); }catch(e){}
+    window.dispatchEvent(new CustomEvent('tweakchange',{detail:edits}));
+  }
+  panel.querySelectorAll('.twk-seg, .twk-chips').forEach(function(grp){
+    grp.addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b||!b.getAttribute('data-val'))return; setTweak(grp.getAttribute('data-key'), b.getAttribute('data-val')); });
+  });
+  window.addEventListener('message', function(e){
+    var t = e && e.data && e.data.type;
+    if(t==='__activate_edit_mode'){ panel.hidden=false; }
+    else if(t==='__deactivate_edit_mode'){ panel.hidden=true; }
+  });
+  document.getElementById('twk-close').addEventListener('click', function(){ panel.hidden=true; try{ window.parent.postMessage({type:'__edit_mode_dismissed'},'*'); }catch(e){} });
+  (function(){
+    var hd=document.getElementById('twk-drag');
+    hd.addEventListener('mousedown', function(e){
+      if(e.target.closest('.twk-x')) return;
+      var r=panel.getBoundingClientRect(); var sx=e.clientX, sy=e.clientY; var sr=window.innerWidth-r.right, sb=window.innerHeight-r.bottom;
+      function mv(ev){ panel.style.right=Math.max(8,sr-(ev.clientX-sx))+'px'; panel.style.bottom=Math.max(8,sb-(ev.clientY-sy))+'px'; }
+      function up(){ window.removeEventListener('mousemove',mv); window.removeEventListener('mouseup',up); }
+      window.addEventListener('mousemove',mv); window.addEventListener('mouseup',up);
+    });
+  })();
+  apply();
+  try{ window.parent.postMessage({type:'__edit_mode_available'},'*'); }catch(e){}
+})();
+</script>
+<!-- ░░ BONUS BOOK · styles ░░ -->
+<style id="book-styles">
+/* —— Profile bonus card —— */
+.bonus-flag{font-family:var(--mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--azure);
+  padding:3px 8px;border-radius:99px;background:var(--azure-tint);border:1px solid rgba(62,128,176,.22);}
+.bonus-flag.locked{color:var(--faint);background:rgba(22,22,22,.05);border-color:var(--line);}
+.bookcard{width:100%;display:flex;gap:15px;align-items:stretch;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:var(--shadow-sm);
+  transition:transform .16s ease, box-shadow .2s ease;}
+.bookcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.bookcard:active{transform:translateY(0) scale(.99);}
+.bk-cover{position:relative;width:76px;flex-shrink:0;aspect-ratio:5/6;border-radius:3px 7px 7px 3px;overflow:hidden;
+  background:linear-gradient(150deg,#1b1e24,#0d0e11 70%);color:#fff;display:flex;flex-direction:column;justify-content:space-between;
+  padding:11px 9px 10px;box-shadow:0 8px 20px -10px rgba(0,0,0,.6), inset 1px 0 0 rgba(255,255,255,.12), inset -1px 0 0 rgba(0,0,0,.4);}
+.bk-cover::before{content:"";position:absolute;top:0;bottom:0;left:0;width:4px;background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,0));}
+.bk-cover-top{display:inline-flex;align-items:flex-end;font-weight:600;font-size:15px;letter-spacing:-.4px;line-height:1;}
+.bk-cover-mk{display:inline-flex;align-items:flex-end;gap:2px;padding-bottom:3px;margin-left:2px;}
+.bk-cover-mk i{width:1.8px;height:11px;border-radius:2px;background:var(--azure-pale);box-shadow:0 0 6px rgba(207,246,255,.7);display:block;}
+.bk-cover-rule{height:1px;background:rgba(255,255,255,.22);margin:2px 0;}
+.bk-cover-vol{font-family:var(--serif);font-style:italic;font-size:12px;color:rgba(255,255,255,.92);line-height:1;}
+.bk-cover-foot{font-family:var(--mono);font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
+.bk-cover-lock{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#fff;background:rgba(8,9,11,.5);backdrop-filter:blur(1.5px);}
+.bk-body{display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:0;}
+.bk-kick{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--azure);}
+.bk-title{font-family:var(--serif);font-size:17px;line-height:1.18;font-weight:500;color:var(--ink);letter-spacing:-.2px;}
+.bk-by{font-size:12.5px;line-height:1.35;color:var(--muted);}
+.bk-cta{display:inline-flex;align-items:center;gap:6px;margin-top:3px;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--azure);font-weight:600;}
+.bk-locknote{margin-top:11px;font-size:12.5px;line-height:1.45;color:var(--muted);text-wrap:pretty;}
+.bk-locknote b{color:var(--ink);font-weight:600;}
+.bookcard.locked .bk-cover{filter:saturate(.5);}
+.bookcard.locked .bk-cover-lock{display:flex;}
+.bookcard.locked{cursor:pointer;}
+.plans.flash{animation:planflash 1.1s ease;}
+@keyframes planflash{0%,100%{box-shadow:none;}30%,60%{box-shadow:0 0 0 3px var(--azure-tint), 0 0 0 1px var(--azure);border-radius:16px;}}
+
+/* —— Reader overlay —— */
+.bookreader{position:absolute;inset:0;z-index:320;display:flex;flex-direction:column;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(62,128,176,.16), transparent 60%),
+    radial-gradient(100% 50% at 50% 110%, rgba(62,128,176,.10), transparent 60%),
+    #0c0d10;
+  opacity:0;transform:scale(1.015);transition:opacity .34s ease, transform .34s ease;}
+.bookreader.open{opacity:1;transform:scale(1);}
+.bookreader[hidden]{display:none;}
+.br-grain{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:soft-light;
+  background-image:radial-gradient(rgba(255,255,255,.5) .5px, transparent .6px);background-size:3px 3px;}
+.br-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:54px 20px 12px;color:rgba(255,255,255,.92);}
+.br-close{width:38px;height:38px;border-radius:50%;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);transition:background .18s, transform .14s;}
+.br-close:hover{background:rgba(255,255,255,.18);}
+.br-close:active{transform:scale(.9);}
+.br-id{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);display:inline-flex;gap:7px;align-items:center;}
+.br-id-word{color:#fff;font-weight:600;}
+.br-id-sep{opacity:.5;}
+.br-count{font-family:var(--mono);font-size:12px;letter-spacing:1px;color:rgba(255,255,255,.5);display:inline-flex;gap:3px;align-items:baseline;min-width:52px;justify-content:flex-end;}
+.br-count b{color:#fff;font-weight:600;font-size:14px;}
+.br-count i{font-style:normal;opacity:.5;}
+.br-stage{position:relative;z-index:1;flex:1;display:grid;place-items:center;padding:8px 18px 4px;perspective:1800px;}
+.br-book{position:relative;width:min(86%,360px);aspect-ratio:5/6;transform-style:preserve-3d;
+  filter:drop-shadow(0 30px 50px rgba(0,0,0,.55));}
+.br-book::before,.br-book::after{content:"";position:absolute;top:1.5%;bottom:1.5%;border-radius:2px 5px 5px 2px;background:#eceae3;z-index:0;}
+.br-book::before{right:-5px;left:5px;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.br-book::after{right:-9px;left:9px;background:#dfdcd3;}
+.br-page{position:absolute;inset:0;z-index:1;background:#fff;border-radius:3px 7px 7px 3px;overflow:hidden;
+  box-shadow:inset 7px 0 16px -10px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.3);}
+.br-frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;pointer-events:none;}
+.br-loading{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;
+  background:#fff;color:var(--faint);transition:opacity .3s ease;}
+.br-loading.done{opacity:0;pointer-events:none;}
+.br-loading-lbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;}
+.br-spin{width:26px;height:26px;border-radius:50%;border:2px solid rgba(22,22,22,.12);border-top-color:var(--azure);animation:brspin .8s linear infinite;}
+@keyframes brspin{to{transform:rotate(360deg);}}
+/* turning leaf */
+.br-leaf{position:absolute;inset:0;z-index:6;border-radius:3px 7px 7px 3px;overflow:hidden;will-change:transform;
+  background:linear-gradient(105deg,#ffffff 0%,#f3f1ea 55%,#e4e1d8 100%);
+  box-shadow:0 16px 36px -12px rgba(0,0,0,.5);backface-visibility:visible;}
+.br-leaf.next{transform-origin:left center;animation:leafNext .64s cubic-bezier(.42,.04,.26,1) forwards;}
+.br-leaf.prev{transform-origin:right center;animation:leafPrev .64s cubic-bezier(.42,.04,.26,1) forwards;}
+@keyframes leafNext{from{transform:rotateY(0);}to{transform:rotateY(-166deg);}}
+@keyframes leafPrev{from{transform:rotateY(0);}to{transform:rotateY(166deg);}}
+.br-leaf-sheen{position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,.6),rgba(255,255,255,0) 45%);
+  opacity:0;animation:leafSheen .64s ease forwards;}
+@keyframes leafSheen{0%{opacity:0;}35%{opacity:.7;}100%{opacity:0;}}
+/* controls */
+.br-controls{position:relative;z-index:2;display:flex;align-items:center;gap:14px;padding:14px 22px calc(20px + env(safe-area-inset-bottom));}
+.br-nav{width:50px;height:50px;border-radius:50%;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);transition:background .18s, transform .14s, opacity .2s;}
+.br-nav:hover{background:rgba(255,255,255,.2);}
+.br-nav:active{transform:scale(.9);}
+.br-nav:disabled{opacity:.28;pointer-events:none;}
+.br-scrub{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;}
+.br-scrub-lbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.6);}
+.br-range{-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:99px;background:rgba(255,255,255,.18);outline:none;cursor:pointer;}
+.br-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--azure-pale);
+  box-shadow:0 0 0 4px rgba(62,128,176,.3),0 1px 3px rgba(0,0,0,.4);}
+.br-range::-moz-range-thumb{width:15px;height:15px;border:0;border-radius:50%;background:var(--azure-pale);box-shadow:0 0 0 4px rgba(62,128,176,.3);}
+@media (prefers-reduced-motion: reduce){
+  .bookreader{transition:none;} .br-leaf{display:none;}
+}
+</style>
+
+<!-- ░░ BONUS BOOK · reader logic ░░ -->
+<script>
+(function(){
+  var BR=document.getElementById('bookreader'); if(!BR) return;
+  var TOTAL=111;
+  var frame=document.getElementById('br-frame');
+  var book=document.getElementById('br-book');
+  var loading=document.getElementById('br-loading');
+  var curEl=document.getElementById('br-cur');
+  var totalEl=document.getElementById('br-total');
+  var range=document.getElementById('br-range');
+  var lbl=document.getElementById('br-lbl');
+  var prevBtn=document.getElementById('br-prev');
+  var nextBtn=document.getElementById('br-next');
+  var closeBtn=document.getElementById('br-close');
+  var card=document.getElementById('book-open');
+  var lockNote=document.getElementById('bk-locknote');
+  var flag=document.getElementById('bonus-flag');
+  var cta=document.getElementById('bk-cta');
+  var PAGE_KEY='echo:book:page', PLAN_KEY='echo:plan';
+  totalEl.textContent=TOTAL; range.max=TOTAL;
+
+  function bookURL(){ return (window.__resources&&window.__resources.book)?window.__resources.book:'media/echo-volume-one.pdf'; }
+  function srcFor(n){ return bookURL()+'#page='+n+'&toolbar=0&navpanes=0&scrollbar=0&statusbar=0&view=Fit'; }
+  function clamp(n){ return Math.max(1,Math.min(TOTAL,n)); }
+  function labelFor(n){ return n<=1?'Cover':(n>=TOTAL?'Back cover':'Page '+n); }
+  function reduce(){ return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function plan(){ try{ return localStorage.getItem(PLAN_KEY)||'y'; }catch(e){ return 'y'; } }
+  function isUnlocked(){ return true; } /* founding beta — everything unlocked (plan gate returns after beta) */
+
+  var cur=1, turning=false;
+
+  function loadPage(n){
+    loading.classList.remove('done');
+    var done=false; function fin(){ if(done)return; done=true; loading.classList.add('done'); }
+    frame.onload=fin; frame.src=srcFor(n); setTimeout(fin,1500);
+  }
+  function setMeta(n){
+    cur=n; curEl.textContent=n; range.value=n; lbl.textContent=labelFor(n);
+    prevBtn.disabled=n<=1; nextBtn.disabled=n>=TOTAL;
+    try{ localStorage.setItem(PAGE_KEY,String(n)); }catch(e){}
+  }
+  function go(n,dir){
+    n=clamp(n); if(n===cur||turning) return;
+    if(reduce()){ loadPage(n); setMeta(n); return; }
+    turning=true;
+    var leaf=document.createElement('div');
+    leaf.className='br-leaf '+(dir<0?'prev':'next');
+    leaf.innerHTML='<span class="br-leaf-sheen"></span>';
+    book.appendChild(leaf);
+    loadPage(n); setMeta(n);
+    var cleaned=false;
+    function cleanup(){ if(cleaned)return; cleaned=true; if(leaf.parentNode) leaf.parentNode.removeChild(leaf); turning=false; }
+    leaf.addEventListener('animationend', cleanup);
+    setTimeout(cleanup, 950);
+  }
+
+  function openBook(){
+    if(!isUnlocked()){ flashPlans(); return; }
+    var start=clamp(parseInt((function(){ try{return localStorage.getItem(PAGE_KEY);}catch(e){return null;} })()||'1',10)||1);
+    BR.hidden=false; requestAnimationFrame(function(){ BR.classList.add('open'); });
+    loadPage(start); setMeta(start);
+    document.addEventListener('keydown', onKey);
+  }
+  function closeBook(){
+    BR.classList.remove('open');
+    document.removeEventListener('keydown', onKey);
+    setTimeout(function(){ BR.hidden=true; try{frame.src='about:blank';}catch(e){} }, 360);
+  }
+  function onKey(e){
+    if(BR.hidden) return;
+    if(e.key==='Escape'){ closeBook(); }
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown'){ go(cur+1,1); }
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ go(cur-1,-1); }
+  }
+
+  function flashPlans(){
+    var plans=document.querySelector('.plans'); if(!plans) return;
+    var view=document.getElementById('view-profile');
+    if(view){ try{ view.scrollTo({top:Math.max(0,plans.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop - 120),behavior:'smooth'}); }catch(e){} }
+    plans.classList.remove('flash'); void plans.offsetWidth; plans.classList.add('flash');
+    setTimeout(function(){ plans.classList.remove('flash'); }, 1200);
+  }
+
+  function updateGate(){
+    var unlocked=isUnlocked();
+    card.classList.toggle('locked', !unlocked);
+    card.setAttribute('aria-disabled', unlocked?'false':'true');
+    if(flag){ flag.textContent=unlocked?'Unlocked':'Annual only'; flag.classList.toggle('locked', !unlocked); }
+    if(lockNote){ lockNote.hidden=unlocked; }
+    if(cta){
+      cta.innerHTML = unlocked
+        ? 'Open the book <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+        : 'Included with Yearly <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    }
+  }
+
+  // wire up
+  card.addEventListener('click', openBook);
+  closeBtn.addEventListener('click', closeBook);
+  prevBtn.addEventListener('click', function(){ go(cur-1,-1); });
+  nextBtn.addEventListener('click', function(){ go(cur+1,1); });
+  range.addEventListener('input', function(){ lbl.textContent=labelFor(parseInt(range.value,10)); });
+  range.addEventListener('change', function(){ var n=clamp(parseInt(range.value,10)); go(n, n<cur?-1:1); });
+
+  // swipe on the book stage
+  (function(){
+    var stage=document.getElementById('br-stage'), x0=null, y0=null;
+    stage.addEventListener('touchstart', function(e){ var t=e.touches[0]; x0=t.clientX; y0=t.clientY; }, {passive:true});
+    stage.addEventListener('touchend', function(e){ if(x0==null)return; var t=e.changedTouches[0]; var dx=t.clientX-x0, dy=t.clientY-y0;
+      if(Math.abs(dx)>46 && Math.abs(dx)>Math.abs(dy)){ if(dx<0) go(cur+1,1); else go(cur-1,-1); } x0=null; }, {passive:true});
+    // pointer (mouse) drag
+    var px=null;
+    stage.addEventListener('pointerdown', function(e){ if(e.pointerType==='touch')return; px=e.clientX; });
+    stage.addEventListener('pointerup', function(e){ if(px==null||e.pointerType==='touch')return; var dx=e.clientX-px; if(Math.abs(dx)>48){ if(dx<0) go(cur+1,1); else go(cur-1,-1); } px=null; });
+  })();
+
+  // persist plan + keep the bonus gate in sync with the membership toggle
+  document.querySelectorAll('.plan').forEach(function(p){
+    p.addEventListener('click', function(){ try{ localStorage.setItem(PLAN_KEY, p.getAttribute('data-plan')); }catch(e){} updateGate(); });
+  });
+  // restore stored plan selection on load
+  (function(){
+    var sel=plan();
+    document.querySelectorAll('.plan').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-plan')===sel); });
+  })();
+  updateGate();
+  /* founding listener Nº — assigned once, persisted; real join-order serial comes from the backend at signup */
+  (function(){
+    var K='echo:founderNo', n=null;
+    try{ n=parseInt(localStorage.getItem(K),10); }catch(e){}
+    if(!n||n<1){ n=11; try{ localStorage.setItem(K,String(n)); }catch(e){} }
+    var no='Nº '+('000'+n).slice(-3);
+    var c=document.getElementById('coord'); if(c) c.textContent='Founding listener · '+no;
+    var pf=document.getElementById('prof-founder'); if(pf) pf.textContent='Founding Listener '+no+' · since 2026';
+  })();
+})();
+</script>
+
+<!-- standalone-export splash (book glyph) -->
+<template id="__bundler_thumbnail" data-bg-color="#0c0d10">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0c0d10"/>
+    <g transform="translate(600 400)">
+      <rect x="-150" y="-220" width="300" height="440" rx="10" fill="#16181d" stroke="#3E80B0" stroke-width="3"/>
+      <line x1="-150" y1="-200" x2="-150" y2="200" stroke="#3E80B0" stroke-width="10" opacity=".5"/>
+      <text x="0" y="-40" text-anchor="middle" font-family="Georgia,serif" font-size="64" fill="#ffffff">echo</text>
+      <text x="0" y="20" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="30" fill="#CFF6FF">Volume One</text>
+      <rect x="-70" y="60" width="140" height="3" fill="#3E80B0" opacity=".7"/>
+    </g>
+  </svg>
+</template>
+</body>
+</html>
