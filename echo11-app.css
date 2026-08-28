@@ -144,8 +144,8 @@ body{
 .live{display:inline-flex;align-items:center;gap:8px;margin-bottom:13px;font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.82);}
 .live i{width:7px;height:7px;border-radius:50%;background:var(--azure-pale);box-shadow:0 0 11px rgba(169,196,255,.95);animation:pulse 2.6s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:.45;transform:scale(.8);}50%{opacity:1;transform:scale(1.18);}}
-.greet h1{font-weight:300;font-size:46px;line-height:.98;letter-spacing:-1.4px;color:#fff;text-shadow:0 2px 30px rgba(0,0,0,.45);}
-.greet h1 b{font-weight:600;color:var(--azure-pale);text-shadow:0 2px 24px rgba(0,0,0,.4);}
+.greet h1{font-weight:300;font-size:46px;line-height:.98;letter-spacing:-1.4px;color:var(--azure-pale);text-shadow:0 2px 30px rgba(0,0,0,.45);}
+.greet h1 b{font-weight:600;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.4);}
 .greet .coord{margin-top:12px;font-family:'IBM Plex Mono',var(--mono);font-size:max(13px,.8rem);letter-spacing:.15em;color:rgba(255,255,255,.72);}
 
 .content{padding:24px 18px calc(16px + env(safe-area-inset-bottom) + 74px + 24px);display:flex;flex-direction:column;gap:22px;margin-top:-2px;}
