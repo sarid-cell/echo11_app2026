@@ -596,6 +596,7 @@
     .hp-welcome{font-family:'Outfit',var(--ui);font-weight:300;font-size:14.5px;line-height:1.55;color:var(--ink-2);}
     .hp-notnow{color:var(--muted);font-weight:400;margin-top:-6px;}
     .hp-notnow:hover{color:var(--ink);}
+    button.wdl{padding:0;cursor:pointer;font:inherit;}
     </style>
 
     <!-- ░░ AUTH / ONBOARDING — sign-in gate ░░ -->
@@ -732,11 +733,35 @@
     document.querySelectorAll('#gal-seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.seg===seg); });
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
-      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><span class="wdl">'+dl+'</span></div>';
+      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><button class="wdl" type="button" aria-label="Save '+w.name+' wallpaper">'+dl+'</button></div>';
     }).join('');
     var check='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
-    document.querySelectorAll('#gal-grid .wp[data-free]').forEach(function(el){
-      el.addEventListener('click', function(){ var b=el.querySelector('.wdl'); if(!b)return; b.innerHTML=check; b.style.background='#fff'; b.style.color='var(--azure)'; setTimeout(function(){ b.innerHTML=dl; b.style.background=''; b.style.color=''; },1400); });
+    function confirmSaved(b){ b.innerHTML=check; b.style.background='#fff'; b.style.color='var(--azure)'; setTimeout(function(){ b.innerHTML=dl; b.style.background=''; b.style.color=''; },1400); }
+    /* real save — the checkmark only ever follows an actual download or share.
+       Touch devices get the share sheet (on iPhone that's where "Save Image" →
+       Photos lives; a plain download would land in Files); everywhere else a
+       same-origin <a download> saves straight to the downloads folder. */
+    function saveWallpaper(w,b){
+      var ext=w.img.slice(w.img.lastIndexOf('.'));
+      var fname='echo-'+w.name.toLowerCase()+ext;
+      function fallback(){
+        var a=document.createElement('a'); a.href=w.img; a.download=fname;
+        document.body.appendChild(a); a.click(); a.remove(); confirmSaved(b);
+      }
+      var touch=window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+      if(touch && navigator.share && navigator.canShare){
+        fetch(w.img).then(function(r){ if(!r.ok) throw 0; return r.blob(); }).then(function(blob){
+          var f=new File([blob],fname,{type:blob.type||'image/png'});
+          if(!navigator.canShare({files:[f]})) return fallback();
+          navigator.share({files:[f],title:'echo · '+w.name}).then(function(){ confirmSaved(b); },function(err){
+            if(!(err && err.name==='AbortError')) fallback();   // user cancelled → no fake checkmark
+          });
+        }).catch(fallback);
+      } else fallback();
+    }
+    document.querySelectorAll('#gal-grid .wp').forEach(function(el,i){
+      var b=el.querySelector('.wdl'); if(!b) return;
+      b.addEventListener('click', function(e){ e.stopPropagation(); saveWallpaper(list[i],b); });
     });
   }
 
@@ -920,7 +945,7 @@
       else cap.textContent='Tap both ears — together they make a beat.';
     }
     function toggle(which){
-      build(); if(dctx&&dctx.state==='suspended') dctx.resume();
+      build(); if(window.__echoEnsurePlaybackRoute) window.__echoEnsurePlaybackRoute(); if(dctx&&dctx.state!=='running') dctx.resume();
       state[which]=!state[which];
       setEar(which==='left'?L:R, state[which]);
       refresh();
@@ -928,7 +953,7 @@
     leftBtn.addEventListener('click', function(){ toggle('left'); });
     rightBtn.addEventListener('click', function(){ toggle('right'); });
     // stop the demo whenever the Science view leaves the screen, so it never bleeds into the player
-    function silence(){ state.left=state.right=false; setEar(L,false); setEar(R,false); refresh(); if(dctx&&dctx.state==='running') dctx.suspend(); }
+    function silence(){ state.left=state.right=false; setEar(L,false); setEar(R,false); refresh(); if(dctx&&dctx.state==='running') dctx.suspend(); if(window.__echoReleasePlaybackRoute) window.__echoReleasePlaybackRoute(); }
     window.__echoSilenceDemo=silence;
   })();
 
@@ -1200,6 +1225,25 @@
 
   /* ── Web Audio: carriers panned hard L/R + soft ambience bed.
         Fade-in over 15s — ambience first, the pure tones rising underneath. ── */
+  /* ── iOS audio route ── Safari treats bare Web Audio as "ambient" sound, so the
+     hardware silent switch mutes it even though the page is playing on purpose.
+     Claiming a "playback" audio session (Audio Session API where supported, plus a
+     silent looping <audio> element as the compatibility path) moves output to the
+     media channel — like any music app — so sessions stay audible with the switch on. */
+  var routeEl=null;
+  function ensurePlaybackRoute(){
+    try{ if(navigator.audioSession && navigator.audioSession.type!=='playback') navigator.audioSession.type='playback'; }catch(e){}
+    if(!routeEl){
+      routeEl=document.createElement('audio');
+      routeEl.setAttribute('playsinline',''); routeEl.loop=true; routeEl.preload='auto';
+      routeEl.src='data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YSADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+    }
+    try{ var p=routeEl.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){}
+  }
+  function releasePlaybackRoute(){ if(routeEl && !playing){ try{ routeEl.pause(); }catch(e){} } }
+  window.__echoEnsurePlaybackRoute=ensurePlaybackRoute;
+  window.__echoReleasePlaybackRoute=releasePlaybackRoute;
+
   var actx=null, master, toneGain, ambGain, oscL, oscR, ambSrc, ambOn=true, faded=false;
   function buildAudio(){
     if(actx) return;
@@ -1276,7 +1320,10 @@
     if(!actx){ toast('Audio isn\u2019t available in this browser'); return; }   // never a running timer with no sound
     playing=true; player.classList.add('playing'); mini.classList.add('playing'); setIcons(true);
     startedAt=Date.now()-elapsed*1000;
-    applyFreqs(); if(actx.state==='suspended') actx.resume();
+    ensurePlaybackRoute();
+    /* iOS may leave the context 'interrupted' (not 'suspended') after a call or
+       screen lock — resume on anything that isn't running */
+    applyFreqs(); if(actx.state!=='running') actx.resume();
     fadeIn();
     clearInterval(tick); tick=setInterval(loop,1000);
     resetIdle();
@@ -1284,6 +1331,7 @@
   function pause(){
     playing=false; player.classList.remove('playing'); mini.classList.remove('playing'); setIcons(false);
     if(actx&&actx.state==='running') actx.suspend();
+    releasePlaybackRoute();
     clearInterval(tick); clearTimeout(idleT); player.classList.remove('dim');
   }
 
@@ -1296,7 +1344,7 @@
     ending=true; playing=false; clearInterval(tick); clearTimeout(idleT);
     player.classList.remove('playing','dim'); mini.classList.remove('playing'); setIcons(false);
     if(actx&&master){ var t=actx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value,t); master.gain.linearRampToValueAtTime(0.0001,t+1.6); }
-    setTimeout(function(){ if(actx&&actx.state==='running') actx.suspend(); }, 1700);
+    setTimeout(function(){ if(actx&&actx.state==='running') actx.suspend(); releasePlaybackRoute(); }, 1700);
     try{ localStorage.setItem(EL_KEY,'0'); }catch(e){}
     /* persistence: clear the open session, record it as the last completed, advance streak + minutes */
     clearOpen();
@@ -1521,7 +1569,7 @@
   function minimizePlayer(){ clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
   function stopPlayer(){ pause(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
 
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden && playing){ loop(); } });
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden && playing){ if(actx&&actx.state!=='running'){ try{ actx.resume(); }catch(e){} } ensurePlaybackRoute(); loop(); } });
   /* Browser back = close the top overlay, never leave the app mid-session.
      One history entry is pushed per overlay open; back pops it and the
      popstate handler dismisses the overlay (player minimizes - audio
@@ -1901,6 +1949,23 @@
 
   var cur=1, turning=false;
 
+  /* graceful state while the PDF isn't deployed yet — a quiet note instead of a
+     browser 404 rendered inside the reader */
+  var bookOK=null;
+  function checkBook(cb){
+    if(bookOK!==null) return cb(bookOK);
+    fetch(bookURL(),{method:'HEAD'}).then(function(r){ bookOK=!!r.ok; cb(bookOK); }).catch(function(){ bookOK=false; cb(false); });
+  }
+  function showMissing(){
+    loading.classList.add('done');
+    if(document.getElementById('br-missing')) return;
+    var m=document.createElement('div');
+    m.id='br-missing';
+    m.style.cssText='position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:28px;background:#F4F2ED;';
+    m.innerHTML='<b style="font-size:20px;letter-spacing:-.3px;">The book is on its way</b><span style="font-size:14px;color:#6f6a62;max-width:34ch;line-height:1.55;">Volume One is being prepared for the founding beta. It will appear right here the moment it lands.</span>';
+    book.appendChild(m);
+  }
+
   function loadPage(n){
     loading.classList.remove('done');
     var done=false; function fin(){ if(done)return; done=true; loading.classList.add('done'); }
@@ -1930,7 +1995,7 @@
     if(!isUnlocked()){ flashPlans(); return; }
     var start=clamp(parseInt((function(){ try{return localStorage.getItem(PAGE_KEY);}catch(e){return null;} })()||'1',10)||1);
     BR.hidden=false; requestAnimationFrame(function(){ BR.classList.add('open'); });
-    loadPage(start); setMeta(start);
+    checkBook(function(ok){ if(ok){ loadPage(start); setMeta(start); } else { setMeta(start); showMissing(); } });
     document.addEventListener('keydown', onKey);
     if(typeof window.__overlayOpened==='function') window.__overlayOpened();
   }
