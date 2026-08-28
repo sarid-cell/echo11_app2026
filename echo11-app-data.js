@@ -6,7 +6,7 @@ window.ECHO = (function(){
     { n:'Theta Drift',     hz:'6 Hz',    sub:'Meditation · subconscious',cat:'binaural', img:'img/eyes-closed.png' },
     { n:'Alpha Clarity',   hz:'10 Hz',   sub:'Calm focus · creativity',  cat:'binaural', img:'img/face-up.png' },
     { n:'Beta Focus',      hz:'18 Hz',   sub:'Sustained attention',      cat:'binaural', img:'img/astro-data.png' },
-    { n:'Gamma Insight',   hz:'40 Hz',   sub:'Peak cognition · brain health', cat:'binaural', img:'img/astro-gaze.png' },
+    { n:'Gamma Insight',   hz:'40 Hz',   sub:'Peak cognition · clarity', cat:'binaural', img:'img/astro-gaze.png' },
     { n:'SMR Steady',      hz:'14 Hz',   sub:'Calm alertness',           cat:'binaural', img:'img/calm-closed.png' },
     { n:'Lucid Theta',     hz:'4.5 Hz',  sub:'Dream & lucidity',         cat:'binaural', img:'img/veil.png' },
     { n:'Schumann',        hz:'7.83 Hz', sub:'Earth resonance · grounding', cat:'binaural', img:'img/desert.webp' },
@@ -15,11 +15,11 @@ window.ECHO = (function(){
     { n:'The Echo',        hz:'11 Hz',   sub:'echo.11 home frequency',   cat:'binaural', img:'img/cosmic-web.png', premium:true },
     /* ── Pure-Tone Resonance (single solfeggio tones) ── */
     { n:'Release',         hz:'174 Hz',  sub:'Foundation · ease',        cat:'tone', img:'img/helmet-field.png' },
-    { n:'Cellular',        hz:'285 Hz',  sub:'Restoration',              cat:'tone', img:'img/eyes-open.png' },
+    { n:'Sanctuary',       hz:'285 Hz',  sub:'Safety · ease',            cat:'tone', img:'img/eyes-open.png' },
     { n:'Liberation',      hz:'396 Hz',  sub:'Letting go',               cat:'tone', img:'img/cape-sun.png' },
     { n:'Change',          hz:'417 Hz',  sub:'Facilitating change',      cat:'tone', img:'img/door.png' },
     { n:'The Universe',    hz:'432 Hz',  sub:'Natural tuning · alignment', cat:'tone', img:'img/neural-light.png' },
-    { n:'Repair',          hz:'528 Hz',  sub:'Renewal · the heart',      cat:'tone', img:'img/energy.png' },
+    { n:'The Heart',       hz:'528 Hz',  sub:'Warmth · renewal',         cat:'tone', img:'img/energy.png' },
     { n:'Connection',      hz:'639 Hz',  sub:'Relationships · empathy',  cat:'tone', img:'img/cape-back.png' },
     { n:'Intuition',       hz:'741 Hz',  sub:'Clarity · expression',     cat:'tone', img:'img/standing.png' },
     { n:'Awakening',       hz:'852 Hz',  sub:'Intuition · insight',      cat:'tone', img:'img/gaze-dark.png' },
@@ -50,7 +50,7 @@ window.ECHO = (function(){
   /* listening history (most recent first) */
   var HISTORY = [
     { n:'Alpha Clarity', hz:'10 Hz',  cat:'binaural', when:'Today · 21:12',     min:15, img:'img/face-up.png' },
-    { n:'Repair',        hz:'528 Hz', cat:'tone',     when:'Today · 08:05',     min:10, img:'img/energy.png' },
+    { n:'The Heart',     hz:'528 Hz', cat:'tone',     when:'Today · 08:05',     min:10, img:'img/energy.png' },
     { n:'Theta Drift',   hz:'6 Hz',   cat:'binaural', when:'Yesterday · 22:40', min:20, img:'img/eyes-closed.png' },
     { n:'Delta Sleep',   hz:'2 Hz',   cat:'binaural', when:'Yesterday · 23:30', min:30, img:'img/astro-rest.png' },
     { n:'Gamma Insight', hz:'40 Hz',  cat:'binaural', when:'2 days ago · 19:50',min:25, img:'img/astro-gaze.png' },

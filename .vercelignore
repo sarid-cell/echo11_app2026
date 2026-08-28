@@ -1,0 +1,7 @@
+# Keep development-only material out of the public deployment.
+# The live site needs: index.html, echo11-app-data.js, the two CSS bundles,
+# legal/, img/, media/, robots.txt.
+chats/
+project/
+echo11-app.html
+README.md
