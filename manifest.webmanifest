@@ -1,0 +1,14 @@
+{
+  "name": "echo·11",
+  "short_name": "echo",
+  "description": "22 binaural and pure-tone frequencies for calm, focus and rest.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#E9E9E7",
+  "background_color": "#E9E9E7",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

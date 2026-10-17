@@ -100,3 +100,47 @@ body{background:var(--bg);}
 .ex-open span{color:var(--faint);letter-spacing:1px;}
 .ex-open:active{opacity:.7;}
 .sci-exhibit .ex-paper{cursor:pointer;}
+
+/* ───────── Founding Pass sheet ─────────
+   Built on the existing .hpsheet / .hp-card sheet (same scrim, radius,
+   type and colors); only the key field and price line are new. */
+.pass-price{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--azure);margin-top:-6px;}
+.hp-btn:disabled{opacity:.5;cursor:default;box-shadow:none;filter:none;transform:none;}
+.pass-key{border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;}
+.pass-lbl{font-size:13.5px;font-weight:600;color:var(--ink);}
+.pass-row{display:flex;gap:8px;}
+.pass-input{flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;
+  background:var(--bg-2);color:var(--ink);font-family:var(--mono);font-size:16px;letter-spacing:.2px;}
+.pass-input:focus{outline:2px solid var(--azure);outline-offset:1px;}
+.pass-act{flex-shrink:0;height:44px;padding:0 16px;border:0;border-radius:12px;background:var(--azure-tint);
+  color:var(--azure);font-size:14px;font-weight:600;cursor:pointer;}
+.pass-act:disabled{opacity:.6;cursor:default;}
+.pass-msg{font-size:13px;line-height:1.45;color:var(--muted);}
+.pass-msg:empty{display:none;}
+.pass-msg.ok{color:var(--azure);font-weight:600;}
+.pass-msg.err{color:#A8433A;}
+.pass-warn{color:var(--ink);}
+/* profile membership card: the CTA sits on the card's dark glass */
+.sub .sub-cta{position:relative;margin-top:16px;}
+
+/* ───────── player: "your device paused the sound" ─────────
+   Shown when the AudioContext isn't running after a tap (iOS route blocked,
+   a call, an interruption). Sits above the play row so it reads as the
+   reason the play button is back. */
+.pl-audio-note{display:block;width:fit-content;max-width:100%;margin:0 auto 12px;padding:8px 14px;border-radius:99px;
+  background:rgba(8,9,12,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13.5px;font-weight:500;line-height:1.35;text-align:center;}
+.pl-audio-note[hidden]{display:none;}
+
+/* ───────── boot guard: data file failed to load ───────── */
+.splash.boot-failed{cursor:pointer;}
+.splash.boot-failed .splash-tag{color:#fff;letter-spacing:1.6px;}
+
+/* ───────── accessibility: real buttons where links/spans faked them ───────── */
+button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--line);font:inherit;text-align:left;}
+/* saved card: the card is a plain container; play and remove are two sibling buttons */
+.saved-card .sc-open{position:absolute;inset:0;z-index:2;width:100%;height:100%;padding:0;border:0;border-radius:inherit;
+  background:none;cursor:pointer;}
+.saved-card .sc-open:focus-visible{outline:2px solid var(--azure-pale);outline-offset:-3px;}
+/* sheet titles take focus on open (keeps the iPhone keyboard down); no ring on a heading */
+.hp-title:focus{outline:none;}
