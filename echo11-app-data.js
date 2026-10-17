@@ -1,4 +1,4 @@
-/* echo.|| — app data: 22 frequencies (2 categories), gallery, weekly line */
+/* echo.|| — app data: 22 frequencies (2 categories), gallery, rotating lines */
 window.ECHO = (function(){
   var FREQS = [
     /* ── Binaural Synchronization (needs headphones) ── */
@@ -42,10 +42,42 @@ window.ECHO = (function(){
     { name:'Vessel',    img:'img/clear-helmet.png', pro:true }
   ];
 
-  var WEEK_QUOTE = {
-    week:'Week 24 · 2026',
-    text:'You don\u2019t chase stillness \u2014 you <em>tune</em> to it. Twenty quiet minutes today \u2014 a small signal for the rest of your week.'
-  };
+  /* rotating lines for the Gallery card — a new one on every visit.
+     'line' = a reflection; 'fact' = a true, checkable curiosity.
+     Rule (same as the rest of the app): experiences and intentions, never
+     health outcomes stated as fact. Each one should stand alone as a post. */
+  var LINES = [
+    { k:'line', t:'You don’t chase stillness — you <em>tune</em> to it.' },
+    { k:'line', t:'Twenty quiet minutes isn’t a break from your day. It’s <em>part</em> of it.' },
+    { k:'line', t:'Attention is the frequency you broadcast most. What are you tuned to today?' },
+    { k:'line', t:'Slow is a speed, too.' },
+    { k:'line', t:'Curiosity is the mind <em>leaning in</em>.' },
+    { k:'line', t:'Some things only exist between the notes. Listen closer.' },
+    { k:'line', t:'The quietest room is the one you carry with you.' },
+    { k:'line', t:'You can’t force a wave. You can only make room for it.' },
+    { k:'line', t:'Notice the pause between two thoughts. That’s where echo lives.' },
+    { k:'line', t:'Energy follows attention. Where is yours right now?' },
+    { k:'line', t:'Trade one scroll for one slow breath. See what changes.' },
+    { k:'line', t:'Your mind has a tempo. Today, <em>choose</em> it.' },
+    { k:'line', t:'Small rituals, repeated, become a rhythm.' },
+    { k:'line', t:'Headphones on. World off. Just for a while.' },
+    { k:'line', t:'Clarity rarely shouts. It <em>hums</em>.' },
+    { k:'line', t:'The beat you hear is yours — your own mind is making it.' },
+    { k:'line', t:'Rest isn’t the opposite of focus. It’s where focus starts.' },
+    { k:'line', t:'Tune in before you reach out.' },
+    { k:'line', t:'Stillness is a practice. Showing up counts more than getting it right.' },
+    { k:'line', t:'Every frequency is an invitation, not an instruction.' },
+    { k:'fact', t:'Binaural beats were first described in <em>1839</em>, by the physicist Heinrich Wilhelm Dove.' },
+    { k:'fact', t:'The beat in a binaural tone isn’t in the air. No microphone between your ears could record it — it appears <em>inside</em> your head.' },
+    { k:'fact', t:'Your brain is about 2% of your body’s weight, yet it uses roughly <em>20%</em> of its energy.' },
+    { k:'fact', t:'Hans Berger recorded the first human brainwaves in 1924 — and noticed the “alpha” rhythm grows when the eyes <em>close</em>.' },
+    { k:'fact', t:'The Earth rings. Lightning keeps the space between ground and sky resonating at about <em>7.83 Hz</em> — the Schumann resonance.' },
+    { k:'fact', t:'A = 440 Hz was agreed as the tuning standard in 1939 and made official in 1955. Some musicians still prefer <em>432</em>.' },
+    { k:'fact', t:'Your ears are about 20 cm apart, and your brain compares the sound reaching each one to within <em>millionths</em> of a second.' },
+    { k:'fact', t:'Binaural beats work best on low carrier tones — under about 1,000 Hz. That’s why echo builds on <em>200 Hz</em>.' },
+    { k:'fact', t:'Most of echo’s beats sit below the lowest pitch we can hear (about 20 Hz). You don’t hear them as notes — you feel them as a <em>pulse</em>.' },
+    { k:'fact', t:'In a perfectly silent room, people start to hear their own heartbeat. Silence is never quite <em>empty</em>.' }
+  ];
 
-  return { FREQS:FREQS, WALLPAPERS:WALLPAPERS, WEEK_QUOTE:WEEK_QUOTE };
+  return { FREQS:FREQS, WALLPAPERS:WALLPAPERS, LINES:LINES };
 })();

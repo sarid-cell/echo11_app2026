@@ -184,7 +184,7 @@
     <!-- ░░ GALLERY ░░ -->
     <section class="view" id="view-gallery" hidden data-screen-label="Gallery">
       <div class="gal-head">
-        <div class="htext"><h2 class="screen-title">Gallery</h2><p class="screen-sub">Lock-screen stills — a new line every week.</p></div>
+        <div class="htext"><h2 class="screen-title">Gallery</h2><p class="screen-sub">Lock-screen stills — and a new line every visit.</p></div>
       </div>
       <div class="seg" id="gal-seg" role="tablist" aria-label="Gallery filter">
         <button class="on" data-seg="all" role="tab" aria-selected="true" aria-controls="gal-grid">All</button>
@@ -719,7 +719,7 @@
   if(!window.ECHO_CONFIG) window.ECHO_CONFIG={PAYWALL_ENABLED:false,CHECKOUT_URL:'',PRICE_LABEL:'',FREE_FREQS:[]};   // config missing → stay open, never charge
   if(window.ECHO && Array.isArray(window.ECHO.FREQS) && window.ECHO.FREQS.length) return;
   window.ECHO_BOOT_FAILED=true;
-  window.ECHO={FREQS:[],WALLPAPERS:[],WEEK_QUOTE:{week:'',text:''}};      // empty data so the scripts below still parse and run
+  window.ECHO={FREQS:[],WALLPAPERS:[],LINES:[]};      // empty data so the scripts below still parse and run
   var sp=document.getElementById('splash'); if(!sp) return;
   sp.classList.add('boot-failed');
   sp.setAttribute('role','button'); sp.setAttribute('tabindex','0');
@@ -896,7 +896,7 @@
     document.getElementById(views[name]).scrollTop = 0;
     if(name==='home' && typeof window.__echoRenderHome==='function') window.__echoRenderHome();   // keep home state fresh on every visit
     if(name==='library') renderSaved();                  // saved frequencies surface at the top of the Archive
-    if(name==='gallery') renderGallery(curSeg);          // fresh lock-screen clock + counter on every visit
+    if(name==='gallery'){ pickLine(); renderGallery(curSeg); }   // a new line, a fresh lock-screen clock + counter on every visit
     if(name==='profile') renderProfile();                // reflect any newly-completed sessions in history
   }
 
@@ -988,10 +988,7 @@
 
   function renderGallery(seg){
     curSeg=seg;
-    document.getElementById('week-quote').innerHTML =
-      '<img src="img/veil.png" alt="" loading="lazy" decoding="async"/><span class="qscrim"></span>'
-      + '<span class="qbody"><span class="qweek">'+ECHO.WEEK_QUOTE.week+' · this week</span>'
-      + '<div class="qtext">'+ECHO.WEEK_QUOTE.text+'</div></span>';
+    renderLine();
     var list = ECHO.WALLPAPERS.filter(function(w){ return seg==='all'?true:(seg==='pro'?w.pro:!w.pro); });
     document.querySelectorAll('#gal-seg button').forEach(function(b){ var on=b.dataset.seg===seg; b.classList.toggle('on', on); b.setAttribute('aria-selected', on?'true':'false'); });
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
@@ -1091,6 +1088,26 @@
     document.querySelectorAll('#gal-grid .lock-time').forEach(function(t){ t.textContent=c.time; });
     document.querySelectorAll('#gal-grid .lock-date').forEach(function(t){ t.textContent=c.date; });
   }, 30000);
+
+  /* ── echo lines · a different one on every Gallery visit (never the same twice in a row) ── */
+  var LINE_KEY='echo:lineIdx', lineIdx=-1;
+  function pickLine(){
+    var n=(ECHO.LINES||[]).length; if(!n) return;
+    var last=-1; try{ last=parseInt(localStorage.getItem(LINE_KEY),10); }catch(e){}
+    var i=Math.floor(Math.random()*n); if(n>1 && i===last) i=(i+1+Math.floor(Math.random()*(n-1)))%n;
+    lineIdx=i; try{ localStorage.setItem(LINE_KEY,String(i)); }catch(e){}
+  }
+  function renderLine(){
+    var el=document.getElementById('week-quote'), lines=ECHO.LINES||[];
+    if(!el) return;
+    if(!lines.length){ el.hidden=true; return; }
+    if(lineIdx<0) pickLine();
+    var L=lines[lineIdx], bgs=ECHO.WALLPAPERS.filter(function(w){ return !w.pro; });
+    var bg=bgs.length ? bgs[lineIdx%bgs.length].img : 'img/veil.png';
+    el.innerHTML='<img src="'+bg+'" alt="" loading="lazy" decoding="async"/><span class="qscrim"></span>'
+      + '<span class="qbody"><span class="qweek">'+(L.k==='fact'?'Did you know':'Echo line')+' · Nº '+String(lineIdx+1).padStart(2,'0')+'</span>'
+      + '<div class="qtext">'+L.t+'</div></span>';
+  }
 
   function renderMembership(){
     var licensed=!!EchoPass.license(), gated=EchoPass.enabled();
