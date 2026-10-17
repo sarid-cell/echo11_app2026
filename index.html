@@ -178,7 +178,7 @@
         <span class="seclabel saved-lbl">Saved</span>
         <div class="saved-row" id="saved-row"></div>
       </div>
-      <div class="nodegrid" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
+      <div class="archive" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
     </section>
 
     <!-- ░░ GALLERY ░░ -->
@@ -186,13 +186,14 @@
       <div class="gal-head">
         <div class="htext"><h2 class="screen-title">Gallery</h2><p class="screen-sub">Lock-screen stills — a new line every week.</p></div>
       </div>
-      <div class="quote" id="week-quote"></div>
       <div class="seg" id="gal-seg" role="tablist" aria-label="Gallery filter">
         <button class="on" data-seg="all" role="tab" aria-selected="true" aria-controls="gal-grid">All</button>
         <button data-seg="free" role="tab" aria-selected="false" aria-controls="gal-grid">Open</button>
         <button data-seg="pro" role="tab" aria-selected="false" aria-controls="gal-grid">Founding</button>
       </div>
-      <div class="galgrid" id="gal-grid" role="tabpanel" aria-label="Wallpapers"></div>
+      <div class="lockreel" id="gal-grid" role="tabpanel" aria-label="Wallpapers, swipe sideways"></div>
+      <div class="lockreel-count" id="gal-count" aria-hidden="true"></div>
+      <div class="quote" id="week-quote"></div>
     </section>
 
     <!-- ░░ PROFILE ░░ -->
@@ -895,28 +896,64 @@
     document.getElementById(views[name]).scrollTop = 0;
     if(name==='home' && typeof window.__echoRenderHome==='function') window.__echoRenderHome();   // keep home state fresh on every visit
     if(name==='library') renderSaved();                  // saved frequencies surface at the top of the Archive
+    if(name==='gallery') renderGallery(curSeg);          // fresh lock-screen clock + counter on every visit
     if(name==='profile') renderProfile();                // reflect any newly-completed sessions in history
   }
 
 
   var LOCK_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   var curFilter='all', curSeg='all';
+  /* ── THE ARCHIVE · an instrument, not a photo album ──
+     Frequencies are grouped by band (delta → gamma, then the solfeggio tones),
+     each band carries the same accent the player uses for it, and every row
+     shows where its frequency sits on a small tuner scale. */
+  var BANDS=[
+    {key:'delta', name:'Delta', range:'1–4 Hz',     mood:'sleep · deep rest'},
+    {key:'theta', name:'Theta', range:'4–8 Hz',     mood:'drift · dreaming'},
+    {key:'alpha', name:'Alpha', range:'8–13 Hz',    mood:'calm · clarity'},
+    {key:'beta',  name:'Beta',  range:'13–30 Hz',   mood:'focus · steady'},
+    {key:'gamma', name:'Gamma', range:'30–40 Hz',   mood:'bright · awake'},
+    {key:'tone',  name:'Pure tones', range:'174–963 Hz', mood:'single tones · any device'}
+  ];
+  function bandOf(f){
+    if(f.cat==='tone') return 'tone';
+    var v=parseFloat(f.hz)||10;
+    return v<4?'delta':v<8?'theta':v<13?'alpha':v<=30?'beta':'gamma';   // same split as the player
+  }
+  /* 0–1 position on a log scale: 1–40 Hz for beats, 174–963 Hz for tones */
+  function tunerPos(f){
+    var v=parseFloat(f.hz)||1;
+    var lo=f.cat==='tone'?174:1, hi=f.cat==='tone'?963:40;
+    return Math.max(0,Math.min(1,Math.log(v/lo)/Math.log(hi/lo)));
+  }
   function renderNodes(filter){
     curFilter=filter;
     var list = ECHO.FREQS.filter(function(f){ return filter==='all' ? true : f.cat===filter; });
     var lab = filter==='all'?'All':(filter==='binaural'?'Binaural':'Pure Tone');
     document.getElementById('lib-note').textContent = lab + ' · ' + list.length + ' frequencies';
     document.querySelectorAll('#lib-chips .chip').forEach(function(c){ var on=c.dataset.filter===filter; c.classList.toggle('on', on); c.setAttribute('aria-selected', on?'true':'false'); });
-    document.getElementById('node-grid').innerHTML = list.map(function(f,i){
-      var idx = String(i+1).padStart(2,'0');
-      var locked = !EchoPass.isUnlocked(f.n);
-      return '<button class="node'+(locked?' locked':'')+'" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'"'+(locked?' aria-label="'+f.n+', '+f.hz+' — included with the Founding Pass"':'')+'>'
-        + '<img src="'+f.img+'" alt="'+f.n+'" loading="lazy" decoding="async"/>'
-        + '<span class="nscrim"></span><span class="nring"></span><span class="ntick tl"></span>'
-        + '<span class="ncore"></span><span class="nhz">'+f.hz+'</span>'
-        + (locked ? '<span class="nlock" aria-hidden="true">'+LOCK_SVG+'</span>' : '<span class="nidx">N.'+idx+'</span>')
-        + '<span class="nbody"><span class="nname">'+f.n+'</span><span class="nsub">'+f.sub+'</span></span>'
-        + '</button>';
+    document.getElementById('node-grid').innerHTML = BANDS.map(function(b){
+      var rows=list.filter(function(f){ return bandOf(f)===b.key; })
+        .sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
+      if(!rows.length) return '';
+      return '<section class="aband" data-band="'+b.key+'" aria-label="'+b.name+' band, '+b.range+'">'
+        + '<header class="aband-head"><span class="aband-dot" aria-hidden="true"></span>'
+        + '<span class="aband-name">'+b.name+'</span><span class="aband-range">'+b.range+'</span>'
+        + '<span class="aband-mood">'+b.mood+'</span></header>'
+        + rows.map(function(f){
+            var locked=!EchoPass.isUnlocked(f.n);
+            var pos=(tunerPos(f)*100).toFixed(1);
+            return '<button class="arow'+(locked?' locked':'')+'" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="'+f.n+', '+f.hz+', '+f.sub+(locked?' — included with the Founding Pass':'')+'">'
+              + '<span class="arow-thumb" aria-hidden="true"><img src="'+f.img+'" alt="" loading="lazy" decoding="async"/></span>'
+              + '<span class="arow-main" aria-hidden="true">'
+              +   '<span class="arow-name">'+f.n+'</span>'
+              +   '<span class="arow-sub">'+f.sub+'</span>'
+              +   '<span class="arow-tuner"><i style="left:'+pos+'%"></i></span>'
+              + '</span>'
+              + '<span class="arow-hz" aria-hidden="true">'+(locked?'<span class="arow-lock">'+LOCK_SVG+'</span>':'')+f.hz+'</span>'
+              + '</button>';
+          }).join('')
+        + '</section>';
     }).join('');
   }
 
@@ -960,15 +997,36 @@
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
     var bigLock='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     function wpLocked(w){ return !!w.pro && !EchoPass.isUnlocked(); }
+    /* each still is shown the way it will actually look: on a lock screen, in its
+       own colors, with the clock over it — the Archive is the instrument, this is the keepsake */
+    var clock=lockClock();
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
       var locked=wpLocked(w);
-      return '<div class="wp'+(locked?' locked':'')+'"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'
-        +(locked?'<span class="wlock" aria-hidden="true">'+bigLock+'</span>':'')
-        +(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span>'
-        +'<button class="wdl" type="button" aria-label="'+(locked?'Unlock '+w.name+' with the Founding Pass':'Save '+w.name+' wallpaper')+'">'+(locked?LOCK_SVG:dl)+'</button></div>';
+      return '<figure class="lock'+(locked?' locked':'')+'">'
+        + '<div class="lock-screen"'+(locked?' role="button" tabindex="0" aria-label="'+w.name+' — included with the Founding Pass"':'')+'>'
+        +   '<img src="'+w.img+'" alt="'+(locked?'':w.name+' wallpaper')+'" loading="lazy" decoding="async"/>'
+        +   '<span class="lock-shade" aria-hidden="true"></span>'
+        +   '<span class="lock-date" aria-hidden="true">'+clock.date+'</span>'
+        +   '<span class="lock-time" aria-hidden="true">'+clock.time+'</span>'
+        +   '<span class="lock-bar" aria-hidden="true"></span>'
+        +   (locked?'<span class="lock-gate" aria-hidden="true">'+bigLock+'<b>Founding Pass</b></span>':'')
+        + '</div>'
+        + '<figcaption class="lock-cap"><span class="lock-name">'+w.name+(w.pro?'<span class="lock-tag">Founding</span>':'')+'</span>'
+        +   '<button class="lock-save" type="button" aria-label="'+(locked?'Unlock '+w.name+' with the Founding Pass':'Save '+w.name+' wallpaper')+'">'+(locked?LOCK_SVG+'<span>Unlock</span>':dl+'<span>Save</span>')+'</button>'
+        + '</figcaption></figure>';
     }).join('');
+    var reel=document.getElementById('gal-grid'), count=document.getElementById('gal-count');
+    reel.scrollLeft=0;
+    function syncCount(){
+      var cards=reel.children; if(!cards.length){ count.textContent=''; return; }
+      var mid=reel.scrollLeft+reel.clientWidth/2, best=0, d=1e9;
+      for(var k=0;k<cards.length;k++){ var c=cards[k], cm=c.offsetLeft+c.offsetWidth/2, dd=Math.abs(cm-mid); if(dd<d){ d=dd; best=k; } }
+      count.textContent=String(best+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
+    }
+    if(!reel.__counted){ reel.__counted=true; var raf=0; reel.addEventListener('scroll', function(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(syncCount); }, {passive:true}); }
+    reel.__sync=syncCount; syncCount();
     var check='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
-    function confirmSaved(b){ b.innerHTML=check; b.style.background='#fff'; b.style.color='var(--azure)'; setTimeout(function(){ b.innerHTML=dl; b.style.background=''; b.style.color=''; },1400); }
+    function confirmSaved(b){ var was=b.innerHTML; b.innerHTML=check+'<span>Saved</span>'; b.classList.add('done'); setTimeout(function(){ b.innerHTML=was; b.classList.remove('done'); },1600); }
     /* real save — the checkmark only ever follows an actual download or share.
        Touch devices get the share sheet (on iPhone that's where "Save Image" →
        Photos lives; a plain download would land in Files); everywhere else a
@@ -999,16 +1057,30 @@
         }).catch(function(){ say('Couldn\u2019t load the image \u2014 check your connection and try again'); });   // nothing to save → no checkmark
       } else fallback();
     }
-    document.querySelectorAll('#gal-grid .wp').forEach(function(el,i){
-      var b=el.querySelector('.wdl'); if(!b) return;
+    document.querySelectorAll('#gal-grid .lock').forEach(function(el,i){
+      var b=el.querySelector('.lock-save'); if(!b) return;
       if(wpLocked(list[i])){
-        el.addEventListener('click', function(){ EchoPass.open(); });
-        b.addEventListener('click', function(e){ e.stopPropagation(); EchoPass.open(); });
+        var scr=el.querySelector('.lock-screen');
+        scr.addEventListener('click', function(){ EchoPass.open(); });
+        scr.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); EchoPass.open(); } });
+        b.addEventListener('click', function(){ EchoPass.open(); });
         return;
       }
-      b.addEventListener('click', function(e){ e.stopPropagation(); saveWallpaper(list[i],b); });
+      b.addEventListener('click', function(){ saveWallpaper(list[i],b); });
     });
   }
+  /* the preview clock is the device's own time, like a real lock screen */
+  function lockClock(){
+    var d=new Date();
+    return { time:d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}).replace(/\s?[AP]M$/,''),
+             date:d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) };
+  }
+  setInterval(function(){
+    if(document.getElementById('view-gallery').hidden) return;
+    var c=lockClock();
+    document.querySelectorAll('#gal-grid .lock-time').forEach(function(t){ t.textContent=c.time; });
+    document.querySelectorAll('#gal-grid .lock-date').forEach(function(t){ t.textContent=c.date; });
+  }, 30000);
 
   function renderMembership(){
     var licensed=!!EchoPass.license(), gated=EchoPass.enabled();
@@ -2011,7 +2083,7 @@
 
   // any of the 22 frequencies → the same Player, varied only by hue + motion
   var grid=document.getElementById('node-grid');
-  if(grid) grid.addEventListener('click', function(e){ var n=e.target.closest('.node'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
+  if(grid) grid.addEventListener('click', function(e){ var n=e.target.closest('[data-fname]'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
 
   /* ───────── STATS INTEGRITY ─────────────────────────────────────
      Streak and weekly minutes are DERIVED from the listening history,
