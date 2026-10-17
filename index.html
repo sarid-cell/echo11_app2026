@@ -19,7 +19,7 @@
 </noscript>
 <link rel="stylesheet" href="echo11-app.css" />
 <link rel="stylesheet" href="echo11-web.css" />
-<!-- Bonus book (annual members) — bundled as a blob for standalone export -->
+<!-- Bonus book (Founding Pass) — bundled as a blob for standalone export -->
 <meta name="ext-resource-dependency" content="media/echo-volume-one.pdf" data-resource-id="book" />
 </head>
 <body>
@@ -187,7 +187,7 @@
         <span class="prof-av"><img src="img/astro-profile.png" alt="" loading="lazy" decoding="async" /></span>
         <div class="prof-id">
           <h2>Founding Listener</h2>
-          <div class="pmeta"><span class="pro-pill">Founding Beta</span> <span id="prof-founder">Founding Listener Nº 011 · since 2026</span></div>
+          <div class="pmeta"><span class="pro-pill" id="pro-pill">Founding Beta</span> <span id="prof-founder">Founding Listener Nº 011 · since 2026</span></div>
         </div>
       </div>
 
@@ -225,10 +225,11 @@
       </div>
 
       <div class="prof-sec">
-        <div class="sub">
+        <div class="sub" id="membership">
           <span class="sub-k">Membership</span>
-          <h3>Founding beta</h3>
-          <p>All 22 frequencies, the full gallery, the bonus book and your echo agent — everything is open while the founding beta runs.</p>
+          <h3 id="sub-h">Founding beta</h3>
+          <p id="sub-p">All 22 frequencies, the full gallery, the bonus book and your echo agent — everything is open while the founding beta runs.</p>
+          <button class="hp-btn sub-cta" id="sub-cta" type="button" hidden>See the Founding Pass</button>
           <p class="legal">Your listening shapes what echo becomes — and founding listeners hear what comes next, first.
             <span class="lk">
               <a href="legal/terms.html" target="_blank" rel="noopener">Terms (EULA)</a>
@@ -483,7 +484,7 @@
     <!-- ░░ TOAST · save / share confirmations ░░ -->
     <div class="echo-toast" id="echo-toast" role="status" aria-live="polite" hidden></div>
 
-    <!-- ░░ BONUS BOOK · flip-book reader (annual members) ░░ -->
+    <!-- ░░ BONUS BOOK · flip-book reader (Founding Pass) ░░ -->
     <div class="bookreader" id="bookreader" hidden role="dialog" aria-modal="true" aria-label="echo — Volume One">
       <div class="br-grain" aria-hidden="true"></div>
       <div class="br-top">
@@ -560,8 +561,31 @@
       <div class="hp-card">
         <h2 class="hp-title">Delete your account?</h2>
         <p class="hp-body">This permanently removes your account data from this device — listening history, streaks, saved frequencies and preferences. This can't be undone.</p>
+        <p class="hp-body pass-warn" id="del-pass-warn" hidden>Your Founding Pass is removed from this device too. To use it again you'll need to re-activate it with your license key — it's in your receipt email.</p>
         <button class="hp-btn danger" id="del-confirm">Delete everything</button>
         <button class="hp-link" id="del-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <!-- ░░ FOUNDING PASS · one-time purchase sheet — opens from any locked item ░░ -->
+    <div class="hpsheet" id="passsheet" hidden role="dialog" aria-modal="true" aria-labelledby="pass-title">
+      <div class="hp-scrim" id="pass-scrim"></div>
+      <div class="hp-card">
+        <span class="hp-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <h2 class="hp-title" id="pass-title">Founding Pass</h2>
+        <p class="hp-body">Lifetime access to all 22 frequencies and the full gallery.</p>
+        <span class="pass-price" id="pass-price"></span>
+        <button class="hp-btn" id="pass-buy" type="button">Get the Founding Pass</button>
+        <div class="pass-key">
+          <label class="pass-lbl" for="pass-key">I have a license key</label>
+          <div class="pass-row">
+            <input class="pass-input" id="pass-key" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Paste your key" />
+            <button class="pass-act" id="pass-activate" type="button">Activate</button>
+          </div>
+          <p class="pass-msg" id="pass-msg" role="status" aria-live="polite"></p>
+        </div>
+        <button class="hp-link" id="pass-restore" type="button">Restore a pass on this device</button>
+        <button class="hp-link hp-notnow" id="pass-close" type="button">Not now</button>
       </div>
     </div>
 
@@ -659,7 +683,118 @@
   <p class="note">Try it: open a category, switch Open/Founding in Gallery, tap the breath pulse, or open Profile to see the agent.</p>
 </aside>
 
+<script src="config.js"></script>
 <script src="echo11-app-data.js"></script>
+
+<!-- ░░ FOUNDING PASS · gate + license (Lemon Squeezy, via /api/license) ░░ -->
+<script>
+/* One rule, app-wide: an item is unlocked when the paywall is off, OR it's
+   one of the FREE_FREQS, OR a license activated on this device is stored.
+   Nothing here can charge: the buy button only opens CHECKOUT_URL in a new
+   tab, and stays disabled while that is empty. */
+(function(){
+  var C=window.ECHO_CONFIG||{};
+  var LIC_KEY='echo:license', PREVIEW_KEY='echo:paywallPreview', REVALIDATE_MS=7*86400000;
+  /* ?paywall=preview turns the gate on for this tab only, so the locked flow can be
+     tested on a preview deploy without flipping config.js. ?paywall=off clears it. */
+  try{
+    var q=new URLSearchParams(location.search).get('paywall');
+    if(q==='preview') sessionStorage.setItem(PREVIEW_KEY,'1'); else if(q==='off') sessionStorage.removeItem(PREVIEW_KEY);
+  }catch(e){}
+  function enabled(){ if(C.PAYWALL_ENABLED===true) return true; try{ return sessionStorage.getItem(PREVIEW_KEY)==='1'; }catch(e){ return false; } }
+  function license(){ try{ var v=JSON.parse(localStorage.getItem(LIC_KEY)); return (v&&v.key&&v.instance_id)?v:null; }catch(e){ return null; } }
+  function isFree(name){ return Array.isArray(C.FREE_FREQS) && C.FREE_FREQS.indexOf(name)>=0; }
+  /* name = a frequency name; omit it for things that are never free (pro wallpapers, the book) */
+  function isUnlocked(name){ return !enabled() || (name!=null && isFree(name)) || !!license(); }
+  function changed(){ try{ window.dispatchEvent(new CustomEvent('echo:pass')); }catch(e){} }
+
+  function instanceName(){
+    var ua=navigator.userAgent||'';
+    var dev=/iPhone|iPad|iPod/.test(ua)?'iPhone/iPad':/Android/.test(ua)?'Android':/Macintosh/.test(ua)?'Mac':/Windows/.test(ua)?'Windows':'browser';
+    return 'echo11.space · '+dev;
+  }
+  function call(action, body){
+    body.action=action;
+    return fetch('/api/license',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){ return r.json().catch(function(){ return {}; }); });
+  }
+  function friendly(err){
+    err=String(err||'');
+    if(/not found|invalid/i.test(err)) return 'That key wasn’t recognised. Check it against your receipt email and try again.';
+    if(/limit/i.test(err)) return 'This key is already active on the maximum number of devices. Contact support and we’ll free one up.';
+    if(/expired|disabled|inactive/i.test(err)) return 'This key is no longer active. Contact support if that’s unexpected.';
+    if(/different product/i.test(err)) return 'That key is for a different product.';
+    return 'Activation didn’t go through. Please try again, or contact support.';
+  }
+  /* success only when the API says so: activated, status active, and an instance id to store */
+  function activate(key){
+    key=String(key||'').trim();
+    if(!key) return Promise.resolve({ok:false,message:'Paste your license key first.'});
+    return call('activate',{license_key:key,instance_name:instanceName()}).then(function(j){
+      if(!(j && j.activated===true && j.status==='active' && j.instance_id)) return {ok:false,message:friendly(j&&j.error)};
+      var now=new Date().toISOString();
+      try{ localStorage.setItem(LIC_KEY, JSON.stringify({key:key,instance_id:j.instance_id,activated_at:now,validated_at:now})); }
+      catch(e){ return {ok:false,message:'Your key is valid, but this browser won’t let echo save it (private mode?). Try again in a normal window.'}; }
+      if(!license()) return {ok:false,message:'Your key is valid, but it couldn’t be saved on this device.'};
+      changed();
+      return {ok:true};
+    }, function(){ return {ok:false,message:'Couldn’t reach the license server. Check your connection and try again.'}; });
+  }
+  /* weekly re-check: a refunded or disabled key is removed; being offline never removes anything */
+  function revalidate(){
+    var l=license(); if(!l) return;
+    var last=Date.parse(l.validated_at||l.activated_at)||0;
+    if(Date.now()-last < REVALIDATE_MS) return;
+    call('validate',{license_key:l.key,instance_id:l.instance_id}).then(function(j){
+      if(j && j.valid===true){ l.validated_at=new Date().toISOString(); try{ localStorage.setItem(LIC_KEY,JSON.stringify(l)); }catch(e){} return; }
+      if(j && j.valid===false && (/disabled|expired/.test(j.status||'') || /not found/i.test(j.error||''))){
+        try{ localStorage.removeItem(LIC_KEY); }catch(e){} changed();
+      }
+    }, function(){});
+  }
+
+  /* ── the sheet ── */
+  var sheet=document.getElementById('passsheet');
+  var input=document.getElementById('pass-key'), msg=document.getElementById('pass-msg');
+  var buy=document.getElementById('pass-buy'), act=document.getElementById('pass-activate');
+  var price=document.getElementById('pass-price');
+  var checkout=(typeof C.CHECKOUT_URL==='string' && /^https:\/\//.test(C.CHECKOUT_URL)) ? C.CHECKOUT_URL : '';
+  if(price) price.textContent=C.PRICE_LABEL||'';
+  if(buy){
+    if(!checkout){ buy.disabled=true; buy.textContent='Checkout opens soon'; }
+    buy.addEventListener('click', function(){ if(checkout) window.open(checkout,'_blank','noopener'); });
+  }
+  function setMsg(text,kind){ if(!msg) return; msg.textContent=text||''; msg.className='pass-msg'+(kind?' '+kind:''); }
+  function open(){
+    if(!sheet) return;
+    setMsg('');
+    sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); });
+  }
+  function close(){
+    if(!sheet||sheet.hidden) return;
+    sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380);
+  }
+  var busy=false;
+  function submit(){
+    if(busy) return;
+    busy=true; act.disabled=true; act.textContent='Checking…'; setMsg('');
+    activate(input.value).then(function(r){
+      busy=false; act.disabled=false; act.textContent='Activate';
+      if(r.ok){ input.value=''; setMsg('Founding Pass active — everything is open. Thank you.','ok'); setTimeout(close,1600); }
+      else setMsg(r.message,'err');
+    });
+  }
+  if(act) act.addEventListener('click', submit);
+  if(input) input.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+  var restore=document.getElementById('pass-restore');
+  if(restore) restore.addEventListener('click', function(){ setMsg('Paste the key from your receipt email, then tap Activate.'); try{ input.focus(); }catch(e){} });
+  ['pass-close','pass-scrim'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('click', close); });
+
+  window.EchoPass={ enabled:enabled, isFree:isFree, isUnlocked:isUnlocked, license:license, activate:activate, open:open, close:close };
+  revalidate();
+})();
+</script>
+
 <script>
   var device = document.querySelector('.device');
   var views = { home:'view-home', library:'view-library', gallery:'view-gallery', profile:'view-profile', science:'view-science' };
@@ -679,18 +814,22 @@
   }
 
 
+  var LOCK_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  var curFilter='all', curSeg='all';
   function renderNodes(filter){
+    curFilter=filter;
     var list = ECHO.FREQS.filter(function(f){ return filter==='all' ? true : f.cat===filter; });
     var lab = filter==='all'?'All':(filter==='binaural'?'Binaural':'Pure Tone');
     document.getElementById('lib-note').textContent = lab + ' · ' + list.length + ' frequencies';
     document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.classList.toggle('on', c.dataset.filter===filter); });
     document.getElementById('node-grid').innerHTML = list.map(function(f,i){
       var idx = String(i+1).padStart(2,'0');
-      return '<button class="node" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
+      var locked = !EchoPass.isUnlocked(f.n);
+      return '<button class="node'+(locked?' locked':'')+'" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'"'+(locked?' aria-label="'+f.n+', '+f.hz+' — included with the Founding Pass"':'')+'>'
         + '<img src="'+f.img+'" alt="'+f.n+'" loading="lazy" decoding="async"/>'
         + '<span class="nscrim"></span><span class="nring"></span><span class="ntick tl"></span>'
         + '<span class="ncore"></span><span class="nhz">'+f.hz+'</span>'
-        + '<span class="nidx">N.'+idx+'</span>'
+        + (locked ? '<span class="nlock" aria-hidden="true">'+LOCK_SVG+'</span>' : '<span class="nidx">N.'+idx+'</span>')
         + '<span class="nbody"><span class="nname">'+f.n+'</span><span class="nsub">'+f.sub+'</span></span>'
         + '</button>';
     }).join('');
@@ -725,6 +864,7 @@
   });
 
   function renderGallery(seg){
+    curSeg=seg;
     document.getElementById('week-quote').innerHTML =
       '<img src="img/veil.png" alt="" loading="lazy" decoding="async"/><span class="qscrim"></span>'
       + '<span class="qbody"><span class="qweek">'+ECHO.WEEK_QUOTE.week+' · this week</span>'
@@ -732,8 +872,14 @@
     var list = ECHO.WALLPAPERS.filter(function(w){ return seg==='all'?true:(seg==='pro'?w.pro:!w.pro); });
     document.querySelectorAll('#gal-seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.seg===seg); });
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
+    var bigLock='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    function wpLocked(w){ return !!w.pro && !EchoPass.isUnlocked(); }
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
-      return '<div class="wp" data-free="1"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'+(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span><button class="wdl" type="button" aria-label="Save '+w.name+' wallpaper">'+dl+'</button></div>';
+      var locked=wpLocked(w);
+      return '<div class="wp'+(locked?' locked':'')+'"><img src="'+w.img+'" alt="'+w.name+'" loading="lazy" decoding="async"/><span class="wscrim"></span>'
+        +(locked?'<span class="wlock" aria-hidden="true">'+bigLock+'</span>':'')
+        +(w.pro?'<span class="wpro">FOUNDING</span>':'')+'<span class="wname">'+w.name+'</span>'
+        +'<button class="wdl" type="button" aria-label="'+(locked?'Unlock '+w.name+' with the Founding Pass':'Save '+w.name+' wallpaper')+'">'+(locked?LOCK_SVG:dl)+'</button></div>';
     }).join('');
     var check='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 5L19 6"/></svg>';
     function confirmSaved(b){ b.innerHTML=check; b.style.background='#fff'; b.style.color='var(--azure)'; setTimeout(function(){ b.innerHTML=dl; b.style.background=''; b.style.color=''; },1400); }
@@ -761,11 +907,37 @@
     }
     document.querySelectorAll('#gal-grid .wp').forEach(function(el,i){
       var b=el.querySelector('.wdl'); if(!b) return;
+      if(wpLocked(list[i])){
+        el.addEventListener('click', function(){ EchoPass.open(); });
+        b.addEventListener('click', function(e){ e.stopPropagation(); EchoPass.open(); });
+        return;
+      }
       b.addEventListener('click', function(e){ e.stopPropagation(); saveWallpaper(list[i],b); });
     });
   }
 
+  function renderMembership(){
+    var licensed=!!EchoPass.license(), gated=EchoPass.enabled();
+    var pill=document.getElementById('pro-pill'), h=document.getElementById('sub-h'), p=document.getElementById('sub-p'), cta=document.getElementById('sub-cta');
+    if(licensed){
+      if(pill) pill.textContent='Founding Pass · active';
+      if(h) h.textContent='Founding Pass · active';
+      if(p) p.textContent='Lifetime access to all 22 frequencies and the full gallery, on this device. Thank you for being here early.';
+      if(cta) cta.hidden=true;
+    } else if(gated){
+      if(pill) pill.textContent='Founding Listener';
+      if(h) h.textContent='Founding Pass';
+      if(p) p.textContent='Four frequencies are always open. The Founding Pass opens all 22 and the full gallery — one payment, yours for good.';
+      if(cta) cta.hidden=false;
+    } else {
+      if(pill) pill.textContent='Founding Beta';
+      if(cta) cta.hidden=true;
+    }
+  }
+  document.getElementById('sub-cta').addEventListener('click', function(){ EchoPass.open(); });
+
   function renderProfile(){
+    renderMembership();
     var storedHist = (function(){ try{ var v=JSON.parse(localStorage.getItem('echo:history')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
     function pnum(k){ var v=null; try{ v=localStorage.getItem(k); }catch(e){} var n=parseInt(v||'0',10); return isNaN(n)?0:n; }
     var streak=pnum('echo:streak'), week=pnum('echo:minWeek'), sessions=storedHist.length;
@@ -843,7 +1015,11 @@
     var row=document.getElementById('delete-account'), sheet=document.getElementById('delsheet');
     if(!row||!sheet) return;
     function hide(){ sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380); }
-    row.addEventListener('click', function(e){ e.preventDefault(); sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); }); });
+    row.addEventListener('click', function(e){
+      e.preventDefault();
+      var warn=document.getElementById('del-pass-warn'); if(warn) warn.hidden=!EchoPass.license();   // the pass goes too — say so first
+      sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); });
+    });
     document.getElementById('del-cancel').addEventListener('click', hide);
     document.getElementById('del-scrim').addEventListener('click', hide);
     document.getElementById('del-confirm').addEventListener('click', function(){
@@ -877,8 +1053,11 @@
   document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.addEventListener('click', function(){ renderNodes(c.dataset.filter); }); });
   document.querySelectorAll('#gal-seg button').forEach(function(b){ b.addEventListener('click', function(){ renderGallery(b.dataset.seg); }); });
 
-  // plan toggle
-  document.querySelectorAll('.plan').forEach(function(p){ p.addEventListener('click', function(){ document.querySelectorAll('.plan').forEach(function(x){ x.classList.toggle('on', x===p); }); }); });
+  // a license activated or removed → every gated surface re-renders
+  window.addEventListener('echo:pass', function(){
+    renderNodes(curFilter); renderGallery(curSeg); renderProfile();
+    if(typeof window.__echoRenderHome==='function') window.__echoRenderHome();
+  });
 
   // science screen — tab + home/profile cards open it as a normal page; the player's "why?" opens it as an overlay SHEET (audio keeps playing)
   var sciView = document.getElementById('view-science');
@@ -1541,11 +1720,14 @@
     opts=opts||{};
     ending=false; finishArmed=false;
     if(completeEl) completeEl.hidden=true;
-    var open = opts.resume ? ljson(OPEN_KEY) : null;
-    if(opts.resume && open){ curFreq={name:open.name,hz:open.hz,cat:open.cat}; }
-    else if(opts.freq){ curFreq={name:opts.freq.name,hz:opts.freq.hz,cat:opts.freq.cat}; }
-    else { curFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'}; }
-    if(curFreq.cat==='binaural' && !opts.__hpOk && lget(HP_KEY,null)!=='done'){ hpPending=opts; showHP(); return; }
+    var open = opts.resume ? ljson(OPEN_KEY) : null, target;
+    if(opts.resume && open){ target={name:open.name,hz:open.hz,cat:open.cat}; }
+    else if(opts.freq){ target={name:opts.freq.name,hz:opts.freq.hz,cat:opts.freq.cat}; }
+    else { target={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'}; }
+    // gates run before curFreq changes, so a session already playing is never relabelled
+    if(window.EchoPass && !EchoPass.isUnlocked(target.name)){ EchoPass.open(); return; }
+    if(target.cat==='binaural' && !opts.__hpOk && lget(HP_KEY,null)!=='done'){ hpPending=opts; showHP(); return; }
+    curFreq=target;
     applyProfile(profile(curFreq));
     var fl=true; try{ fl=localStorage.getItem(FL_KEY)!=='done'; }catch(e){}
     firstListen = fl && !opts.resume && prof.fL===200 && prof.fR===210;   // guided captions = first Alpha listen only
@@ -1678,6 +1860,7 @@
   function renderHome(){
     renderBeta();
     var rec=recForHour(new Date().getHours());
+    if(window.EchoPass && !EchoPass.isUnlocked(rec.name)){ rec.name='Alpha Clarity'; rec.hz='10 Hz'; rec.cat='binaural'; }   // the hero CTA never leads to a lock
     homeRecFreq={name:rec.name,hz:rec.hz,cat:rec.cat};
     // greeting + eyebrow always derive from the device clock
     if(gid('greet-h')) gid('greet-h').innerHTML=rec.greet+'<b>.</b>';
@@ -1842,13 +2025,9 @@
 .bk-title{font-family:var(--serif);font-size:17px;line-height:1.18;font-weight:500;color:var(--ink);letter-spacing:-.2px;}
 .bk-by{font-size:12.5px;line-height:1.35;color:var(--muted);}
 .bk-cta{display:inline-flex;align-items:center;gap:6px;margin-top:3px;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--azure);font-weight:600;}
-.bk-locknote{margin-top:11px;font-size:12.5px;line-height:1.45;color:var(--muted);text-wrap:pretty;}
-.bk-locknote b{color:var(--ink);font-weight:600;}
 .bookcard.locked .bk-cover{filter:saturate(.5);}
 .bookcard.locked .bk-cover-lock{display:flex;}
 .bookcard.locked{cursor:pointer;}
-.plans.flash{animation:planflash 1.1s ease;}
-@keyframes planflash{0%,100%{box-shadow:none;}30%,60%{box-shadow:0 0 0 3px var(--azure-tint), 0 0 0 1px var(--azure);border-radius:16px;}}
 
 /* —— Reader overlay —— */
 .bookreader{position:absolute;inset:0;z-index:320;display:flex;flex-direction:column;
@@ -1933,10 +2112,9 @@
   var nextBtn=document.getElementById('br-next');
   var closeBtn=document.getElementById('br-close');
   var card=document.getElementById('book-open');
-  var lockNote=document.getElementById('bk-locknote');
   var flag=document.getElementById('bonus-flag');
   var cta=document.getElementById('bk-cta');
-  var PAGE_KEY='echo:book:page', PLAN_KEY='echo:plan';
+  var PAGE_KEY='echo:book:page';
   totalEl.textContent=TOTAL; range.max=TOTAL;
 
   function bookURL(){ return (window.__resources&&window.__resources.book)?window.__resources.book:'media/echo-volume-one.pdf'; }
@@ -1944,8 +2122,7 @@
   function clamp(n){ return Math.max(1,Math.min(TOTAL,n)); }
   function labelFor(n){ return n<=1?'Cover':(n>=TOTAL?'Back cover':'Page '+n); }
   function reduce(){ return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
-  function plan(){ try{ return localStorage.getItem(PLAN_KEY)||'y'; }catch(e){ return 'y'; } }
-  function isUnlocked(){ return true; } /* founding beta — everything unlocked (plan gate returns after beta) */
+  function isUnlocked(){ return window.EchoPass ? EchoPass.isUnlocked() : true; }   /* same rule as every other gate — the book is never one of the free items */
 
   var cur=1, turning=false;
 
@@ -1992,7 +2169,7 @@
   }
 
   function openBook(){
-    if(!isUnlocked()){ flashPlans(); return; }
+    if(!isUnlocked()){ EchoPass.open(); return; }
     var start=clamp(parseInt((function(){ try{return localStorage.getItem(PAGE_KEY);}catch(e){return null;} })()||'1',10)||1);
     BR.hidden=false; requestAnimationFrame(function(){ BR.classList.add('open'); });
     checkBook(function(ok){ if(ok){ loadPage(start); setMeta(start); } else { setMeta(start); showMissing(); } });
@@ -2014,24 +2191,15 @@
     else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ go(cur-1,-1); }
   }
 
-  function flashPlans(){
-    var plans=document.querySelector('.plans'); if(!plans) return;
-    var view=document.getElementById('view-profile');
-    if(view){ try{ view.scrollTo({top:Math.max(0,plans.getBoundingClientRect().top - view.getBoundingClientRect().top + view.scrollTop - 120),behavior:'smooth'}); }catch(e){} }
-    plans.classList.remove('flash'); void plans.offsetWidth; plans.classList.add('flash');
-    setTimeout(function(){ plans.classList.remove('flash'); }, 1200);
-  }
-
   function updateGate(){
     var unlocked=isUnlocked();
     card.classList.toggle('locked', !unlocked);
     card.setAttribute('aria-disabled', unlocked?'false':'true');
-    if(flag){ flag.textContent=unlocked?'Unlocked':'Annual only'; flag.classList.toggle('locked', !unlocked); }
-    if(lockNote){ lockNote.hidden=unlocked; }
+    if(flag){ flag.textContent=unlocked?'Unlocked':'Founding Pass'; flag.classList.toggle('locked', !unlocked); }
     if(cta){
       cta.innerHTML = unlocked
         ? 'Open the book <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
-        : 'Included with Yearly <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+        : 'With the Founding Pass <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     }
   }
 
@@ -2055,15 +2223,7 @@
     stage.addEventListener('pointerup', function(e){ if(px==null||e.pointerType==='touch')return; var dx=e.clientX-px; if(Math.abs(dx)>48){ if(dx<0) go(cur+1,1); else go(cur-1,-1); } px=null; });
   })();
 
-  // persist plan + keep the bonus gate in sync with the membership toggle
-  document.querySelectorAll('.plan').forEach(function(p){
-    p.addEventListener('click', function(){ try{ localStorage.setItem(PLAN_KEY, p.getAttribute('data-plan')); }catch(e){} updateGate(); });
-  });
-  // restore stored plan selection on load
-  (function(){
-    var sel=plan();
-    document.querySelectorAll('.plan').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-plan')===sel); });
-  })();
+  window.addEventListener('echo:pass', updateGate);   // a license activated or removed re-gates the book
   updateGate();
   /* founding listener Nº — assigned once, persisted; real join-order serial comes from the backend at signup */
   (function(){
