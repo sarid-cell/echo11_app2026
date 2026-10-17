@@ -228,3 +228,11 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .lock-save.done{color:var(--azure);border-color:var(--azure);}
 .lockreel-count{padding:10px 16px 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--faint);}
 #view-gallery .quote{margin-bottom:130px;}
+
+/* ───────── player top rail ─────────
+   Back chevron on a visible surface chip; the whole top rail (back, plate
+   number, save/share) stays below the iOS status bar on notched phones.
+   Overrides echo11-app.css, which stays byte-identical to the design bundle. */
+.player-min{top:max(54px, calc(env(safe-area-inset-top) + 8px));z-index:8;border:1px solid var(--line);
+  background:color-mix(in srgb, var(--surface) 72%, transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+.player-actions,.pl-plate{top:max(54px, calc(env(safe-area-inset-top) + 8px));}
