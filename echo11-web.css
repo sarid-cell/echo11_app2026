@@ -135,3 +135,12 @@ body{background:var(--bg);}
 /* ───────── boot guard: data file failed to load ───────── */
 .splash.boot-failed{cursor:pointer;}
 .splash.boot-failed .splash-tag{color:#fff;letter-spacing:1.6px;}
+
+/* ───────── accessibility: real buttons where links/spans faked them ───────── */
+button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--line);font:inherit;text-align:left;}
+/* saved card: the card is a plain container; play and remove are two sibling buttons */
+.saved-card .sc-open{position:absolute;inset:0;z-index:2;width:100%;height:100%;padding:0;border:0;border-radius:inherit;
+  background:none;cursor:pointer;}
+.saved-card .sc-open:focus-visible{outline:2px solid var(--azure-pale);outline-offset:-3px;}
+/* sheet titles take focus on open (keeps the iPhone keyboard down); no ring on a heading */
+.hp-title:focus{outline:none;}

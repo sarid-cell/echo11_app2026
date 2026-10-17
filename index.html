@@ -168,9 +168,9 @@
       <div class="lib-head">
         <div class="htext"><h2 class="screen-title">The Archive</h2><p class="screen-sub">22 frequencies, two ways to tune.</p></div>
         <div class="chips" id="lib-chips" role="tablist">
-          <button class="chip on" data-filter="all">All <span class="ct">22</span></button>
-          <button class="chip" data-filter="binaural">Binaural</button>
-          <button class="chip" data-filter="tone">Pure Tone</button>
+          <button class="chip on" data-filter="all" role="tab" aria-selected="true" aria-controls="node-grid">All <span class="ct">22</span></button>
+          <button class="chip" data-filter="binaural" role="tab" aria-selected="false" aria-controls="node-grid">Binaural</button>
+          <button class="chip" data-filter="tone" role="tab" aria-selected="false" aria-controls="node-grid">Pure Tone</button>
         </div>
         <span class="lib-note" id="lib-note">All · 22 frequencies</span>
       </div>
@@ -178,7 +178,7 @@
         <span class="seclabel saved-lbl">Saved</span>
         <div class="saved-row" id="saved-row"></div>
       </div>
-      <div class="nodegrid" id="node-grid"></div>
+      <div class="nodegrid" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
     </section>
 
     <!-- ░░ GALLERY ░░ -->
@@ -187,12 +187,12 @@
         <div class="htext"><h2 class="screen-title">Gallery</h2><p class="screen-sub">Lock-screen stills — a new line every week.</p></div>
       </div>
       <div class="quote" id="week-quote"></div>
-      <div class="seg" id="gal-seg">
-        <button class="on" data-seg="all">All</button>
-        <button data-seg="free">Open</button>
-        <button data-seg="pro">Founding</button>
+      <div class="seg" id="gal-seg" role="tablist" aria-label="Gallery filter">
+        <button class="on" data-seg="all" role="tab" aria-selected="true" aria-controls="gal-grid">All</button>
+        <button data-seg="free" role="tab" aria-selected="false" aria-controls="gal-grid">Open</button>
+        <button data-seg="pro" role="tab" aria-selected="false" aria-controls="gal-grid">Founding</button>
       </div>
-      <div class="galgrid" id="gal-grid"></div>
+      <div class="galgrid" id="gal-grid" role="tabpanel" aria-label="Wallpapers"></div>
     </section>
 
     <!-- ░░ PROFILE ░░ -->
@@ -256,10 +256,10 @@
 
       <div class="prof-sec last">
         <div class="slist">
-          <a class="srow" id="srow-science">
+          <button type="button" class="srow" id="srow-science">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 8.5A2 2 0 0 0 6.8 21h10.4a2 2 0 0 0 1.7-3L14 9V3"/></svg></span>
             <span class="sname">The science of echo</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-          </a>
+          </button>
           <a class="srow" href="legal/disclaimer.html" target="_blank" rel="noopener">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg></span>
             <span class="sname">Safe-use &amp; medical disclaimer</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
@@ -276,14 +276,14 @@
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v16H7zM10 9h4M10 13h4"/></svg></span>
             <span class="sname">Terms of use (EULA)</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
           </a>
-          <a class="srow" id="signout" href="#">
+          <button type="button" class="srow" id="signout">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5M20 12H9M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/></svg></span>
             <span class="sname">Sign out</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-          </a>
-          <a class="srow danger" id="delete-account" href="#">
+          </button>
+          <button type="button" class="srow danger" id="delete-account">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13M9 7V4h6v3"/></svg></span>
             <span class="sname">Delete my account</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -535,7 +535,7 @@
     </div>
 
     <!-- ░░ CALM RESET overlay ░░ -->
-    <div class="resetscrim" id="reset-scrim">
+    <div class="resetscrim" id="reset-scrim" role="dialog" aria-modal="true" aria-label="Calm reset" inert>
       <div class="breath" id="breath" aria-hidden="true"><div class="bring"></div><div class="bcore"></div></div>
       <span class="reset-kick">Calm Reset</span>
       <h2>Find your <b>baseline</b></h2>
@@ -549,11 +549,11 @@
     </div>
 
     <!-- ░░ HEADPHONE & SAFETY SHEET · one-time, before the first binaural session ░░ -->
-    <div class="hpsheet" id="hpsheet" hidden role="dialog" aria-modal="true" aria-label="Headphones on">
+    <div class="hpsheet" id="hpsheet" hidden role="dialog" aria-modal="true" aria-labelledby="hp-title">
       <div class="hp-scrim" id="hp-scrim"></div>
       <div class="hp-card">
         <span class="hp-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="7" rx="1.4"/><rect x="17" y="13" width="4" height="7" rx="1.4"/></svg></span>
-        <h2 class="hp-title">Headphones on</h2>
+        <h2 class="hp-title" id="hp-title" tabindex="-1">Headphones on</h2>
         <p class="hp-body">Binaural frequencies work by sending a slightly different tone to each ear — your brain creates the beat. Without stereo headphones, the effect doesn't happen.</p>
         <div class="hp-safe">
           <span class="hp-safe-k">Before you begin</span>
@@ -572,10 +572,10 @@
     </div>
 
     <!-- ░░ DELETE ACCOUNT · confirmation sheet ░░ -->
-    <div class="hpsheet" id="delsheet" hidden role="dialog" aria-modal="true" aria-label="Delete your account">
+    <div class="hpsheet" id="delsheet" hidden role="dialog" aria-modal="true" aria-labelledby="del-title">
       <div class="hp-scrim" id="del-scrim"></div>
       <div class="hp-card">
-        <h2 class="hp-title">Delete your account?</h2>
+        <h2 class="hp-title" id="del-title" tabindex="-1">Delete your account?</h2>
         <p class="hp-body">This permanently removes your account data from this device — listening history, streaks, saved frequencies and preferences. This can't be undone.</p>
         <p class="hp-body pass-warn" id="del-pass-warn" hidden>Your Founding Pass is removed from this device too. To use it again you'll need to re-activate it with your license key — it's in your receipt email.</p>
         <button class="hp-btn danger" id="del-confirm">Delete everything</button>
@@ -588,7 +588,7 @@
       <div class="hp-scrim" id="pass-scrim"></div>
       <div class="hp-card">
         <span class="hp-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
-        <h2 class="hp-title" id="pass-title">Founding Pass</h2>
+        <h2 class="hp-title" id="pass-title" tabindex="-1">Founding Pass</h2>
         <p class="hp-body">Lifetime access to all 22 frequencies and the full gallery.</p>
         <span class="pass-price" id="pass-price"></span>
         <button class="hp-btn" id="pass-buy" type="button">Get the Founding Pass</button>
@@ -730,6 +730,45 @@
 })();
 </script>
 
+<!-- ░░ DIALOGS · focus in on open, back on close, Escape closes the top one ░░ -->
+<script>
+(function(){
+  var stack=[];
+  var FOCUSABLE='button:not([disabled]),[href],input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])';
+  function shown(n){ return !!(n.offsetWidth||n.offsetHeight||n.getClientRects().length); }
+  function focusables(el){ return Array.prototype.filter.call(el.querySelectorAll(FOCUSABLE), shown); }
+  function drop(el){ for(var i=stack.length-1;i>=0;i--){ if(stack[i].el===el) return stack.splice(i,1)[0]; } return null; }
+  /* opts.focus: selector to focus first (sheets focus their title, so the iPhone
+     keyboard never pops up uninvited); opts.onEscape: the dialog's own close */
+  function open(el, opts){
+    if(!el) return; opts=opts||{};
+    var prev=drop(el);
+    stack.push({el:el, ret:prev?prev.ret:document.activeElement, onEscape:opts.onEscape});
+    setTimeout(function(){
+      var t=(opts.focus && el.querySelector(opts.focus)) || focusables(el)[0];
+      if(!t){ t=el; if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex','-1'); }
+      try{ t.focus({preventScroll:true}); }catch(e){}
+    }, 60);
+  }
+  function close(el){
+    var d=drop(el); if(!d) return;
+    var r=d.ret;
+    if(r && r!==document.body && r.focus && document.contains(r) && shown(r)){ try{ r.focus({preventScroll:true}); }catch(e){} }
+  }
+  document.addEventListener('keydown', function(e){
+    var top=stack[stack.length-1]; if(!top) return;
+    if(e.key==='Escape'){ if(top.onEscape){ e.preventDefault(); top.onEscape(); } return; }
+    if(e.key!=='Tab') return;
+    var f=focusables(top.el); if(!f.length) return;
+    var first=f[0], last=f[f.length-1], a=document.activeElement;
+    if(!top.el.contains(a)){ e.preventDefault(); first.focus(); }
+    else if(e.shiftKey && a===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && a===last){ e.preventDefault(); first.focus(); }
+  });
+  window.EchoDialog={ open:open, close:close };
+})();
+</script>
+
 <!-- ░░ FOUNDING PASS · gate + license (Lemon Squeezy, via /api/license) ░░ -->
 <script>
 /* One rule, app-wide: an item is unlocked when the paywall is off, OR it's
@@ -813,10 +852,12 @@
     if(!sheet) return;
     setMsg('');
     sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); });
+    EchoDialog.open(sheet,{focus:'#pass-title', onEscape:close});
   }
   function close(){
     if(!sheet||sheet.hidden) return;
     sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380);
+    EchoDialog.close(sheet);
   }
   var busy=false;
   function submit(){
@@ -865,7 +906,7 @@
     var list = ECHO.FREQS.filter(function(f){ return filter==='all' ? true : f.cat===filter; });
     var lab = filter==='all'?'All':(filter==='binaural'?'Binaural':'Pure Tone');
     document.getElementById('lib-note').textContent = lab + ' · ' + list.length + ' frequencies';
-    document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.classList.toggle('on', c.dataset.filter===filter); });
+    document.querySelectorAll('#lib-chips .chip').forEach(function(c){ var on=c.dataset.filter===filter; c.classList.toggle('on', on); c.setAttribute('aria-selected', on?'true':'false'); });
     document.getElementById('node-grid').innerHTML = list.map(function(f,i){
       var idx = String(i+1).padStart(2,'0');
       var locked = !EchoPass.isUnlocked(f.n);
@@ -888,11 +929,12 @@
     sec.hidden=false;
     var x='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
     row.innerHTML=items.map(function(f){
-      return '<button class="saved-card" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'">'
+      return '<div class="saved-card">'
         + '<img src="'+f.img+'" alt="" loading="lazy" decoding="async"/><span class="sc-scrim"></span>'
         + '<span class="sc-hz">'+f.hz+'</span><span class="sc-name">'+f.n+'</span>'
-        + '<span class="sc-rm" data-rm="'+f.n+'" role="button" aria-label="Remove '+f.n+' from saved">'+x+'</span>'
-        + '</button>';
+        + '<button type="button" class="sc-open" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="Play '+f.n+' — '+f.hz+'"></button>'
+        + '<button type="button" class="sc-rm" data-rm="'+f.n+'" aria-label="Remove '+f.n+' from saved">'+x+'</button>'
+        + '</div>';
     }).join('');
   }
   window.__echoRenderSaved=renderSaved;
@@ -903,7 +945,7 @@
       localStorage.setItem('echo:saved', JSON.stringify(names));
       renderSaved(); if(typeof window.__echoSyncSave==='function') window.__echoSyncSave();
       return; }
-    var card=e.target.closest('.saved-card');
+    var card=e.target.closest('.sc-open');
     if(card && typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:card.dataset.fname,hz:card.dataset.fhz,cat:card.dataset.fcat}});
   });
 
@@ -914,7 +956,7 @@
       + '<span class="qbody"><span class="qweek">'+ECHO.WEEK_QUOTE.week+' · this week</span>'
       + '<div class="qtext">'+ECHO.WEEK_QUOTE.text+'</div></span>';
     var list = ECHO.WALLPAPERS.filter(function(w){ return seg==='all'?true:(seg==='pro'?w.pro:!w.pro); });
-    document.querySelectorAll('#gal-seg button').forEach(function(b){ b.classList.toggle('on', b.dataset.seg===seg); });
+    document.querySelectorAll('#gal-seg button').forEach(function(b){ var on=b.dataset.seg===seg; b.classList.toggle('on', on); b.setAttribute('aria-selected', on?'true':'false'); });
     var dl = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>';
     var bigLock='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     function wpLocked(w){ return !!w.pro && !EchoPass.isUnlocked(); }
@@ -1066,11 +1108,12 @@
   (function(){
     var row=document.getElementById('delete-account'), sheet=document.getElementById('delsheet');
     if(!row||!sheet) return;
-    function hide(){ sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380); }
+    function hide(){ sheet.classList.remove('open'); setTimeout(function(){ sheet.hidden=true; },380); EchoDialog.close(sheet); }
     row.addEventListener('click', function(e){
       e.preventDefault();
       var warn=document.getElementById('del-pass-warn'); if(warn) warn.hidden=!EchoPass.license();   // the pass goes too — say so first
       sheet.hidden=false; requestAnimationFrame(function(){ sheet.classList.add('open'); });
+      EchoDialog.open(sheet,{focus:'#del-title', onEscape:hide});
     });
     document.getElementById('del-cancel').addEventListener('click', hide);
     document.getElementById('del-scrim').addEventListener('click', hide);
@@ -1122,10 +1165,12 @@
     var pl=document.getElementById('player');
     if(pl && !pl.hidden) pl.style.visibility='hidden';   // hide the live player beneath; audio keeps playing
     requestAnimationFrame(function(){ sciView.classList.add('in'); });
+    EchoDialog.open(sciView,{onEscape:function(){ document.getElementById('science-back').click(); }});
     if(typeof window.__overlayOpened==='function') window.__overlayOpened();
   }
   window.__closeScience = function(){ if(sciSheet) closeScienceSheet(); };
   function closeScienceSheet(){
+    EchoDialog.close(sciView);
     if(typeof window.__echoSilenceDemo==='function') window.__echoSilenceDemo();
     sciView.classList.remove('in');
     setTimeout(function(){
@@ -1211,8 +1256,11 @@
     if(pt<=0){ pi=(pi+1)%phases.length; pt=phases[pi][1]; cueEl.textContent=phases[pi][0]; }
   }
   function startReset(){ pi=0; pt=phases[0][1]; remain=120; running=true; cueEl.textContent=phases[0][0]; timerEl.textContent=fmt(remain); toggleBtn.textContent='Pause'; breath.classList.add('run'); clearInterval(tick); tick=setInterval(step,1000); }
-  function stopReset(done){ running=false; clearInterval(tick); breath.classList.remove('run'); if(done){ cueEl.textContent='Grounded'; } resetScrim.classList.remove('open'); }
-  document.getElementById('reset-open').addEventListener('click', function(){ resetScrim.classList.add('open'); startReset(); });
+  function stopReset(done){ running=false; clearInterval(tick); breath.classList.remove('run'); if(done){ cueEl.textContent='Grounded'; } resetScrim.classList.remove('open'); resetScrim.inert=true; EchoDialog.close(resetScrim); }
+  document.getElementById('reset-open').addEventListener('click', function(){
+    resetScrim.inert=false; resetScrim.classList.add('open'); startReset();
+    EchoDialog.open(resetScrim,{focus:'#reset-close', onEscape:function(){ stopReset(false); }});
+  });
   document.getElementById('reset-close').addEventListener('click', function(){ stopReset(false); });
   toggleBtn.addEventListener('click', function(){ running=!running; toggleBtn.textContent=running?'Pause':'Resume'; breath.classList.toggle('run',running); });
 
@@ -1282,6 +1330,10 @@
       if(p && p.catch) p.catch(function(){ /* autoplay blocked → cap handles it */ });
     }
     sp.addEventListener('click', function(){ if(Date.now()-started >= MIN) finish(); });
+    document.addEventListener('keydown', function onKey(e){   // keyboard equivalent of the tap-to-skip
+      if(done){ document.removeEventListener('keydown', onKey); return; }
+      if((e.key==='Enter'||e.key===' '||e.key==='Escape') && Date.now()-started >= MIN){ e.preventDefault(); finish(); }
+    });
   })();
 </script>
 
@@ -1787,9 +1839,10 @@
   function showLink(url){
     if(!linkSheet) return;
     linkField.value=url; linkSheet.hidden=false;
-    requestAnimationFrame(function(){ linkSheet.classList.add('open'); try{ linkField.focus(); linkField.select(); }catch(e){} });
+    requestAnimationFrame(function(){ linkSheet.classList.add('open'); });
+    EchoDialog.open(linkSheet,{focus:'#link-field', onEscape:hideLink});
   }
-  function hideLink(){ if(!linkSheet||linkSheet.hidden) return; linkSheet.classList.remove('open'); setTimeout(function(){ linkSheet.hidden=true; },380); }
+  function hideLink(){ if(!linkSheet||linkSheet.hidden) return; linkSheet.classList.remove('open'); setTimeout(function(){ linkSheet.hidden=true; },380); EchoDialog.close(linkSheet); }
   if(linkField) linkField.addEventListener('focus', function(){ try{ linkField.select(); }catch(e){} });
   ['link-done','link-scrim'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('click', hideLink); });
   window.__echoToast=toast;
@@ -1858,8 +1911,9 @@
   /* ── one-time headphone & safety sheet — gates the FIRST binaural session ── */
   var HP_KEY='echo:hpSeen', hpPending=null;
   var hpEl=document.getElementById('hpsheet');
-  function showHP(){ if(!hpEl) return; hpEl.hidden=false; requestAnimationFrame(function(){ hpEl.classList.add('open'); }); }
-  function hideHP(){ if(!hpEl) return; hpEl.classList.remove('open'); setTimeout(function(){ hpEl.hidden=true; },380); }
+  function showHP(){ if(!hpEl) return; hpEl.hidden=false; requestAnimationFrame(function(){ hpEl.classList.add('open'); });
+    EchoDialog.open(hpEl,{focus:'#hp-title', onEscape:function(){ var n=document.getElementById('hp-notnow'); if(n) n.click(); }}); }   // Escape = "Not now", never a silent start
+  function hideHP(){ if(!hpEl) return; hpEl.classList.remove('open'); setTimeout(function(){ hpEl.hidden=true; },380); EchoDialog.close(hpEl); }
   (function(){
     var ready=document.getElementById('hp-ready'), notNow=document.getElementById('hp-notnow');
     if(ready) ready.addEventListener('click', function(){ lset(HP_KEY,'done'); hideHP(); var o=hpPending; hpPending=null; if(o){ o.__hpOk=true; openPlayer(o); } });
@@ -1897,12 +1951,20 @@
     faded=false; setAmb(true); render();
     hideMini();
     player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); });
+    EchoDialog.open(player,{onEscape:playerEscape});
     overlayOpened();
     play();
   }
-  function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); overlayOpened(); }
-  function minimizePlayer(){ clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
-  function stopPlayer(){ pause(); setMSState('none'); hideAudioNote(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
+  function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); EchoDialog.open(player,{onEscape:playerEscape}); overlayOpened(); }
+  /* Escape: close the length menu if it's open, otherwise the same as the chevron (minimize, audio continues);
+     on the completion view it's Done */
+  function playerEscape(){
+    if(!lenmenu.hidden){ lenmenu.hidden=true; totalEl.setAttribute('aria-expanded','false'); try{ totalEl.focus(); }catch(e){} return; }
+    if(completeEl && !completeEl.hidden){ closeComplete(); return; }
+    minBtn.click();
+  }
+  function minimizePlayer(){ EchoDialog.close(player); clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
+  function stopPlayer(){ EchoDialog.close(player); pause(); setMSState('none'); hideAudioNote(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
   window.__echoStopPlayer=function(){ if(playing || !player.hidden || !mini.hidden) stopPlayer(); };
 
   document.addEventListener('visibilitychange', function(){
@@ -2329,6 +2391,7 @@
     if(!isUnlocked()){ EchoPass.open(); return; }
     var start=clamp(parseInt((function(){ try{return localStorage.getItem(PAGE_KEY);}catch(e){return null;} })()||'1',10)||1);
     BR.hidden=false; requestAnimationFrame(function(){ BR.classList.add('open'); });
+    EchoDialog.open(BR,{focus:'#br-close', onEscape:function(){ closeBtn.click(); }});
     checkBook(function(ok){ if(ok){ loadPage(start); setMeta(start); } else { setMeta(start); showMissing(); } });
     document.addEventListener('keydown', onKey);
     if(typeof window.__overlayOpened==='function') window.__overlayOpened();
@@ -2337,14 +2400,14 @@
   var __brClose=document.getElementById('br-close');
   if(__brClose) __brClose.addEventListener('click', function(){ if(typeof window.__overlayClosed==='function') window.__overlayClosed(); }, true);
   function closeBook(){
+    EchoDialog.close(BR);
     BR.classList.remove('open');
     document.removeEventListener('keydown', onKey);
     setTimeout(function(){ BR.hidden=true; try{frame.src='about:blank';}catch(e){} }, 360);
   }
   function onKey(e){
     if(BR.hidden) return;
-    if(e.key==='Escape'){ closeBook(); }
-    else if(e.key==='ArrowRight'||e.key==='ArrowDown'){ go(cur+1,1); }
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'){ go(cur+1,1); }
     else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ go(cur-1,-1); }
   }
 
