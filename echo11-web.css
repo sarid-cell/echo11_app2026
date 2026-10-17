@@ -236,3 +236,22 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .player-min{top:max(54px, calc(env(safe-area-inset-top) + 8px));z-index:8;border:1px solid var(--line);
   background:color-mix(in srgb, var(--surface) 72%, transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
 .player-actions,.pl-plate{top:max(54px, calc(env(safe-area-inset-top) + 8px));}
+
+/* ───────── player: session-length picker ─────────
+   The bundle centred a 7-chip single row on the "15 min" pill, which sits
+   right of centre, so the row ran off the screen edge (and 100vw was the
+   window, not the 393px app column). Now: anchored to the whole timer row,
+   a compact 4-column grid (5 10 15 20 / 30 45 ∞) with a "Minutes" label,
+   always inside the player. */
+.pl-timer{position:relative;}
+.pl-total-wrap{position:static;}
+.pl-lenmenu{left:50%;right:auto;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,52px);gap:6px;
+  max-width:none;overflow:visible;padding:10px;border-radius:20px;z-index:12;}
+.pl-lenmenu::before{content:"Minutes";grid-column:1/-1;padding:0 2px 2px;font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);line-height:1.4;}
+.pl-lenmenu button{width:52px;padding:0;}
+.pl-lenmenu button:focus-visible{outline:2px solid var(--pb-accent);outline-offset:2px;}
+
+/* player: the medical/safety notice stays one tap away during every session */
+.pl-safe{display:block;margin-top:6px;text-align:center;font-size:11.5px;letter-spacing:.2px;color:var(--faint);text-decoration:none;}
+.pl-safe:active{opacity:.6;}

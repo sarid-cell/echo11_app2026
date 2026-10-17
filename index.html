@@ -425,13 +425,13 @@
           <span class="pl-total-wrap">
             <button class="pl-total" id="pl-total" aria-haspopup="true" aria-expanded="false" aria-label="Session length — 15 minutes">15 min<span class="pl-caret" aria-hidden="true">▾</span></button>
             <div class="pl-lenmenu" id="pl-lenmenu" hidden role="menu" aria-label="Session length">
-              <button data-min="5" role="menuitemradio">5</button>
-              <button data-min="10" role="menuitemradio">10</button>
-              <button data-min="15" role="menuitemradio">15</button>
-              <button data-min="20" role="menuitemradio">20</button>
-              <button data-min="30" role="menuitemradio">30</button>
-              <button data-min="45" role="menuitemradio">45</button>
-              <button data-min="inf" role="menuitemradio" aria-label="No limit">∞</button>
+              <button data-min="5" role="menuitemradio" aria-checked="false" aria-label="5 minutes">5</button>
+              <button data-min="10" role="menuitemradio" aria-checked="false" aria-label="10 minutes">10</button>
+              <button data-min="15" role="menuitemradio" aria-checked="false" aria-label="15 minutes">15</button>
+              <button data-min="20" role="menuitemradio" aria-checked="false" aria-label="20 minutes">20</button>
+              <button data-min="30" role="menuitemradio" aria-checked="false" aria-label="30 minutes">30</button>
+              <button data-min="45" role="menuitemradio" aria-checked="false" aria-label="45 minutes">45</button>
+              <button data-min="inf" role="menuitemradio" aria-checked="false" aria-label="No limit">∞</button>
             </div>
           </span>
         </div>
@@ -450,6 +450,7 @@
           <span aria-hidden="true"></span>
         </div>
         <button class="pl-why" id="pl-why">why does it sound like this?</button>
+        <a class="pl-safe" href="/disclaimer" target="_blank" rel="noopener">Wellness, not medical · Safe use</a>
       </div>
 
       <!-- completion state — quiet check-in, same layout language -->
@@ -555,7 +556,7 @@
       <div class="hp-card">
         <span class="hp-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="7" rx="1.4"/><rect x="17" y="13" width="4" height="7" rx="1.4"/></svg></span>
         <h2 class="hp-title" id="hp-title" tabindex="-1">Headphones on</h2>
-        <p class="hp-body">Binaural frequencies work by sending a slightly different tone to each ear — your brain creates the beat. Without stereo headphones, the effect doesn't happen.</p>
+        <p class="hp-body" id="hp-body">Binaural frequencies work by sending a slightly different tone to each ear — your brain creates the beat. Without stereo headphones, the effect doesn't happen.</p>
         <div class="hp-safe">
           <span class="hp-safe-k">Before you begin</span>
           <ul>
@@ -1973,7 +1974,7 @@
 
   /* ── session-length control — explicit "N min ▾" pill opens duration chips (5·10·15·20·30·45·∞) ── */
   function chipSec(b){ return b.dataset.min==='inf' ? Infinity : parseInt(b.dataset.min,10)*60; }
-  function markChips(){ lenmenu.querySelectorAll('button[data-min]').forEach(function(b){ b.classList.toggle('on', chipSec(b)===SESSION); }); }
+  function markChips(){ lenmenu.querySelectorAll('button[data-min]').forEach(function(b){ var on=chipSec(b)===SESSION; b.classList.toggle('on', on); b.setAttribute('aria-checked', on?'true':'false'); }); }
   function setSession(sec){
     SESSION=sec;
     var inf=!isFinite(sec);
@@ -1983,7 +1984,8 @@
     markChips();
     render();
   }
-  totalEl.addEventListener('click', function(e){ e.stopPropagation(); var open=!lenmenu.hidden; lenmenu.hidden=open; totalEl.setAttribute('aria-expanded',open?'false':'true'); if(!open) markChips(); });
+  totalEl.addEventListener('click', function(e){ e.stopPropagation(); var open=!lenmenu.hidden; lenmenu.hidden=open; totalEl.setAttribute('aria-expanded',open?'false':'true');
+    if(!open){ markChips(); var cur=lenmenu.querySelector('button.on'); if(cur) try{ cur.focus({preventScroll:true}); }catch(err){} } });
   lenmenu.querySelectorAll('button[data-min]').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); var sec=chipSec(b); setSession(sec); lenmenu.hidden=true; totalEl.setAttribute('aria-expanded','false'); if(isFinite(sec)&&elapsed>=sec) endSession(); }); });
   document.addEventListener('click', function(){ if(!lenmenu.hidden){ lenmenu.hidden=true; totalEl.setAttribute('aria-expanded','false'); } });
 
@@ -2007,15 +2009,25 @@
     if(tag && el>0) tag.textContent='In progress · '+fmt(el)+' / '+(isFinite(SESSION)?fmt(SESSION):'∞');
   }
 
-  /* ── one-time headphone & safety sheet — gates the FIRST binaural session ── */
-  var HP_KEY='echo:hpSeen', hpPending=null;
+  /* ── one-time safety sheet — gates the FIRST session of any kind. Binaural gets the
+     headphone explanation; a pure tone (any speaker) gets the same safety list under
+     a neutral title, so nobody starts without seeing the driving / seizure notes. ── */
+  var HP_KEY='echo:hpSeen', SAFE_KEY='echo:safetySeen', hpPending=null;
   var hpEl=document.getElementById('hpsheet');
-  function showHP(){ if(!hpEl) return; hpEl.hidden=false; requestAnimationFrame(function(){ hpEl.classList.add('open'); });
+  var HP_COPY={
+    binaural:{t:'Headphones on', b:'Binaural frequencies work by sending a slightly different tone to each ear \u2014 your brain creates the beat. Without stereo headphones, the effect doesn\u2019t happen.'},
+    tone:{t:'Settle in', b:'Pure tones play through any speaker or headphones \u2014 no setup needed.'}
+  };
+  function needsSheet(cat){ return cat==='binaural' ? lget(HP_KEY,null)!=='done' : (lget(SAFE_KEY,null)!=='done' && lget(HP_KEY,null)!=='done'); }
+  function showHP(cat){ if(!hpEl) return;
+    var c=HP_COPY[cat==='binaural'?'binaural':'tone'];
+    var t=document.getElementById('hp-title'), b=document.getElementById('hp-body'); if(t) t.textContent=c.t; if(b) b.textContent=c.b;
+    hpEl.hidden=false; requestAnimationFrame(function(){ hpEl.classList.add('open'); });
     EchoDialog.open(hpEl,{focus:'#hp-title', onEscape:function(){ var n=document.getElementById('hp-notnow'); if(n) n.click(); }}); }   // Escape = "Not now", never a silent start
   function hideHP(){ if(!hpEl) return; hpEl.classList.remove('open'); setTimeout(function(){ hpEl.hidden=true; },380); EchoDialog.close(hpEl); }
   (function(){
     var ready=document.getElementById('hp-ready'), notNow=document.getElementById('hp-notnow');
-    if(ready) ready.addEventListener('click', function(){ lset(HP_KEY,'done'); hideHP(); var o=hpPending; hpPending=null; if(o){ o.__hpOk=true; openPlayer(o); } });
+    if(ready) ready.addEventListener('click', function(){ lset(SAFE_KEY,'done'); if(hpPending && hpPending.__cat==='binaural') lset(HP_KEY,'done'); hideHP(); var o=hpPending; hpPending=null; if(o){ o.__hpOk=true; openPlayer(o); } });
     /* the scrim is deliberately inert — a stray tap must never silently cancel the session.
        The sheet closes only via "I'm ready" (starts) or "Not now" (dismisses, stays one-time). */
     if(notNow) notNow.addEventListener('click', function(){ hpPending=null; hideHP(); if(typeof showView==='function') showView('home'); });
@@ -2031,7 +2043,7 @@
     else { target={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'}; }
     // gates run before curFreq changes, so a session already playing is never relabelled
     if(window.EchoPass && !EchoPass.isUnlocked(target.name)){ EchoPass.open(); return; }
-    if(target.cat==='binaural' && !opts.__hpOk && lget(HP_KEY,null)!=='done'){ hpPending=opts; showHP(); return; }
+    if(!opts.__hpOk && needsSheet(target.cat)){ opts.__cat=target.cat; hpPending=opts; showHP(target.cat); return; }
     curFreq=target;
     applyProfile(profile(curFreq));
     var fl=true; try{ fl=localStorage.getItem(FL_KEY)!=='done'; }catch(e){}
