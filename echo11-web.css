@@ -255,3 +255,30 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 /* player: the medical/safety notice stays one tap away during every session */
 .pl-safe{display:block;margin-top:6px;text-align:center;font-size:11.5px;letter-spacing:.2px;color:var(--faint);text-decoration:none;}
 .pl-safe:active{opacity:.6;}
+
+/* ───────── player on short screens (iPhone SE, 667pt and below) ─────────
+   The stage is the only flexible block, so on short screens it collapsed to
+   ~40px and the 226px orb spilled up over the back / save / share rail.
+   Here the stage starts below the rail, the orb is scaled down, and the
+   fixed gaps tighten so everything fits without overlap. */
+@media (max-height: 760px){
+  .player{padding-top:100px;padding-bottom:18px;}
+  .player-stage{flex:0 0 136px;}
+  .pbreath{transform:scale(.56);margin:-50px 0;}
+  .pl-capzone{height:34px;}
+  .pl-info{gap:5px;margin-top:0;}
+  .pl-name{font-size:24px;}
+  .pl-timer{margin-top:4px;}
+  .pl-track{margin-top:24px;}
+  .pl-controls{margin-top:auto;padding-top:10px;gap:4px;}
+  .pl-safe{margin-top:2px;}
+}
+
+/* ───────── home CTA: two lines instead of one truncated line ─────────
+   The time-aware labels ("Begin this afternoon's echo") plus "· 10 Hz" did
+   not fit one line on a 375pt screen and were cut mid-word. The action now
+   gets the whole first line; the frequency it plays sits under it. */
+.begin{justify-content:flex-start;padding:10px 18px;}
+.begin-lbl{flex-direction:column;align-items:flex-start;gap:2px;min-width:0;}
+#begin-label{max-width:100%;font-size:clamp(15px,4.4vw,17px);}
+.begin-hz{font-size:11.5px;letter-spacing:.6px;opacity:.95;}

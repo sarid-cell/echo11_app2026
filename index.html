@@ -89,7 +89,7 @@
         <div class="begin-wrap">
           <button class="begin" id="begin-signal" data-mode="begin" aria-label="Begin tonight's echo">
             <span class="begin-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg></span>
-            <span class="begin-lbl"><span class="begin-label" id="begin-label">Begin tonight's echo</span> <span class="begin-hz" id="begin-hz">· 10 Hz</span></span>
+            <span class="begin-lbl"><span class="begin-label" id="begin-label">Begin tonight's echo</span> <span class="begin-hz" id="begin-hz">Delta Sleep · 2 Hz</span></span>
           </button>
           <p class="begin-note" id="begin-note">A steady tone, not music — give it 60 seconds.</p>
         </div>
@@ -2210,7 +2210,7 @@
       begin.dataset.mode='resume';
       gid('begin-label').innerHTML='Resume <span class="begin-sep">·</span> <span class="begin-fname">'+open.name+'</span>';
       var left = open.session ? Math.max(1,Math.ceil((open.session-open.elapsed)/60))+' min left' : fmt(open.elapsed)+' in';
-      gid('begin-hz').textContent='· '+left;
+      gid('begin-hz').textContent=left;
       begin.setAttribute('aria-label','Resume '+open.name+' — '+left);
       if(gid('begin-note')) gid('begin-note').textContent='Picks up exactly where you paused.';
       if(tnight) tnight.classList.add('solo');
@@ -2219,7 +2219,7 @@
       // CTA is Begin with the time-recommended frequency; card shows the LAST completed session
       begin.dataset.mode='begin';
       gid('begin-label').textContent=rec.begin;
-      gid('begin-hz').textContent='· '+rec.hz;
+      gid('begin-hz').textContent=rec.name+' · '+rec.hz;   // second line: which frequency, so the label never has to truncate
       begin.setAttribute('aria-label',rec.begin+' — '+rec.name+', '+rec.hz);
       if(gid('begin-note')) gid('begin-note').textContent='A steady tone, not music — give it 60 seconds.';
       var last=ljson(LAST_KEY);
