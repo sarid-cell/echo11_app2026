@@ -144,3 +144,87 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .saved-card .sc-open:focus-visible{outline:2px solid var(--azure-pale);outline-offset:-3px;}
 /* sheet titles take focus on open (keeps the iPhone keyboard down); no ring on a heading */
 .hp-title:focus{outline:none;}
+
+/* ═══════════ THE ARCHIVE · instrument list ═══════════
+   Replaces the 2-up photo grid, which made the Archive read as a second
+   Gallery. Rows are grouped by band; each band reuses the accent the player
+   already gives it (BAND_THEMES in index.html), so a frequency keeps one
+   color from list to player. */
+.archive{padding:8px 16px 130px;display:flex;flex-direction:column;gap:18px;}
+.aband{--band:#3E80B0;background:var(--surface);border:1px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow-sm);overflow:hidden;}
+.aband[data-band="delta"]{--band:#4B53B8;}
+.aband[data-band="theta"]{--band:#7A4FC0;}
+.aband[data-band="alpha"]{--band:#3E80B0;}
+.aband[data-band="beta"]{--band:#4E7290;}
+.aband[data-band="gamma"]{--band:#8F7B4A;}
+.aband[data-band="tone"]{--band:#7A7166;}
+.aband-head{display:flex;align-items:baseline;gap:8px;padding:14px 16px 10px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;}
+.aband-dot{width:8px;height:8px;border-radius:50%;background:var(--band);box-shadow:0 0 0 4px color-mix(in srgb,var(--band) 16%,transparent);align-self:center;}
+.aband-name{font-family:var(--serif);font-size:19px;font-weight:500;letter-spacing:-.2px;color:var(--ink);}
+.aband-range{font-family:var(--mono);font-size:10.5px;letter-spacing:.8px;color:var(--band);}
+.aband-mood{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);}
+
+.arow{width:100%;display:flex;align-items:center;gap:13px;padding:11px 16px;background:none;border:0;
+  border-top:1px solid var(--line-2);font:inherit;color:var(--ink);text-align:left;cursor:pointer;transition:background .15s;}
+.aband-head + .arow{border-top:0;}
+.arow:active{background:var(--line-2);}
+.arow:focus-visible{outline:2px solid var(--band);outline-offset:-2px;}
+.arow-thumb{width:48px;height:48px;flex-shrink:0;border-radius:14px;overflow:hidden;background:#0c0d10;}
+.arow-thumb img{width:100%;height:100%;object-fit:cover;filter:var(--img-filter);}
+.arow-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
+.arow-name{font-size:15.5px;font-weight:600;letter-spacing:-.2px;line-height:1.15;}
+.arow-sub{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* the tuner: where this frequency sits on its band's scale */
+.arow-tuner{position:relative;height:2px;margin-top:5px;border-radius:2px;
+  background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 10%),var(--line-2);}
+.arow-tuner i{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--band);
+  box-shadow:0 0 8px color-mix(in srgb,var(--band) 60%,transparent);}
+.arow-hz{flex-shrink:0;min-width:74px;justify-content:flex-end;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:14px;font-weight:500;
+  letter-spacing:.2px;color:var(--band);}
+.arow-lock{display:inline-flex;color:var(--faint);}
+.arow.locked .arow-name,.arow.locked .arow-sub{color:var(--faint);}
+.arow.locked .arow-thumb img{filter:var(--img-filter) brightness(.6);}
+.arow.locked .arow-tuner i{background:var(--faint);box-shadow:none;}
+
+/* ═══════════ GALLERY · lock-screen reel ═══════════
+   Each still is previewed as a phone lock screen — full color, the device's
+   own clock over it — in a swipeable reel, one at a time. Nothing here looks
+   like the Archive's list, so the two screens stop reading as twins. */
+#view-gallery .seg{margin-top:16px;}
+.lockreel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;
+  padding:18px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.lockreel::-webkit-scrollbar{display:none;}
+.lock{flex:0 0 auto;width:min(58%, calc((100vh - 450px) * 9 / 19.5), calc((100dvh - 450px) * 9 / 19.5));min-width:150px;margin:0;scroll-snap-align:center;
+  display:flex;flex-direction:column;gap:12px;}
+.lock-screen{position:relative;aspect-ratio:9/19.5;border-radius:30px;overflow:hidden;background:#0c0d10;
+  border:1px solid var(--line);box-shadow:var(--shadow-lg);}
+.lock-screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;pointer-events:none;}
+.lock-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,0) 78%,rgba(0,0,0,.3) 100%);}
+/* clock + date in the brand's pale sky, thin and a touch smaller, so the face
+   or figure at the top of each still stays visible through it */
+.lock-date{position:absolute;top:9%;left:0;right:0;text-align:center;font-size:11px;font-weight:400;letter-spacing:.4px;
+  color:rgba(207,246,255,.92);text-shadow:0 1px 8px rgba(0,0,0,.35);transition:opacity .25s ease;}
+.lock-time{position:absolute;top:calc(9% + 15px);left:0;right:0;text-align:center;font-family:var(--ui);font-size:clamp(38px,12.5vw,54px);
+  font-weight:200;letter-spacing:-1px;line-height:1;color:var(--azure-pale);font-variant-numeric:tabular-nums;
+  text-shadow:0 0 18px rgba(207,246,255,.35),0 1px 10px rgba(0,0,0,.28);transition:opacity .25s ease;}
+/* press and hold a preview: the clock steps aside so the whole image shows */
+.lock-screen.peek .lock-date,.lock-screen.peek .lock-time,.lock-screen.peek .lock-shade{opacity:0;}
+.lock-shade{transition:opacity .25s ease;}
+.lock-bar{position:absolute;bottom:9px;left:50%;width:34%;height:4px;margin-left:-17%;border-radius:4px;background:rgba(255,255,255,.75);}
+.lock.locked .lock-screen{cursor:pointer;}
+.lock.locked .lock-screen img{filter:blur(10px) brightness(.62);transform:scale(1.08);}
+.lock-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;}
+.lock-gate b{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;
+  padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);}
+.lock-screen:focus-visible{outline:2px solid var(--azure);outline-offset:3px;}
+.lock-cap{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:0 2px;min-width:0;}
+.lock-name{display:flex;align-items:center;gap:7px;min-width:0;flex-wrap:wrap;row-gap:4px;font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);}
+.lock-tag{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--azure);
+  padding:2px 7px;border-radius:99px;background:var(--azure-tint);}
+.lock-save{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 13px;border-radius:99px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;box-shadow:var(--shadow-sm);}
+.lock-save:active{transform:scale(.97);}
+.lock-save.done{color:var(--azure);border-color:var(--azure);}
+.lockreel-count{padding:10px 16px 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--faint);}
+#view-gallery .quote{margin-bottom:130px;}
