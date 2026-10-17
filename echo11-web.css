@@ -131,3 +131,7 @@ body{background:var(--bg);}
   background:rgba(8,9,12,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13.5px;font-weight:500;line-height:1.35;text-align:center;}
 .pl-audio-note[hidden]{display:none;}
+
+/* ───────── boot guard: data file failed to load ───────── */
+.splash.boot-failed{cursor:pointer;}
+.splash.boot-failed .splash-tag{color:#fff;letter-spacing:1.6px;}

@@ -1,4 +1,4 @@
-/* echo.|| — app data: 22 frequencies (2 categories), gallery, history, AI */
+/* echo.|| — app data: 22 frequencies (2 categories), gallery, weekly line */
 window.ECHO = (function(){
   var FREQS = [
     /* ── Binaural Synchronization (needs headphones) ── */
@@ -47,28 +47,5 @@ window.ECHO = (function(){
     text:'You don\u2019t chase stillness \u2014 you <em>tune</em> to it. Twenty quiet minutes today \u2014 a small signal for the rest of your week.'
   };
 
-  /* listening history (most recent first) */
-  var HISTORY = [
-    { n:'Alpha Clarity', hz:'10 Hz',  cat:'binaural', when:'Today · 21:12',     min:15, img:'img/face-up.png' },
-    { n:'The Heart',     hz:'528 Hz', cat:'tone',     when:'Today · 08:05',     min:10, img:'img/energy.png' },
-    { n:'Theta Drift',   hz:'6 Hz',   cat:'binaural', when:'Yesterday · 22:40', min:20, img:'img/eyes-closed.png' },
-    { n:'Delta Sleep',   hz:'2 Hz',   cat:'binaural', when:'Yesterday · 23:30', min:30, img:'img/astro-rest.png' },
-    { n:'Gamma Insight', hz:'40 Hz',  cat:'binaural', when:'2 days ago · 19:50',min:25, img:'img/astro-gaze.png' },
-    { n:'The Universe',  hz:'432 Hz', cat:'tone',     when:'3 days ago · 07:30',min:12, img:'img/neural-light.png' }
-  ];
-
-  /* simulated cognitive-behaviour agent — analyses time/duration/band */
-  function buildAI(){
-    return {
-      stats:{ streak:4, week:182, sessions:21, coherence:'0.82' },
-      summary:'You listen <b>almost entirely in the evening</b>, mostly in the <b>alpha\u2013theta</b> range. That\u2019s a calm, wind-down pattern \u2014 great for your nervous system, but your <b>focus &amp; peak-cognition bands are under-used</b>. Sessions average 17 min; nudging two of them to 20 would deepen entrainment.',
-      recs:[
-        { n:'Beta Focus', hz:'18 Hz', why:'A morning focus block \u2014 the band you skip most.' },
-        { n:'Delta Sleep', hz:'2 Hz', why:'Close the night instead of stopping at theta.' },
-        { n:'Gamma Insight', hz:'40 Hz', why:'One peak-cognition session to balance the week.' }
-      ]
-    };
-  }
-
-  return { FREQS:FREQS, WALLPAPERS:WALLPAPERS, WEEK_QUOTE:WEEK_QUOTE, HISTORY:HISTORY, buildAI:buildAI };
+  return { FREQS:FREQS, WALLPAPERS:WALLPAPERS, WEEK_QUOTE:WEEK_QUOTE };
 })();

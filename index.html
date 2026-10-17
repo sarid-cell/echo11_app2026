@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
 <title>echo.|| — App</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -203,7 +203,7 @@
         <div class="hist" id="hist-list"></div>
       </div>
 
-      <div class="prof-sec">
+      <div class="prof-sec" id="book-sec" hidden>
         <div class="sec-head"><span class="seclabel">Founding bonus</span><span class="bonus-flag" id="bonus-flag">Unlocked</span></div>
         <button class="bookcard" id="book-open" aria-label="Open the bonus book — echo, Volume One">
           <span class="bk-cover" aria-hidden="true">
@@ -590,6 +590,17 @@
       </div>
     </div>
 
+    <!-- ░░ SHARE · copy-the-link fallback when neither the share sheet nor the clipboard is available ░░ -->
+    <div class="hpsheet" id="linksheet" hidden role="dialog" aria-modal="true" aria-labelledby="link-title">
+      <div class="hp-scrim" id="link-scrim"></div>
+      <div class="hp-card">
+        <h2 class="hp-title" id="link-title">Share this frequency</h2>
+        <p class="hp-body">Copy the link below to share it.</p>
+        <input class="pass-input" id="link-field" type="text" readonly aria-label="Link to share" />
+        <button class="hp-btn" id="link-done" type="button">Done</button>
+      </div>
+    </div>
+
     <style id="beta-fixes">
     .beta-line{margin-top:12px;max-width:32ch;font-family:'Outfit',var(--ui);font-size:clamp(1rem,1.8vw,1.25rem);line-height:1.6;font-weight:300;letter-spacing:.1px;color:rgba(255,255,255,.92);text-shadow:0 1px 14px rgba(0,0,0,.4);text-wrap:pretty;}
     .pro-pill{text-transform:uppercase;letter-spacing:.6px;}
@@ -686,6 +697,23 @@
 
 <script src="config.js"></script>
 <script src="echo11-app-data.js"></script>
+<!-- ░░ BOOT GUARD · the data file failed → a retry state, never a splash that hangs ░░ -->
+<script>
+(function(){
+  if(!window.ECHO_CONFIG) window.ECHO_CONFIG={PAYWALL_ENABLED:false,CHECKOUT_URL:'',PRICE_LABEL:'',FREE_FREQS:[]};   // config missing → stay open, never charge
+  if(window.ECHO && Array.isArray(window.ECHO.FREQS) && window.ECHO.FREQS.length) return;
+  window.ECHO_BOOT_FAILED=true;
+  window.ECHO={FREQS:[],WALLPAPERS:[],WEEK_QUOTE:{week:'',text:''}};      // empty data so the scripts below still parse and run
+  var sp=document.getElementById('splash'); if(!sp) return;
+  sp.classList.add('boot-failed');
+  sp.setAttribute('role','button'); sp.setAttribute('tabindex','0');
+  sp.setAttribute('aria-label','Couldn\u2019t load echo. Tap to retry.');
+  var tag=sp.querySelector('.splash-tag'); if(tag) tag.textContent='Couldn\u2019t load \u2014 tap to retry';
+  function retry(){ location.reload(); }
+  sp.addEventListener('click', retry);
+  sp.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); retry(); } });
+})();
+</script>
 
 <!-- ░░ FOUNDING PASS · gate + license (Lemon Squeezy, via /api/license) ░░ -->
 <script>
@@ -891,7 +919,15 @@
     function saveWallpaper(w,b){
       var ext=w.img.slice(w.img.lastIndexOf('.'));
       var fname='echo-'+w.name.toLowerCase()+ext;
+      function say(m){ if(typeof window.__echoToast==='function') window.__echoToast(m); }
+      /* the checkmark only follows a download the browser actually started: no
+         download-attribute support → open the image to long-press instead */
       function fallback(){
+        if(!('download' in HTMLAnchorElement.prototype)){
+          var win=window.open(w.img,'_blank','noopener');
+          say(win===null ? 'Couldn\u2019t open the image \u2014 allow pop-ups and try again' : 'Press and hold the image to save it');
+          return;
+        }
         var a=document.createElement('a'); a.href=w.img; a.download=fname;
         document.body.appendChild(a); a.click(); a.remove(); confirmSaved(b);
       }
@@ -903,7 +939,7 @@
           navigator.share({files:[f],title:'echo · '+w.name}).then(function(){ confirmSaved(b); },function(err){
             if(!(err && err.name==='AbortError')) fallback();   // user cancelled → no fake checkmark
           });
-        }).catch(fallback);
+        }).catch(function(){ say('Couldn\u2019t load the image \u2014 check your connection and try again'); });   // nothing to save → no checkmark
       } else fallback();
     }
     document.querySelectorAll('#gal-grid .wp').forEach(function(el,i){
@@ -1214,6 +1250,7 @@
     var done = false, started = Date.now();
     var MIN = 1200;
     function finish(){
+      if(window.ECHO_BOOT_FAILED) return;      // stay on the retry state the boot guard put up
       if(done) return; done = true;
       clearTimeout(maxT);
       routeFromSplash();                       // decide destination first…
@@ -1721,11 +1758,26 @@
     var data={ title:'echo.|| · '+curFreq.name+' · '+curFreq.hz,
                text: prof.intent+' — twenty quiet minutes on echo',
                url: location.href };
-    if(navigator.share){ navigator.share(data).catch(function(){}); return; }
-    var copy = data.url;
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(copy).then(function(){ toast('Link copied'); }, function(){ toast('Link copied'); }); }
-    else { toast('Link copied'); }
+    if(navigator.share){ navigator.share(data).catch(function(err){ if(!(err && err.name==='AbortError')) copyLink(data.url); }); return; }
+    copyLink(data.url);
   });
+  /* "Link copied" only when the clipboard write actually succeeded; otherwise the link
+     is shown in a selectable field so it can be copied by hand */
+  function copyLink(url){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast('Link copied'); }, function(){ showLink(url); });
+    } else showLink(url);
+  }
+  var linkSheet=document.getElementById('linksheet'), linkField=document.getElementById('link-field');
+  function showLink(url){
+    if(!linkSheet) return;
+    linkField.value=url; linkSheet.hidden=false;
+    requestAnimationFrame(function(){ linkSheet.classList.add('open'); try{ linkField.focus(); linkField.select(); }catch(e){} });
+  }
+  function hideLink(){ if(!linkSheet||linkSheet.hidden) return; linkSheet.classList.remove('open'); setTimeout(function(){ linkSheet.hidden=true; },380); }
+  if(linkField) linkField.addEventListener('focus', function(){ try{ linkField.select(); }catch(e){} });
+  ['link-done','link-scrim'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('click', hideLink); });
+  window.__echoToast=toast;
 
   /* ── night behaviour: dim to 40% after 30s idle. iOS HIG — dimming must never trap
        the user: the FIRST tap only restores brightness (it does NOT trigger the control
@@ -1934,10 +1986,10 @@
   /* ───────── HOME STATE · single source of truth, time-aware, persisted ───────── */
   var homeRecFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};
   function recForHour(h){
-    if(h>=5 && h<11)  return {name:'Beta Focus',   hz:'18 Hz', cat:'binaural', word:'Morning', greet:'Good morning'};   // focus
-    if(h>=11 && h<17) return {name:'Alpha Clarity', hz:'10 Hz', cat:'binaural', word:'Day',     greet:'Good afternoon'};// clarity
-    if(h>=17 && h<22) return {name:'Theta Drift',   hz:'6 Hz',  cat:'binaural', word:'Evening', greet:'Good evening'};  // wind-down
-    return                   {name:'Delta Sleep',   hz:'2 Hz',  cat:'binaural', word:'Night',   greet:'Good night'};    // sleep
+    if(h>=5 && h<11)  return {name:'Beta Focus',   hz:'18 Hz', cat:'binaural', word:'Morning', greet:'Good morning',   begin:"Begin this morning's echo"};   // focus
+    if(h>=11 && h<17) return {name:'Alpha Clarity', hz:'10 Hz', cat:'binaural', word:'Day',     greet:'Good afternoon', begin:"Begin this afternoon's echo"}; // clarity
+    if(h>=17 && h<22) return {name:'Theta Drift',   hz:'6 Hz',  cat:'binaural', word:'Evening', greet:'Good evening',   begin:"Begin this evening's echo"};   // wind-down
+    return                   {name:'Delta Sleep',   hz:'2 Hz',  cat:'binaural', word:'Night',   greet:'Good night',     begin:"Begin tonight's echo"};        // sleep
   }
   function relTime(ts){
     var d=Date.now()-ts, day=86400000;
@@ -1958,7 +2010,7 @@
     // streak tile from persisted values
     if(gid('streak-n'))    gid('streak-n').textContent=lnum(STREAK_KEY,0);
     if(gid('streak-week')) gid('streak-week').textContent=lnum(WEEK_KEY,0)+' min this week';
-    if(gid('streak-best')) var nb=lnum(BEST_KEY,0); gid('streak-best').textContent='Best: '+nb+' day'+(nb===1?'':'s');
+    if(gid('streak-best')){ var nb=lnum(BEST_KEY,0); gid('streak-best').textContent='Best: '+nb+' day'+(nb===1?'':'s'); }
 
     var open=ljson(OPEN_KEY), inProgress=!!(open && (!open.session || open.elapsed < open.session));
     var rb=gid('resume-block'), tnight=gid('tonight');
@@ -1978,9 +2030,9 @@
     } else {
       // CTA is Begin with the time-recommended frequency; card shows the LAST completed session
       begin.dataset.mode='begin';
-      gid('begin-label').textContent="Begin tonight's echo";
+      gid('begin-label').textContent=rec.begin;
       gid('begin-hz').textContent='· '+rec.hz;
-      begin.setAttribute('aria-label',"Begin tonight's echo — "+rec.name+", "+rec.hz);
+      begin.setAttribute('aria-label',rec.begin+' — '+rec.name+', '+rec.hz);
       if(gid('begin-note')) gid('begin-note').textContent='A steady tone, not music — give it 60 seconds.';
       var last=ljson(LAST_KEY);
       if(last && tnight){
@@ -2315,6 +2367,9 @@
 
   window.addEventListener('echo:pass', updateGate);   // a license activated or removed re-gates the book
   updateGate();
+  /* the book's only entry point stays hidden until the PDF is actually deployed
+     (same HEAD check the reader uses); the reader's "on its way" state stays as a fallback */
+  checkBook(function(ok){ var sec=document.getElementById('book-sec'); if(sec) sec.hidden=!ok; });
   /* founding listener Nº — assigned once, persisted; real join-order serial comes from the backend at signup */
   (function(){
     var K='echo:founderNo', n=null;
