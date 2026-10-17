@@ -164,28 +164,31 @@
     </section>
 
     <!-- ░░ LIBRARY ░░ -->
-    <section class="view" id="view-library" hidden data-screen-label="Spectrum">
+    <section class="view" id="view-library" hidden data-screen-label="Dial">
       <div class="lib-head">
-        <div class="htext"><h2 class="screen-title">The Spectrum</h2><p class="screen-sub">Pick a feeling. We'll tune the rest.</p></div>
-        <div class="chips mood-chips" id="lib-chips" role="tablist" aria-label="Filter by feeling">
-          <button class="chip on" data-filter="all" role="tab" aria-selected="true" aria-controls="node-grid">All <span class="ct">22</span></button>
-          <button class="chip" data-filter="delta" data-band="delta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Sleep</button>
-          <button class="chip" data-filter="theta" data-band="theta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Dream</button>
-          <button class="chip" data-filter="alpha" data-band="alpha" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Calm</button>
-          <button class="chip" data-filter="beta" data-band="beta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Focus</button>
-          <button class="chip" data-filter="gamma" data-band="gamma" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Bright</button>
-          <button class="chip" data-filter="tone" data-band="tone" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Tones</button>
+        <div class="htext"><h2 class="screen-title">The Dial</h2><p class="screen-sub">Turn it. Or let echo turn it for you.</p></div>
+      </div>
+      <!-- the dial: every frequency is a stop on one scale, 1 Hz → 963 Hz -->
+      <div class="dial" id="dial">
+        <div class="dial-read" aria-live="polite">
+          <span class="dial-why" id="dial-why"></span>
+          <span class="dial-hz" id="dial-hz">—</span>
         </div>
-        <button type="button" class="spec-pick" id="spec-pick">
-          <span class="spec-pick-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></span>
-          <span class="spec-pick-txt"><b>Can't choose?</b> <span id="spec-pick-sub">Let echo pick for now</span></span>
+        <div class="dial-scale">
+          <div class="dial-track" id="dial-track" role="listbox" aria-label="Frequency dial — use the arrow keys to turn" tabindex="0"></div>
+          <span class="dial-needle" aria-hidden="true"></span>
+        </div>
+        <button type="button" class="dial-card" id="dial-card" aria-describedby="dial-why"></button>
+        <button type="button" class="dial-again" id="dial-again">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Try another
         </button>
       </div>
       <div class="saved-sec" id="saved-sec" hidden>
         <span class="seclabel saved-lbl" id="saved-lbl">Your echoes</span>
         <div class="saved-row" id="saved-row"></div>
       </div>
-      <div class="spectrum" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
+      <div class="shelves" id="node-grid" aria-label="All frequencies by band"></div>
     </section>
 
     <!-- ░░ GALLERY ░░ -->
@@ -376,9 +379,9 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a12 12 0 0 0 0 17M20.5 3.5a12 12 0 0 1 0 17"/></svg>
         <span class="tlab">ECHO</span>
       </button>
-      <button class="tab" data-tab="library" aria-label="Spectrum">
+      <button class="tab" data-tab="library" aria-label="Dial">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.4"/></svg>
-        <span class="tlab">SPECTRUM</span>
+        <span class="tlab">DIAL</span>
       </button>
       <button class="tab" data-tab="gallery" aria-label="Gallery">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg>
@@ -903,7 +906,7 @@
     device.classList.remove('scrolled');
     document.getElementById(views[name]).scrollTop = 0;
     if(name==='home' && typeof window.__echoRenderHome==='function') window.__echoRenderHome();   // keep home state fresh on every visit
-    if(name==='library'){ renderSaved(); renderPick(); }  // your echoes + a fresh suggestion on every visit
+    if(name==='library'){ renderSaved(); tuneOnEnter(); }  // your echoes + the dial turned for you on every visit
     if(name==='gallery'){ pickLine(); renderGallery(curSeg); }   // a new line, a fresh lock-screen clock + counter on every visit
     if(name==='profile') renderProfile();                // reflect any newly-completed sessions in history
   }
@@ -911,13 +914,13 @@
 
   var LOCK_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   var curFilter='all', curSeg='all';
-  /* ── THE SPECTRUM · pick a feeling, not a number ──
-     Built for attention-light browsing: the first choice is a feeling (one
-     row of mood chips), one tap hands the choice to the app ("Can't choose?"),
-     your own echoes sit on top as big cards, and every band is one shelf of
-     photo cards you swipe — Hz and band name stay, but second. Each band keeps
-     the accent the player uses for it (BAND_THEMES), and every card still
-     shows where it sits on the tuner scale. */
+  /* ── THE DIAL · turn it, or let echo turn it for you ──
+     Every frequency is one stop on a single scale (1 Hz → 40 Hz, then the
+     tones). On every visit the dial is already turned: to what your own
+     listening says suits this time of day (tunedFor), or — until there is
+     enough history — to a time-of-day default. Below it: your echoes as big
+     cards, then one swipeable shelf per band. Each band keeps the accent the
+     player uses for it (BAND_THEMES). */
   var BANDS=[
     {key:'delta', word:'Sleep',  name:'Delta', range:'1–4 Hz',     mood:'deep rest · stillness'},
     {key:'theta', word:'Dream',  name:'Theta', range:'4–8 Hz',     mood:'drift · meditation'},
@@ -949,26 +952,21 @@
       + '</button>';
   }
   function renderNodes(filter){
-    if(filter==='binaural') filter='all';                 // home category cards: binaural shelves lead the list anyway
-    if(filter!=='all' && !BANDS.some(function(b){ return b.key===filter; })) filter='all';
-    curFilter=filter;
-    document.querySelectorAll('#lib-chips .chip').forEach(function(c){ var on=c.dataset.filter===filter; c.classList.toggle('on', on); c.setAttribute('aria-selected', on?'true':'false'); });
+    curFilter='all';
+    if(filter && filter!=='all' && filter!=='binaural') pendingTune=filter;   // home "Pure tone" card → dial opens on the tones
     var grid=document.getElementById('node-grid');
-    grid.classList.toggle('one', filter!=='all');
-    grid.innerHTML = BANDS.filter(function(b){ return filter==='all' || b.key===filter; }).map(function(b){
+    grid.innerHTML = BANDS.map(function(b){
       var rows=ECHO.FREQS.filter(function(f){ return bandOf(f)===b.key; })
         .sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
       if(!rows.length) return '';
-      var one=filter!=='all';
       return '<section class="shelf" data-band="'+b.key+'" aria-label="'+b.word+' — '+b.name+', '+b.range+'">'
         + '<header class="shelf-head"><span class="shelf-word">'+b.word+'</span>'
-        + '<span class="shelf-band"><i aria-hidden="true"></i>'+b.name+' · '+b.range+'</span>'
-        + (one?'':'<button type="button" class="shelf-more" data-more="'+b.key+'" aria-label="Show all '+rows.length+' '+b.word+' frequencies">'+rows.length+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>')
-        + '</header>'
-        + (one?'<p class="shelf-mood">'+b.mood+'</p>':'')
+        + '<span class="shelf-band"><i aria-hidden="true"></i>'+b.name+' · '+b.range+'</span></header>'
         + '<div class="shelf-row">'+rows.map(function(f){ return freqCard(f); }).join('')+'</div>'
         + '</section>';
     }).join('');
+    renderDial();
+    if(dialWhy) setDial(dialIdx);                          // a license change re-renders: keep the dial where it was
     renderSaved();
   }
 
@@ -977,7 +975,6 @@
   function renderSaved(){
     var sec=document.getElementById('saved-sec'), row=document.getElementById('saved-row'), lbl=document.getElementById('saved-lbl');
     if(!sec||!row) return;
-    if(curFilter!=='all'){ sec.hidden=true; return; }     // one feeling picked → only that shelf
     function byName(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0]; }
     var saved=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:saved')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
     var hist=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:history')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
@@ -1005,21 +1002,118 @@
     }).join('');
   }
 
-  /* "Can't choose?" — one tap hands the decision to the app: a frequency from
-     the bands that suit this time of day, never the one you just played */
-  var PICK_BANDS=[[5,11,['beta','alpha'],'this morning'],[11,17,['alpha','beta'],'this afternoon'],[17,22,['theta','alpha'],'this evening'],[22,29,['delta','theta'],'tonight']];
-  function pickSlot(){ var h=new Date().getHours(); if(h<5) h+=24; return PICK_BANDS.filter(function(p){ return h>=p[0] && h<p[1]; })[0]||PICK_BANDS[3]; }
-  function renderPick(){ var el=document.getElementById('spec-pick-sub'); if(el) el.textContent='Let echo pick for '+pickSlot()[3]; }
-  function surprise(){
-    var slot=pickSlot(), last=null;
-    try{ last=(JSON.parse(localStorage.getItem('echo:last'))||{}).name; }catch(e){}
-    var pool=ECHO.FREQS.filter(function(f){ return slot[2].indexOf(bandOf(f))>-1 && EchoPass.isUnlocked(f.n) && f.n!==last; });
-    if(!pool.length) pool=ECHO.FREQS.filter(function(f){ return EchoPass.isUnlocked(f.n) && f.n!==last; });
-    var f=pool[Math.floor(Math.random()*pool.length)];
-    if(f && typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:f.n,hz:f.hz,cat:f.cat}});
+  /* ── the dial ── */
+  var DIAL=[], dialIdx=0, pendingTune=null, dialWhy='';
+  var SLOTS=[[5,11,['beta','alpha'],'morning','this morning'],[11,17,['alpha','beta'],'afternoon','this afternoon'],
+             [17,22,['theta','alpha'],'evening','this evening'],[22,29,['delta','theta'],'night','tonight']];
+  function slotOf(ts){ var h=new Date(ts).getHours(); if(h<5) h+=24; return SLOTS.filter(function(p){ return h>=p[0] && h<p[1]; })[0]||SLOTS[3]; }
+  function renderDial(){
+    var bin=ECHO.FREQS.filter(function(f){ return f.cat!=='tone'; }).sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
+    var ton=ECHO.FREQS.filter(function(f){ return f.cat==='tone'; }).sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
+    DIAL=bin.concat(ton);
+    var lastBand=null;
+    document.getElementById('dial-track').innerHTML=DIAL.map(function(f,i){
+      var band=bandOf(f), first=band!==lastBand; lastBand=band;
+      var word=BANDS.filter(function(b){ return b.key===band; })[0].word;
+      return '<button type="button" class="dstop'+(first?' first':'')+(EchoPass.isUnlocked(f.n)?'':' locked')+'" data-band="'+band+'" data-i="'+i+'" role="option" aria-selected="false" tabindex="-1" aria-label="'+f.n+', '+f.hz+'">'
+        + '<i class="dtick" aria-hidden="true"></i>'+(first?'<span class="dword" aria-hidden="true">'+word+'</span>':'')+'</button>';
+    }).join('');
   }
-  document.getElementById('spec-pick').addEventListener('click', surprise);
-  renderPick();
+  function setDial(i, why, smooth){
+    if(!DIAL.length) renderDial();
+    dialIdx=Math.max(0,Math.min(DIAL.length-1,i));
+    if(why!=null) dialWhy=why;
+    var f=DIAL[dialIdx], band=bandOf(f), locked=!EchoPass.isUnlocked(f.n);
+    var dial=document.getElementById('dial'); dial.dataset.band=band;
+    document.getElementById('dial-hz').textContent=f.hz;
+    document.getElementById('dial-why').innerHTML=dialWhy;
+    document.querySelectorAll('#dial-track .dstop').forEach(function(s,k){ var on=k===dialIdx; s.classList.toggle('on',on); s.setAttribute('aria-selected',on?'true':'false'); });
+    var b=BANDS.filter(function(x){ return x.key===band; })[0];
+    var card=document.getElementById('dial-card');
+    card.className='dial-card'+(locked?' locked':''); card.dataset.band=band;
+    card.dataset.fname=f.n; card.dataset.fhz=f.hz; card.dataset.fcat=f.cat;
+    card.setAttribute('aria-label','Play '+f.n+', '+f.hz+' — '+f.sub+(locked?' (included with the Founding Pass)':''));
+    card.innerHTML='<img src="'+f.img+'" alt="" decoding="async"/><span class="dc-scrim"></span>'
+      + '<span class="dc-band">'+(band==='tone'?'Pure tone':b.word+' · '+b.name)+'</span>'
+      + '<span class="dc-txt"><span class="dc-name">'+f.n+'</span><span class="dc-sub">'+f.sub+'</span></span>'
+      + '<span class="dc-play" aria-hidden="true">'+(locked?LOCK_SVG:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg>')+'</span>';
+    var track=document.getElementById('dial-track'), stop=track.children[dialIdx];
+    if(stop){ dialLock=Date.now(); track.scrollTo({left:stop.offsetLeft+stop.offsetWidth/2-track.clientWidth/2, behavior:smooth?'smooth':'auto'}); }
+  }
+  var dialLock=0, dialT=null;
+  (function(){
+    var track=document.getElementById('dial-track');
+    track.addEventListener('scroll', function(){
+      if(Date.now()-dialLock<450) return;                       // our own scrollTo, not a turn
+      clearTimeout(dialT);
+      dialT=setTimeout(function(){
+        var mid=track.scrollLeft+track.clientWidth/2, best=0, bd=1e9;
+        Array.prototype.forEach.call(track.children,function(s,k){ var d=Math.abs(s.offsetLeft+s.offsetWidth/2-mid); if(d<bd){ bd=d; best=k; } });
+        if(best!==dialIdx){ setDial(best,'Tuned by you',false); try{ if(navigator.vibrate) navigator.vibrate(4); }catch(e){} }
+      },90);
+    }, {passive:true});
+    track.addEventListener('click', function(e){ var s=e.target.closest('.dstop'); if(s) setDial(+s.dataset.i,'Tuned by you',true); });
+    track.addEventListener('keydown', function(e){
+      var k=e.key, d=k==='ArrowRight'?1:k==='ArrowLeft'?-1:0;
+      if(k==='Home'){ d=-dialIdx; } if(k==='End'){ d=DIAL.length-1-dialIdx; }
+      if(!d) return; e.preventDefault(); setDial(dialIdx+d,'Tuned by you',true);
+    });
+    document.getElementById('dial-card').addEventListener('click', function(){
+      var c=this; if(typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:c.dataset.fname,hz:c.dataset.fhz,cat:c.dataset.fcat}});
+    });
+    document.getElementById('dial-again').addEventListener('click', function(){ tuneOnEnter(true); });
+  })();
+
+  /* ── tunedFor · the listening agent, on this device ──
+     Reads only your own history (time of day, minutes, finished sessions and
+     the "how do you feel?" answer) and scores each frequency for the current
+     slot. Needs 5 sessions overall and 2 in this slot before it speaks;
+     until then the dial falls back to a time-of-day default. It describes what
+     you did — never what you feel or how your health is. */
+  var GOOD_FEEL={morning:'sharper',afternoon:'sharper',evening:'calmer',night:'calmer'};
+  function tunedFor(exclude){
+    var hist=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:history')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
+    if(hist.length<5) return null;
+    var slot=slotOf(Date.now()), now=Date.now(), stats={};
+    hist.forEach(function(h){
+      if(!h||!h.name||!h.ts) return;
+      var f=ECHO.FREQS.filter(function(x){ return x.n===h.name; })[0];
+      if(!f || !EchoPass.isUnlocked(f.n) || f.n===exclude) return;
+      var same=slotOf(h.ts)[3]===slot[3];
+      var age=(now-h.ts)/86400000, w=Math.pow(0.5, age/14);            // two-week half-life
+      var s=stats[f.n]||(stats[f.n]={f:f,score:0,n:0,good:0,feel:null});
+      var pts=(same?2:0.5) + ((parseInt(h.min,10)||0)>=10?0.5:0);
+      if(h.feel && h.feel!=='same'){ pts+=1; if(same){ s.good++; s.feel=h.feel; } }
+      s.score+=pts*w; if(same) s.n++;
+    });
+    var best=Object.keys(stats).map(function(k){ return stats[k]; }).filter(function(s){ return s.n>=2; })
+      .sort(function(a,b){ return b.score-a.score; })[0];
+    if(!best) return null;
+    var cap=slot[3].charAt(0).toUpperCase()+slot[3].slice(1)+'s';
+    var why= best.good ? cap+' you come back to '+best.f.n+' — you felt '+best.feel+' after '+best.good+' of '+best.n+'.'
+                       : cap+' you come back to '+best.f.n+' — '+best.n+' sessions so far.';
+    return {f:best.f, why:'<b>Tuned for you</b> · '+why};
+  }
+  function tuneOnEnter(again){
+    if(!DIAL.length) renderDial();
+    var cur=DIAL[dialIdx], pick=null, why='';
+    if(pendingTune){
+      var band=pendingTune; pendingTune=null;
+      var i=DIAL.map(function(f){ return bandOf(f); }).indexOf(band);
+      if(i>-1){ setDial(i,'<b>'+BANDS.filter(function(b){ return b.key===band; })[0].word+'</b> · turn for more',false); return; }
+    }
+    var t=again?null:tunedFor();
+    if(t){ pick=t.f; why=t.why; }
+    else {
+      var slot=slotOf(Date.now()), last=null;
+      try{ last=(JSON.parse(localStorage.getItem('echo:last'))||{}).name; }catch(e){}
+      var pool=ECHO.FREQS.filter(function(f){ return slot[2].indexOf(bandOf(f))>-1 && EchoPass.isUnlocked(f.n) && f.n!==last && (!again || !cur || f.n!==cur.n); });
+      if(!pool.length) pool=ECHO.FREQS.filter(function(f){ return EchoPass.isUnlocked(f.n); });
+      pick=pool[Math.floor(Math.random()*pool.length)];
+      why=again?'<b>Another one</b> for '+slot[4]:'<b>Tuned for '+slot[4]+'</b>';
+    }
+    setDial(DIAL.indexOf(pick), why, !!again);
+  }
   window.__echoRenderSaved=renderSaved;
   document.getElementById('saved-row').addEventListener('click', function(e){
     var rm=e.target.closest('[data-rm]');
@@ -1041,7 +1135,7 @@
     var bigLock='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     function wpLocked(w){ return !!w.pro && !EchoPass.isUnlocked(); }
     /* each still is shown the way it will actually look: on a lock screen, in its
-       own colors, with the clock over it — the Spectrum is the instrument, this is the keepsake */
+       own colors, with the clock over it — the Dial is the instrument, this is the keepsake */
     var clock=lockClock();
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
       var locked=wpLocked(w);
@@ -1290,7 +1384,6 @@
   document.querySelectorAll('[data-cat]').forEach(function(card){
     card.addEventListener('click', function(e){ if(e.target.closest('.now-play')) return; renderNodes(card.dataset.cat); showView('library'); });
   });
-  document.querySelectorAll('#lib-chips .chip').forEach(function(c){ c.addEventListener('click', function(){ renderNodes(c.dataset.filter); }); });
   document.querySelectorAll('#gal-seg button').forEach(function(b){ b.addEventListener('click', function(){ renderGallery(b.dataset.seg); }); });
 
   // a license activated or removed → every gated surface re-renders
@@ -1511,7 +1604,7 @@
   var OPEN_KEY='echo:open';          // JSON {name,hz,cat,elapsed,session} while a session is mid-way; absent = none open
   var LAST_KEY='echo:last';          // JSON {name,hz,cat,ts,min} of the last COMPLETED session
   var STREAK_KEY='echo:streak', WEEK_KEY='echo:minWeek', BEST_KEY='echo:best', CHK_KEY='echo:checkin';
-  var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced in the Spectrum
+  var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced on the Dial
   var HIST_KEY='echo:history';       // array of completed sessions {name,hz,cat,min,ts,feel}, newest first
   var SESS_KEY='echo:sessions';      // sessions rows, kept in localStorage only — guest-only beta, nothing syncs
   function lget(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
@@ -1578,7 +1671,7 @@
     gamma:{ accent:'#8F7B4A', pale:'#F5EEDC', tempo:11, motion:'fine shimmer' },
     tone: { accent:'#7A7166', pale:'#F1ECE3', tempo:10, motion:'concentric ripple' }
   };
-  /* photographic plates come from the Spectrum catalog; faces anchor to the top
+  /* photographic plates come from the Dial catalog; faces anchor to the top
      third so the orb never lands on the eyes */
   var CATALOG=(window.ECHO&&window.ECHO.FREQS)?window.ECHO.FREQS:[];
   var FOCAL={'img/face-up.png':'26%','img/eyes-closed.png':'26%','img/eyes-open.png':'24%','img/gaze-dark.png':'22%',
@@ -2168,7 +2261,6 @@
   // any of the 22 frequencies → the same Player, varied only by hue + motion
   var grid=document.getElementById('node-grid');
   if(grid) grid.addEventListener('click', function(e){
-    var more=e.target.closest('[data-more]'); if(more){ renderNodes(more.dataset.more); document.getElementById('view-library').scrollTop=0; return; }
     var n=e.target.closest('[data-fname]'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
 
   /* ───────── STATS INTEGRITY ─────────────────────────────────────
