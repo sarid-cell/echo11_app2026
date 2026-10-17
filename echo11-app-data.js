@@ -2,29 +2,29 @@
 window.ECHO = (function(){
   var FREQS = [
     /* ── Binaural Synchronization (needs headphones) ── */
-    { n:'Delta Sleep',     hz:'2 Hz',    sub:'Deep sleep & renewal',     cat:'binaural', img:'img/astro-rest.png' },
+    { n:'Delta Sleep',     hz:'2 Hz',    sub:'Deep sleep · stillness',   cat:'binaural', img:'img/astro-rest.png' },
     { n:'Theta Drift',     hz:'6 Hz',    sub:'Meditation · subconscious',cat:'binaural', img:'img/eyes-closed.png' },
     { n:'Alpha Clarity',   hz:'10 Hz',   sub:'Calm focus · creativity',  cat:'binaural', img:'img/face-up.png' },
     { n:'Beta Focus',      hz:'18 Hz',   sub:'Sustained attention',      cat:'binaural', img:'img/astro-data.png' },
-    { n:'Gamma Insight',   hz:'40 Hz',   sub:'Peak cognition · clarity', cat:'binaural', img:'img/astro-gaze.png' },
+    { n:'Gamma Insight',   hz:'40 Hz',   sub:'Bright · wide awake',      cat:'binaural', img:'img/astro-gaze.png' },
     { n:'SMR Steady',      hz:'14 Hz',   sub:'Calm alertness',           cat:'binaural', img:'img/calm-closed.png' },
     { n:'Lucid Theta',     hz:'4.5 Hz',  sub:'Dream & lucidity',         cat:'binaural', img:'img/veil.png' },
     { n:'Schumann',        hz:'7.83 Hz', sub:'Earth resonance · grounding', cat:'binaural', img:'img/desert.webp' },
-    { n:'The Genius Point',hz:'9 Hz',    sub:'Flow · the point of genius', cat:'binaural', img:'img/schematic.png' },
-    { n:'Deep Renewal',    hz:'1 Hz',    sub:'Restorative rest',         cat:'binaural', img:'img/clear-helmet.png' },
+    { n:'The Genius Point',hz:'9 Hz',    sub:'Flow · absorbed', cat:'binaural', img:'img/schematic.png' },
+    { n:'Deep Renewal',    hz:'1 Hz',    sub:'Slow, heavy rest',         cat:'binaural', img:'img/clear-helmet.png' },
     { n:'The Echo',        hz:'11 Hz',   sub:'echo.11 home frequency',   cat:'binaural', img:'img/cosmic-web.png', premium:true },
     /* ── Pure-Tone Resonance (single solfeggio tones) ── */
     { n:'Release',         hz:'174 Hz',  sub:'Foundation · ease',        cat:'tone', img:'img/helmet-field.png' },
     { n:'Sanctuary',       hz:'285 Hz',  sub:'Safety · ease',            cat:'tone', img:'img/eyes-open.png' },
     { n:'Liberation',      hz:'396 Hz',  sub:'Letting go',               cat:'tone', img:'img/cape-sun.png' },
-    { n:'Change',          hz:'417 Hz',  sub:'Facilitating change',      cat:'tone', img:'img/door.png' },
+    { n:'Change',          hz:'417 Hz',  sub:'Fresh start',              cat:'tone', img:'img/door.png' },
     { n:'The Universe',    hz:'432 Hz',  sub:'Natural tuning · alignment', cat:'tone', img:'img/neural-light.png' },
-    { n:'The Heart',       hz:'528 Hz',  sub:'Warmth · renewal',         cat:'tone', img:'img/energy.png' },
+    { n:'The Heart',       hz:'528 Hz',  sub:'Warmth · softness',        cat:'tone', img:'img/energy.png' },
     { n:'Connection',      hz:'639 Hz',  sub:'Relationships · empathy',  cat:'tone', img:'img/cape-back.png' },
     { n:'Intuition',       hz:'741 Hz',  sub:'Clarity · expression',     cat:'tone', img:'img/standing.png' },
     { n:'Awakening',       hz:'852 Hz',  sub:'Intuition · insight',      cat:'tone', img:'img/gaze-dark.png' },
-    { n:'Abundance',       hz:'963 Hz',  sub:'Abundance · expansion',    cat:'tone', img:'img/cape-sparkle.png', premium:true },
-    { n:'Tesla 369',       hz:'369 Hz',  sub:'Energy · vitality',        cat:'tone', img:'img/schematic-2.png', premium:true }
+    { n:'Abundance',       hz:'963 Hz',  sub:'Open · expansive',         cat:'tone', img:'img/cape-sparkle.png', premium:true },
+    { n:'Tesla 369',       hz:'369 Hz',  sub:'Bright · lifted',          cat:'tone', img:'img/schematic-2.png', premium:true }
   ];
 
   var WALLPAPERS = [
@@ -44,7 +44,7 @@ window.ECHO = (function(){
 
   var WEEK_QUOTE = {
     week:'Week 24 · 2026',
-    text:'You don\u2019t chase stillness \u2014 you <em>tune</em> to it. Twenty quiet minutes today is a signal the rest of your week will follow.'
+    text:'You don\u2019t chase stillness \u2014 you <em>tune</em> to it. Twenty quiet minutes today \u2014 a small signal for the rest of your week.'
   };
 
   /* listening history (most recent first) */
