@@ -122,3 +122,12 @@ body{background:var(--bg);}
 .pass-warn{color:var(--ink);}
 /* profile membership card: the CTA sits on the card's dark glass */
 .sub .sub-cta{position:relative;margin-top:16px;}
+
+/* ───────── player: "your device paused the sound" ─────────
+   Shown when the AudioContext isn't running after a tap (iOS route blocked,
+   a call, an interruption). Sits above the play row so it reads as the
+   reason the play button is back. */
+.pl-audio-note{display:block;width:fit-content;max-width:100%;margin:0 auto 12px;padding:8px 14px;border-radius:99px;
+  background:rgba(8,9,12,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13.5px;font-weight:500;line-height:1.35;text-align:center;}
+.pl-audio-note[hidden]{display:none;}

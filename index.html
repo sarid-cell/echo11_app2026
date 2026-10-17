@@ -427,6 +427,7 @@
       </div>
 
       <div class="pl-controls">
+        <p class="pl-audio-note" id="pl-audio-note" role="alert" hidden>Tap play again — your device paused the sound.</p>
         <div class="pl-row">
           <button class="pl-amb on" id="pl-amb" aria-pressed="true" aria-label="Ambience layer"><span class="dot" aria-hidden="true"></span>Ambience</button>
           <button class="pl-play" id="pl-play" aria-label="Pause"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
@@ -1196,7 +1197,11 @@
 
   // Sign out (Profile) → end the session and return to the onboarding gate.
   var signoutBtn = document.getElementById('signout');
-  if(signoutBtn) signoutBtn.addEventListener('click', function(e){ e.preventDefault(); clearAuth(); showView('home'); showAuth(); });
+  if(signoutBtn) signoutBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    if(typeof window.__echoStopPlayer==='function') window.__echoStopPlayer();   // nothing keeps playing behind the sign-in screen
+    clearAuth(); showView('home'); showAuth();
+  });
   window.echoSignOut = function(){ clearAuth(); location.reload(); };  // console helper
 
   /* ─── SPLASH: wait for the boot video to finish, THEN route ─────
@@ -1396,7 +1401,7 @@
   }
   function applyFreqs(){ if(!actx||!oscL) return; var t=actx.currentTime; oscL.frequency.setValueAtTime(prof.fL,t); oscR.frequency.setValueAtTime(prof.fR,t); }
 
-  var elapsed=0, playing=false, tick=null, firstListen=false, capDone=true, capIdx=-1, ending=false, startedAt=0, finishArmed=false;
+  var elapsed=0, playing=false, tick=null, firstListen=false, capDone=true, capIdx=-1, ending=false, finishArmed=false;
   var curFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};   // the frequency the player is currently on
   function persistOpen(){ lset(OPEN_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,elapsed:elapsed,session:isFinite(SESSION)?SESSION:0})); }
   function clearOpen(){ try{ localStorage.removeItem(OPEN_KEY); }catch(e){} }
@@ -1428,6 +1433,7 @@
     if(actx) return;
     var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
     actx=new AC();
+    actx.onstatechange=onAudioState;
     master=actx.createGain(); master.gain.value=0.9; master.connect(actx.destination);
     toneGain=actx.createGain(); toneGain.gain.value=0.0001; toneGain.connect(master);
     ambGain=actx.createGain(); ambGain.gain.value=0.0001; ambGain.connect(master);
@@ -1479,38 +1485,111 @@
     if(shiftEl){ var sl=shiftLine(); if(shiftEl.textContent!==sl) shiftEl.textContent=sl; }
     updateCaptions();
   }
+  /* ── audible time only ── elapsed grows only while the AudioContext is actually
+     'running'. Wall-clock deltas, not tick counting (browsers throttle background
+     timers to >=1/min), but a suspended or interrupted context adds nothing — so a
+     session can only complete, and count toward streak/history, on time the sound
+     was really playing. ── */
+  var runSince=0, notRunningSince=0;
+  function accrue(){
+    var now=Date.now();
+    if(runSince) elapsed+=(now-runSince)/1000;
+    runSince=(playing && actx && actx.state==='running') ? now : 0;
+  }
+  var noteEl=document.getElementById('pl-audio-note');
+  function showAudioNote(){
+    if(noteEl) noteEl.hidden=false;
+    if(player.hidden || player.style.visibility==='hidden') toast('Tap play again \u2014 your device paused the sound');
+  }
+  function hideAudioNote(){ if(noteEl) noteEl.hidden=true; notRunningSince=0; }
+  function onAudioState(){
+    accrue();
+    if(!actx) return;
+    if(actx.state==='running'){
+      if(!playing && !ending){ actx.suspend(); return; }   // a late resume() must never sound behind a paused UI
+      hideAudioNote();
+    }
+  }
+  /* after a tap: wait for resume(), then check the context really runs. iOS's resume()
+     promise can hang when the route is blocked, hence the timeout. */
+  function verifyRunning(resumeP){
+    var settled=false;
+    function check(){ if(settled) return; settled=true; if(!playing||!actx) return;
+      if(actx.state==='running') hideAudioNote(); else { pause(); showAudioNote(); } }
+    var t=setTimeout(check,1500);
+    if(resumeP && resumeP.then) resumeP.then(function(){ clearTimeout(t); check(); }, function(){ clearTimeout(t); check(); });
+    else { clearTimeout(t); setTimeout(check,300); }
+  }
+
+  /* ── lock screen / notification controls ── */
+  var hasMS=('mediaSession' in navigator);
+  function setMediaSession(){
+    if(!hasMS) return;
+    try{
+      var src=new URL(prof.img, location.href).href, ext=prof.img.slice(prof.img.lastIndexOf('.')+1).toLowerCase();
+      navigator.mediaSession.metadata=new MediaMetadata({ title:prof.name, artist:'echo\u00b711', album:prof.freqText,
+        artwork:[{src:src, type: ext==='jpg'?'image/jpeg':'image/'+ext}] });
+    }catch(e){}
+  }
+  function setMSState(state){ if(hasMS){ try{ navigator.mediaSession.playbackState=state; }catch(e){} } }
+  if(hasMS){
+    [['play',function(){ if(!playing) play(); }],['pause',function(){ if(playing) pause(); }],['stop',function(){ stopPlayer(); if(typeof renderHome==='function') renderHome(); }]]
+      .forEach(function(h){ try{ navigator.mediaSession.setActionHandler(h[0],h[1]); }catch(e){} });
+  }
+
+  /* ── keep the screen awake while a session plays; the lock drops itself when the
+     page is hidden, so it is re-requested on return ── */
+  var wakeLock=null, wakePending=false;
+  function holdWake(){
+    if(!('wakeLock' in navigator) || wakeLock || wakePending || document.hidden) return;
+    wakePending=true;
+    navigator.wakeLock.request('screen').then(function(l){
+      wakePending=false; wakeLock=l;
+      l.addEventListener('release', function(){ if(wakeLock===l) wakeLock=null; });
+      if(!playing) releaseWake();
+    }, function(){ wakePending=false; });
+  }
+  function releaseWake(){ if(wakeLock){ var l=wakeLock; wakeLock=null; try{ l.release(); }catch(e){} } }
+
   function loop(){
     if(!playing) return;
-    // wall clock, not tick counting: browsers throttle background timers
-    // to >=1/min, so a counter drifts the moment the screen locks
-    elapsed=Math.max(elapsed, Math.floor((Date.now()-startedAt)/1000));
+    accrue();
+    if(actx && actx.state!=='running' && !document.hidden){
+      if(!notRunningSince) notRunningSince=Date.now();
+      else if(Date.now()-notRunningSince>3000){ pause(); showAudioNote(); return; }   // went silent mid-session (call, route change)
+    } else notRunningSince=0;
     if(isFinite(SESSION)){
       if(elapsed>=Math.max(1,SESSION-15) && !finishArmed){ finishArmed=true; beginFinish(); }   // last 15s: gentle fade + orb slows toward rest
       if(elapsed>=SESSION){ elapsed=SESSION; render(); completeSession(); return; }
     }
-    render(); try{localStorage.setItem(EL_KEY,String(elapsed));}catch(e){}
+    render(); try{localStorage.setItem(EL_KEY,String(Math.floor(elapsed)));}catch(e){}
     persistOpen();
   }
 
-  function setIcons(on){ playBtn.innerHTML=on?PAUSE:PLAY; playBtn.setAttribute('aria-label',on?'Pause':'Play'); miniPlay.innerHTML=on?MPAUSE:MPLAY; miniPlay.setAttribute('aria-label',on?'Pause':'Play'); }
+  function setIcons(on){ playBtn.innerHTML=on?PAUSE:PLAY; playBtn.setAttribute('aria-label',on?'Pause':'Play'); miniPlay.innerHTML=on?MPAUSE:MPLAY; miniPlay.setAttribute('aria-label',on?'Pause':'Play'); setMSState(on?'playing':'paused'); }
   function play(){
     if(ending) return;
     buildAudio();
     if(!actx){ toast('Audio isn\u2019t available in this browser'); return; }   // never a running timer with no sound
     playing=true; player.classList.add('playing'); mini.classList.add('playing'); setIcons(true);
-    startedAt=Date.now()-elapsed*1000;
+    hideAudioNote();
     ensurePlaybackRoute();
     /* iOS may leave the context 'interrupted' (not 'suspended') after a call or
        screen lock — resume on anything that isn't running */
-    applyFreqs(); if(actx.state!=='running') actx.resume();
+    applyFreqs();
+    var rp=null; if(actx.state!=='running'){ try{ rp=actx.resume(); }catch(e){} }
+    accrue();                                           // starts counting now if already running; else onstatechange does
+    verifyRunning(rp);
     fadeIn();
+    setMediaSession(); holdWake();
     clearInterval(tick); tick=setInterval(loop,1000);
     resetIdle();
   }
   function pause(){
-    playing=false; player.classList.remove('playing'); mini.classList.remove('playing'); setIcons(false);
+    accrue(); playing=false; runSince=0;
+    player.classList.remove('playing'); mini.classList.remove('playing'); setIcons(false);
     if(actx&&actx.state==='running') actx.suspend();
-    releasePlaybackRoute();
+    releasePlaybackRoute(); releaseWake();
     clearInterval(tick); clearTimeout(idleT); player.classList.remove('dim');
   }
 
@@ -1520,7 +1599,7 @@
     player.style.setProperty('--pb-tempo','22s');   // pulse visibly slows toward rest
   }
   function completeSession(){
-    ending=true; playing=false; clearInterval(tick); clearTimeout(idleT);
+    accrue(); ending=true; playing=false; runSince=0; clearInterval(tick); clearTimeout(idleT); releaseWake();
     player.classList.remove('playing','dim'); mini.classList.remove('playing'); setIcons(false);
     if(actx&&master){ var t=actx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value,t); master.gain.linearRampToValueAtTime(0.0001,t+1.6); }
     setTimeout(function(){ if(actx&&actx.state==='running') actx.suspend(); releasePlaybackRoute(); }, 1700);
@@ -1528,14 +1607,19 @@
     /* persistence: clear the open session, record it as the last completed, advance streak + minutes */
     clearOpen();
     var mins=isFinite(SESSION)?Math.max(1,Math.round(SESSION/60)):Math.max(1,Math.round(elapsed/60));
-    lset(LAST_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,ts:Date.now(),min:mins}));
-    /* append this session to the listening history (newest first); feel is filled in when a pill is tapped */
-    pendingHistTs=Date.now();
-    var hist=ljson(HIST_KEY)||[]; if(!Array.isArray(hist)) hist=[];
-    hist.unshift({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,min:mins,ts:pendingHistTs,feel:null});
-    lset(HIST_KEY, JSON.stringify(hist.slice(0,50)));
-    normalizeStats();                                   // streak + weekly minutes are derived, never incremented blind
-    plcSub.textContent=prof.name+' · '+(isFinite(SESSION)?Math.round(SESSION/60)+' min':fmt(elapsed));
+    /* counts only if the sound actually ran for most of the session (elapsed is audible time) */
+    sessionCounted = elapsed >= (isFinite(SESSION)?SESSION:elapsed)*0.5;
+    pendingHistTs=null;
+    if(sessionCounted){
+      lset(LAST_KEY, JSON.stringify({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,ts:Date.now(),min:mins}));
+      /* append this session to the listening history (newest first); feel is filled in when a pill is tapped */
+      pendingHistTs=Date.now();
+      var hist=ljson(HIST_KEY)||[]; if(!Array.isArray(hist)) hist=[];
+      hist.unshift({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,min:mins,ts:pendingHistTs,feel:null});
+      lset(HIST_KEY, JSON.stringify(hist.slice(0,50)));
+      normalizeStats();                                 // streak + weekly minutes are derived, never incremented blind
+    }
+    plcSub.textContent=prof.name+' · '+(isFinite(SESSION)?Math.round(SESSION/60)+' min':fmt(elapsed))+(sessionCounted?'':' · not counted');
     renderPlcStreak();
     setNextLine();
     setUpNext();
@@ -1544,7 +1628,7 @@
     player.classList.add('complete-on');
     completeEl.hidden=false;
   }
-  var pendingHistTs=null, pendingFeel=null;
+  var pendingHistTs=null, pendingFeel=null, sessionCounted=true;
   /* sign-off is time-aware by local clock and never promises an hour that has passed:
      morning → "tomorrow morning", midday → the neutral line, evening/night → "tomorrow evening". */
   function setNextLine(){
@@ -1574,6 +1658,7 @@
      record shape kept stable for a future server (mood enum:
      calmer | same | sharper | null). Guest mode keeps the same shape locally. */
   function logSession(){
+    if(!sessionCounted) return;
     var mins=isFinite(SESSION)?Math.max(1,Math.round(SESSION/60)):Math.max(1,Math.round(elapsed/60));
     lset(CHK_KEY, JSON.stringify({feel:pendingFeel,ts:Date.now()}));
     var arr=ljson(HIST_KEY)||[];
@@ -1738,6 +1823,7 @@
     setSession(sess);                                   // restore the saved length on resume, else default 15:00
     if(opts.resume && open){ elapsed=Math.min(open.elapsed||0, isFinite(SESSION)?SESSION-1:599999); }
     else { elapsed=0; }
+    runSince=0;                                         // never carry the previous session's audible stretch over
     try{ localStorage.setItem(EL_KEY,String(elapsed)); }catch(e){}
     persistOpen();
     if(typeof syncSave==='function') syncSave();   // reflect saved state for this frequency
@@ -1749,9 +1835,16 @@
   }
   function expandPlayer(){ hideMini(); player.hidden=false; requestAnimationFrame(function(){ player.classList.add('open'); resetIdle(); }); overlayOpened(); }
   function minimizePlayer(){ clearTimeout(idleT); player.classList.remove('dim'); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); persistOpen(); if(typeof renderHome==='function') renderHome(); showMini(); }   // audio keeps playing
-  function stopPlayer(){ pause(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
+  function stopPlayer(){ pause(); setMSState('none'); hideAudioNote(); player.classList.remove('open'); setTimeout(function(){ player.hidden=true; },520); hideMini(); }
+  window.__echoStopPlayer=function(){ if(playing || !player.hidden || !mini.hidden) stopPlayer(); };
 
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden && playing){ if(actx&&actx.state!=='running'){ try{ actx.resume(); }catch(e){} } ensurePlaybackRoute(); loop(); } });
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden && playing){
+      var rp=null; if(actx&&actx.state!=='running'){ try{ rp=actx.resume(); }catch(e){} }
+      ensurePlaybackRoute(); holdWake(); loop();
+      if(rp) verifyRunning(rp);
+    }
+  });
   /* Browser back = close the top overlay, never leave the app mid-session.
      One history entry is pushed per overlay open; back pops it and the
      popstate handler dismisses the overlay (player minimizes - audio
