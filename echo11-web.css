@@ -145,52 +145,95 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 /* sheet titles take focus on open (keeps the iPhone keyboard down); no ring on a heading */
 .hp-title:focus{outline:none;}
 
-/* ═══════════ THE ARCHIVE · instrument list ═══════════
-   Replaces the 2-up photo grid, which made the Archive read as a second
-   Gallery. Rows are grouped by band; each band reuses the accent the player
-   already gives it (BAND_THEMES in index.html), so a frequency keeps one
-   color from list to player. */
-.archive{padding:8px 16px 130px;display:flex;flex-direction:column;gap:18px;}
-.aband{--band:#3E80B0;background:var(--surface);border:1px solid var(--line);border-radius:22px;
-  box-shadow:var(--shadow-sm);overflow:hidden;}
-.aband[data-band="delta"]{--band:#4B53B8;}
-.aband[data-band="theta"]{--band:#7A4FC0;}
-.aband[data-band="alpha"]{--band:#3E80B0;}
-.aband[data-band="beta"]{--band:#4E7290;}
-.aband[data-band="gamma"]{--band:#8F7B4A;}
-.aband[data-band="tone"]{--band:#7A7166;}
-.aband-head{display:flex;align-items:baseline;gap:8px;padding:14px 16px 10px;border-bottom:1px solid var(--line-2);flex-wrap:wrap;}
-.aband-dot{width:8px;height:8px;border-radius:50%;background:var(--band);box-shadow:0 0 0 4px color-mix(in srgb,var(--band) 16%,transparent);align-self:center;}
-.aband-name{font-family:var(--serif);font-size:19px;font-weight:500;letter-spacing:-.2px;color:var(--ink);}
-.aband-range{font-family:var(--mono);font-size:10.5px;letter-spacing:.8px;color:var(--band);}
-.aband-mood{margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);}
+/* ═══════════ THE SPECTRUM · pick a feeling, not a number ═══════════
+   Attention-light browsing: one row of feelings, a one-tap "Can't choose?",
+   your own echoes as big cards on top, then one swipeable shelf per band.
+   Each band reuses the accent the player gives it (BAND_THEMES in
+   index.html), so a frequency keeps one color from shelf to player. */
+#view-library [data-band]{--band:#3E80B0;--band-pale:#CFF6FF;}
+#view-library [data-band="delta"]{--band:#4B53B8;--band-pale:#C9CDF6;}
+#view-library [data-band="theta"]{--band:#7A4FC0;--band-pale:#DCC9F3;}
+#view-library [data-band="alpha"]{--band:#3E80B0;--band-pale:#CFF6FF;}
+#view-library [data-band="beta"]{--band:#4E7290;--band-pale:#CFE0EF;}
+#view-library [data-band="gamma"]{--band:#8F7B4A;--band-pale:#F5EEDC;}
+#view-library [data-band="tone"]{--band:#7A7166;--band-pale:#F1ECE3;}
 
-.arow{width:100%;display:flex;align-items:center;gap:13px;padding:11px 16px;background:none;border:0;
-  border-top:1px solid var(--line-2);font:inherit;color:var(--ink);text-align:left;cursor:pointer;transition:background .15s;}
-.aband-head + .arow{border-top:0;}
-.arow:active{background:var(--line-2);}
-.arow:focus-visible{outline:2px solid var(--band);outline-offset:-2px;}
-.arow-thumb{width:48px;height:48px;flex-shrink:0;border-radius:14px;overflow:hidden;background:#0c0d10;}
-.arow-thumb img{width:100%;height:100%;object-fit:cover;filter:var(--img-filter);}
-.arow-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
-.arow-name{font-size:15.5px;font-weight:600;letter-spacing:-.2px;line-height:1.15;}
-.arow-sub{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* feelings row */
+.mood-chips .chip .md{width:8px;height:8px;border-radius:50%;background:var(--band);flex-shrink:0;}
+.mood-chips .chip.on[data-band]{background:var(--band);border-color:var(--band);color:#fff;
+  box-shadow:0 8px 20px -8px color-mix(in srgb,var(--band) 70%,transparent);}
+.mood-chips .chip.on .md{background:#fff;}
+
+/* "Can't choose?" — hands the decision to the app */
+.spec-pick{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:10px 16px 10px 11px;border-radius:18px;cursor:pointer;
+  border:1px solid color-mix(in srgb,var(--azure) 22%,transparent);background:color-mix(in srgb,var(--azure-pale) 42%,var(--surface));
+  font:inherit;color:var(--ink);text-align:left;transition:transform .15s;}
+.spec-pick:active{transform:scale(.98);}
+.spec-pick:focus-visible{outline:2px solid var(--azure);outline-offset:2px;}
+.spec-pick-ico{width:36px;height:36px;flex-shrink:0;border-radius:50%;background:var(--azure);color:#fff;display:flex;align-items:center;justify-content:center;}
+.spec-pick-txt{font-size:14.5px;line-height:1.3;}
+.spec-pick-txt b{font-weight:600;}
+.spec-pick-txt span{color:var(--muted);}
+
+/* your echoes: the big cards, full-bleed row */
+#saved-sec .saved-lbl{padding-left:6px;}
+#saved-sec .saved-row{margin:0 -16px;padding:1px 16px 6px;scroll-snap-type:x mandatory;scroll-padding:0 16px;}
+.echo-card{width:156px;aspect-ratio:4/5;border-radius:22px;scroll-snap-align:start;}
+.echo-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;z-index:2;background:var(--band);}
+.echo-card .sc-name{bottom:14px;font-size:15.5px;}
+.echo-card .sc-tag{display:block;margin-bottom:4px;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--band-pale);}
+
+/* shelves */
+.spectrum{padding:26px 0 130px;display:flex;flex-direction:column;gap:28px;}
+.shelf{display:flex;flex-direction:column;gap:11px;}
+.shelf-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;padding:0 16px 0 22px;}
+.shelf-word{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:-.4px;line-height:1;color:var(--ink);}
+.shelf-band{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;text-transform:uppercase;color:var(--band);}
+.shelf-band i{width:7px;height:7px;border-radius:50%;background:var(--band);box-shadow:0 0 0 3px color-mix(in srgb,var(--band) 16%,transparent);}
+.shelf-more{margin-left:auto;align-self:center;min-height:40px;min-width:52px;padding:0 10px 0 14px;border-radius:99px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow-sm);
+  font-family:var(--mono);font-size:12.5px;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:4px;}
+.shelf-more:active{transform:scale(.95);}
+.shelf-more:focus-visible{outline:2px solid var(--band);outline-offset:2px;}
+.shelf-mood{margin:-3px 0 2px;padding:0 22px;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted);}
+.shelf-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;padding:2px 16px 8px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.shelf-row::-webkit-scrollbar{display:none;}
+
+/* frequency card: photo first, the number as a small tag, the tuner underneath */
+.scard{flex:0 0 auto;width:138px;aspect-ratio:3/4;position:relative;border-radius:20px;overflow:hidden;cursor:pointer;scroll-snap-align:start;
+  padding:0;border:0;background:#0c0d10;box-shadow:var(--shadow-md);font:inherit;color:#fff;text-align:left;transition:transform .15s;}
+.scard:active{transform:scale(.97);}
+.scard:focus-visible{outline:2px solid var(--band);outline-offset:2px;}
+.scard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--img-filter);}
+.scard-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.32) 0%,rgba(5,5,5,0) 30%,rgba(5,5,5,.9) 100%);}
+.scard-hz{position:absolute;top:10px;left:10px;z-index:1;height:22px;padding:0 8px;border-radius:99px;display:inline-flex;align-items:center;
+  background:rgba(8,9,12,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.3px;color:#fff;}
+.scard-lock{position:absolute;top:9px;right:9px;z-index:1;width:24px;height:24px;border-radius:50%;background:rgba(8,9,12,.5);
+  display:flex;align-items:center;justify-content:center;color:#fff;}
+.scard-txt{position:absolute;left:11px;right:11px;bottom:12px;z-index:1;display:flex;flex-direction:column;gap:3px;}
+.scard-name{font-size:15px;font-weight:600;letter-spacing:-.3px;line-height:1.15;}
+.scard-sub{font-size:11.5px;color:rgba(255,255,255,.74);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* the tuner: where this frequency sits on its band's scale */
-.arow-tuner{position:relative;height:2px;margin-top:5px;border-radius:2px;
-  background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 10%),var(--line-2);}
-.arow-tuner i{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--band);
-  box-shadow:0 0 8px color-mix(in srgb,var(--band) 60%,transparent);}
-.arow-hz{flex-shrink:0;min-width:74px;justify-content:flex-end;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:14px;font-weight:500;
-  letter-spacing:.2px;color:var(--band);}
-.arow-lock{display:inline-flex;color:var(--faint);}
-.arow.locked .arow-name,.arow.locked .arow-sub{color:var(--faint);}
-.arow.locked .arow-thumb img{filter:var(--img-filter) brightness(.6);}
-.arow.locked .arow-tuner i{background:var(--faint);box-shadow:none;}
+.scard-tuner{position:relative;height:2px;margin-top:8px;border-radius:2px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.34) 0 1px,transparent 1px 10%),rgba(255,255,255,.16);}
+.scard-tuner i{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;
+  background:var(--band-pale);box-shadow:0 0 0 2px color-mix(in srgb,var(--band) 70%,transparent),0 0 10px var(--band);}
+.scard.locked img{filter:var(--img-filter) brightness(.55);}
+.scard.locked .scard-name,.scard.locked .scard-sub{opacity:.72;}
+.scard.locked .scard-tuner i{background:rgba(255,255,255,.5);box-shadow:none;}
+
+/* one feeling picked: its shelf opens into a 2-up grid */
+.spectrum.one{padding-top:22px;}
+.spectrum.one .shelf-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow:visible;}
+.spectrum.one .scard{width:auto;}
+.spectrum.one .scard-name{font-size:16px;}
 
 /* ═══════════ GALLERY · lock-screen reel ═══════════
    Each still is previewed as a phone lock screen — full color, the device's
    own clock over it — in a swipeable reel, one at a time. Nothing here looks
-   like the Archive's list, so the two screens stop reading as twins. */
+   like the Spectrum's shelves, so the two screens stop reading as twins. */
 #view-gallery .seg{margin-top:16px;}
 .lockreel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;
   padding:18px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}

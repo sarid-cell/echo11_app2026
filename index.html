@@ -164,21 +164,28 @@
     </section>
 
     <!-- ░░ LIBRARY ░░ -->
-    <section class="view" id="view-library" hidden data-screen-label="Library">
+    <section class="view" id="view-library" hidden data-screen-label="Spectrum">
       <div class="lib-head">
-        <div class="htext"><h2 class="screen-title">The Archive</h2><p class="screen-sub">22 frequencies, two ways to tune.</p></div>
-        <div class="chips" id="lib-chips" role="tablist">
+        <div class="htext"><h2 class="screen-title">The Spectrum</h2><p class="screen-sub">Pick a feeling. We'll tune the rest.</p></div>
+        <div class="chips mood-chips" id="lib-chips" role="tablist" aria-label="Filter by feeling">
           <button class="chip on" data-filter="all" role="tab" aria-selected="true" aria-controls="node-grid">All <span class="ct">22</span></button>
-          <button class="chip" data-filter="binaural" role="tab" aria-selected="false" aria-controls="node-grid">Binaural</button>
-          <button class="chip" data-filter="tone" role="tab" aria-selected="false" aria-controls="node-grid">Pure Tone</button>
+          <button class="chip" data-filter="delta" data-band="delta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Sleep</button>
+          <button class="chip" data-filter="theta" data-band="theta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Dream</button>
+          <button class="chip" data-filter="alpha" data-band="alpha" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Calm</button>
+          <button class="chip" data-filter="beta" data-band="beta" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Focus</button>
+          <button class="chip" data-filter="gamma" data-band="gamma" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Bright</button>
+          <button class="chip" data-filter="tone" data-band="tone" role="tab" aria-selected="false" aria-controls="node-grid"><i class="md" aria-hidden="true"></i>Tones</button>
         </div>
-        <span class="lib-note" id="lib-note">All · 22 frequencies</span>
+        <button type="button" class="spec-pick" id="spec-pick">
+          <span class="spec-pick-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></span>
+          <span class="spec-pick-txt"><b>Can't choose?</b> <span id="spec-pick-sub">Let echo pick for now</span></span>
+        </button>
       </div>
       <div class="saved-sec" id="saved-sec" hidden>
-        <span class="seclabel saved-lbl">Saved</span>
+        <span class="seclabel saved-lbl" id="saved-lbl">Your echoes</span>
         <div class="saved-row" id="saved-row"></div>
       </div>
-      <div class="archive" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
+      <div class="spectrum" id="node-grid" role="tabpanel" aria-label="Frequencies"></div>
     </section>
 
     <!-- ░░ GALLERY ░░ -->
@@ -369,9 +376,9 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.4"/><path d="M6.3 6.3a8 8 0 0 0 0 11.4M17.7 6.3a8 8 0 0 1 0 11.4M3.5 3.5a12 12 0 0 0 0 17M20.5 3.5a12 12 0 0 1 0 17"/></svg>
         <span class="tlab">ECHO</span>
       </button>
-      <button class="tab" data-tab="library" aria-label="Library">
+      <button class="tab" data-tab="library" aria-label="Spectrum">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="2.4"/></svg>
-        <span class="tlab">LIBRARY</span>
+        <span class="tlab">SPECTRUM</span>
       </button>
       <button class="tab" data-tab="gallery" aria-label="Gallery">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg>
@@ -896,7 +903,7 @@
     device.classList.remove('scrolled');
     document.getElementById(views[name]).scrollTop = 0;
     if(name==='home' && typeof window.__echoRenderHome==='function') window.__echoRenderHome();   // keep home state fresh on every visit
-    if(name==='library') renderSaved();                  // saved frequencies surface at the top of the Archive
+    if(name==='library'){ renderSaved(); renderPick(); }  // your echoes + a fresh suggestion on every visit
     if(name==='gallery'){ pickLine(); renderGallery(curSeg); }   // a new line, a fresh lock-screen clock + counter on every visit
     if(name==='profile') renderProfile();                // reflect any newly-completed sessions in history
   }
@@ -904,17 +911,20 @@
 
   var LOCK_SVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
   var curFilter='all', curSeg='all';
-  /* ── THE ARCHIVE · an instrument, not a photo album ──
-     Frequencies are grouped by band (delta → gamma, then the solfeggio tones),
-     each band carries the same accent the player uses for it, and every row
-     shows where its frequency sits on a small tuner scale. */
+  /* ── THE SPECTRUM · pick a feeling, not a number ──
+     Built for attention-light browsing: the first choice is a feeling (one
+     row of mood chips), one tap hands the choice to the app ("Can't choose?"),
+     your own echoes sit on top as big cards, and every band is one shelf of
+     photo cards you swipe — Hz and band name stay, but second. Each band keeps
+     the accent the player uses for it (BAND_THEMES), and every card still
+     shows where it sits on the tuner scale. */
   var BANDS=[
-    {key:'delta', name:'Delta', range:'1–4 Hz',     mood:'sleep · deep rest'},
-    {key:'theta', name:'Theta', range:'4–8 Hz',     mood:'drift · dreaming'},
-    {key:'alpha', name:'Alpha', range:'8–13 Hz',    mood:'calm · clarity'},
-    {key:'beta',  name:'Beta',  range:'13–30 Hz',   mood:'focus · steady'},
-    {key:'gamma', name:'Gamma', range:'30–40 Hz',   mood:'bright · awake'},
-    {key:'tone',  name:'Pure tones', range:'174–963 Hz', mood:'single tones · any device'}
+    {key:'delta', word:'Sleep',  name:'Delta', range:'1–4 Hz',     mood:'deep rest · stillness'},
+    {key:'theta', word:'Dream',  name:'Theta', range:'4–8 Hz',     mood:'drift · meditation'},
+    {key:'alpha', word:'Calm',   name:'Alpha', range:'8–13 Hz',    mood:'relaxed · clear'},
+    {key:'beta',  word:'Focus',  name:'Beta',  range:'13–30 Hz',   mood:'steady attention'},
+    {key:'gamma', word:'Bright', name:'Gamma', range:'30–40 Hz',   mood:'awake · sharp'},
+    {key:'tone',  word:'Tones',  name:'Pure tones', range:'174–963 Hz', mood:'single tones · no headphones needed'}
   ];
   function bandOf(f){
     if(f.cat==='tone') return 'tone';
@@ -927,54 +937,89 @@
     var lo=f.cat==='tone'?174:1, hi=f.cat==='tone'?963:40;
     return Math.max(0,Math.min(1,Math.log(v/lo)/Math.log(hi/lo)));
   }
+  function freqCard(f, cls){
+    var locked=!EchoPass.isUnlocked(f.n);
+    var pos=(tunerPos(f)*100).toFixed(1);
+    return '<button class="scard'+(cls?' '+cls:'')+(locked?' locked':'')+'" data-band="'+bandOf(f)+'" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="'+f.n+', '+f.hz+', '+f.sub+(locked?' — included with the Founding Pass':'')+'">'
+      + '<img src="'+f.img+'" alt="" loading="lazy" decoding="async"/><span class="scard-scrim" aria-hidden="true"></span>'
+      + '<span class="scard-hz" aria-hidden="true">'+f.hz+'</span>'
+      + (locked?'<span class="scard-lock" aria-hidden="true">'+LOCK_SVG+'</span>':'')
+      + '<span class="scard-txt" aria-hidden="true"><span class="scard-name">'+f.n+'</span><span class="scard-sub">'+f.sub+'</span>'
+      + '<span class="scard-tuner"><i style="left:'+pos+'%"></i></span></span>'
+      + '</button>';
+  }
   function renderNodes(filter){
+    if(filter==='binaural') filter='all';                 // home category cards: binaural shelves lead the list anyway
+    if(filter!=='all' && !BANDS.some(function(b){ return b.key===filter; })) filter='all';
     curFilter=filter;
-    var list = ECHO.FREQS.filter(function(f){ return filter==='all' ? true : f.cat===filter; });
-    var lab = filter==='all'?'All':(filter==='binaural'?'Binaural':'Pure Tone');
-    document.getElementById('lib-note').textContent = lab + ' · ' + list.length + ' frequencies';
     document.querySelectorAll('#lib-chips .chip').forEach(function(c){ var on=c.dataset.filter===filter; c.classList.toggle('on', on); c.setAttribute('aria-selected', on?'true':'false'); });
-    document.getElementById('node-grid').innerHTML = BANDS.map(function(b){
-      var rows=list.filter(function(f){ return bandOf(f)===b.key; })
+    var grid=document.getElementById('node-grid');
+    grid.classList.toggle('one', filter!=='all');
+    grid.innerHTML = BANDS.filter(function(b){ return filter==='all' || b.key===filter; }).map(function(b){
+      var rows=ECHO.FREQS.filter(function(f){ return bandOf(f)===b.key; })
         .sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
       if(!rows.length) return '';
-      return '<section class="aband" data-band="'+b.key+'" aria-label="'+b.name+' band, '+b.range+'">'
-        + '<header class="aband-head"><span class="aband-dot" aria-hidden="true"></span>'
-        + '<span class="aband-name">'+b.name+'</span><span class="aband-range">'+b.range+'</span>'
-        + '<span class="aband-mood">'+b.mood+'</span></header>'
-        + rows.map(function(f){
-            var locked=!EchoPass.isUnlocked(f.n);
-            var pos=(tunerPos(f)*100).toFixed(1);
-            return '<button class="arow'+(locked?' locked':'')+'" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="'+f.n+', '+f.hz+', '+f.sub+(locked?' — included with the Founding Pass':'')+'">'
-              + '<span class="arow-thumb" aria-hidden="true"><img src="'+f.img+'" alt="" loading="lazy" decoding="async"/></span>'
-              + '<span class="arow-main" aria-hidden="true">'
-              +   '<span class="arow-name">'+f.n+'</span>'
-              +   '<span class="arow-sub">'+f.sub+'</span>'
-              +   '<span class="arow-tuner"><i style="left:'+pos+'%"></i></span>'
-              + '</span>'
-              + '<span class="arow-hz" aria-hidden="true">'+(locked?'<span class="arow-lock">'+LOCK_SVG+'</span>':'')+f.hz+'</span>'
-              + '</button>';
-          }).join('')
+      var one=filter!=='all';
+      return '<section class="shelf" data-band="'+b.key+'" aria-label="'+b.word+' — '+b.name+', '+b.range+'">'
+        + '<header class="shelf-head"><span class="shelf-word">'+b.word+'</span>'
+        + '<span class="shelf-band"><i aria-hidden="true"></i>'+b.name+' · '+b.range+'</span>'
+        + (one?'':'<button type="button" class="shelf-more" data-more="'+b.key+'" aria-label="Show all '+rows.length+' '+b.word+' frequencies">'+rows.length+' <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>')
+        + '</header>'
+        + (one?'<p class="shelf-mood">'+b.mood+'</p>':'')
+        + '<div class="shelf-row">'+rows.map(function(f){ return freqCard(f); }).join('')+'</div>'
         + '</section>';
     }).join('');
+    renderSaved();
   }
 
+  /* "Your echoes": saved first, then what you played recently; a new listener
+     sees the free frequencies instead, so the top of the screen is never empty */
   function renderSaved(){
-    var sec=document.getElementById('saved-sec'), row=document.getElementById('saved-row');
+    var sec=document.getElementById('saved-sec'), row=document.getElementById('saved-row'), lbl=document.getElementById('saved-lbl');
     if(!sec||!row) return;
-    var names=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:saved')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
-    var items=names.map(function(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0]; }).filter(Boolean);
+    if(curFilter!=='all'){ sec.hidden=true; return; }     // one feeling picked → only that shelf
+    function byName(n){ return ECHO.FREQS.filter(function(f){ return f.n===n; })[0]; }
+    var saved=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:saved')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
+    var hist=(function(){ try{ var v=JSON.parse(localStorage.getItem('echo:history')); return Array.isArray(v)?v:[]; }catch(e){ return []; } })();
+    var seen={}, items=[];
+    saved.forEach(function(n){ var f=byName(n); if(f && !seen[n]){ seen[n]=1; items.push({f:f, kind:'saved'}); } });
+    hist.forEach(function(h){ var f=h&&byName(h.name); if(f && !seen[f.n] && items.length<10){ seen[f.n]=1; items.push({f:f, kind:'recent'}); } });
+    var starter=!items.length;
+    if(starter){
+      var free=(window.ECHO_CONFIG&&ECHO_CONFIG.FREE_FREQS)||[];
+      free.forEach(function(n){ var f=byName(n); if(f) items.push({f:f, kind:'start'}); });
+    }
     if(!items.length){ sec.hidden=true; row.innerHTML=''; return; }
     sec.hidden=false;
+    lbl.textContent=starter?'Start here':'Your echoes';
     var x='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-    row.innerHTML=items.map(function(f){
-      return '<div class="saved-card">'
+    var tag={saved:'Saved', recent:'Recent', start:'Free'};
+    row.innerHTML=items.map(function(it){
+      var f=it.f;
+      return '<div class="saved-card echo-card" data-band="'+bandOf(f)+'">'
         + '<img src="'+f.img+'" alt="" loading="lazy" decoding="async"/><span class="sc-scrim"></span>'
-        + '<span class="sc-hz">'+f.hz+'</span><span class="sc-name">'+f.n+'</span>'
-        + '<button type="button" class="sc-open" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="Play '+f.n+' — '+f.hz+'"></button>'
-        + '<button type="button" class="sc-rm" data-rm="'+f.n+'" aria-label="Remove '+f.n+' from saved">'+x+'</button>'
+        + '<span class="sc-hz">'+f.hz+'</span><span class="sc-name"><span class="sc-tag">'+tag[it.kind]+'</span>'+f.n+'</span>'
+        + '<button type="button" class="sc-open" data-fname="'+f.n+'" data-fhz="'+f.hz+'" data-fcat="'+f.cat+'" aria-label="Play '+f.n+' — '+f.hz+' ('+tag[it.kind]+')"></button>'
+        + (it.kind==='saved'?'<button type="button" class="sc-rm" data-rm="'+f.n+'" aria-label="Remove '+f.n+' from saved">'+x+'</button>':'')
         + '</div>';
     }).join('');
   }
+
+  /* "Can't choose?" — one tap hands the decision to the app: a frequency from
+     the bands that suit this time of day, never the one you just played */
+  var PICK_BANDS=[[5,11,['beta','alpha'],'this morning'],[11,17,['alpha','beta'],'this afternoon'],[17,22,['theta','alpha'],'this evening'],[22,29,['delta','theta'],'tonight']];
+  function pickSlot(){ var h=new Date().getHours(); if(h<5) h+=24; return PICK_BANDS.filter(function(p){ return h>=p[0] && h<p[1]; })[0]||PICK_BANDS[3]; }
+  function renderPick(){ var el=document.getElementById('spec-pick-sub'); if(el) el.textContent='Let echo pick for '+pickSlot()[3]; }
+  function surprise(){
+    var slot=pickSlot(), last=null;
+    try{ last=(JSON.parse(localStorage.getItem('echo:last'))||{}).name; }catch(e){}
+    var pool=ECHO.FREQS.filter(function(f){ return slot[2].indexOf(bandOf(f))>-1 && EchoPass.isUnlocked(f.n) && f.n!==last; });
+    if(!pool.length) pool=ECHO.FREQS.filter(function(f){ return EchoPass.isUnlocked(f.n) && f.n!==last; });
+    var f=pool[Math.floor(Math.random()*pool.length)];
+    if(f && typeof window.__echoOpenPlayer==='function') window.__echoOpenPlayer({freq:{name:f.n,hz:f.hz,cat:f.cat}});
+  }
+  document.getElementById('spec-pick').addEventListener('click', surprise);
+  renderPick();
   window.__echoRenderSaved=renderSaved;
   document.getElementById('saved-row').addEventListener('click', function(e){
     var rm=e.target.closest('[data-rm]');
@@ -996,7 +1041,7 @@
     var bigLock='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
     function wpLocked(w){ return !!w.pro && !EchoPass.isUnlocked(); }
     /* each still is shown the way it will actually look: on a lock screen, in its
-       own colors, with the clock over it — the Archive is the instrument, this is the keepsake */
+       own colors, with the clock over it — the Spectrum is the instrument, this is the keepsake */
     var clock=lockClock();
     document.getElementById('gal-grid').innerHTML = list.map(function(w){
       var locked=wpLocked(w);
@@ -1466,7 +1511,7 @@
   var OPEN_KEY='echo:open';          // JSON {name,hz,cat,elapsed,session} while a session is mid-way; absent = none open
   var LAST_KEY='echo:last';          // JSON {name,hz,cat,ts,min} of the last COMPLETED session
   var STREAK_KEY='echo:streak', WEEK_KEY='echo:minWeek', BEST_KEY='echo:best', CHK_KEY='echo:checkin';
-  var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced in Library
+  var SAVED_KEY='echo:saved';        // array of saved frequency names → surfaced in the Spectrum
   var HIST_KEY='echo:history';       // array of completed sessions {name,hz,cat,min,ts,feel}, newest first
   var SESS_KEY='echo:sessions';      // sessions rows, kept in localStorage only — guest-only beta, nothing syncs
   function lget(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
@@ -1533,7 +1578,7 @@
     gamma:{ accent:'#8F7B4A', pale:'#F5EEDC', tempo:11, motion:'fine shimmer' },
     tone: { accent:'#7A7166', pale:'#F1ECE3', tempo:10, motion:'concentric ripple' }
   };
-  /* photographic plates come from the Archive catalog; faces anchor to the top
+  /* photographic plates come from the Spectrum catalog; faces anchor to the top
      third so the orb never lands on the eyes */
   var CATALOG=(window.ECHO&&window.ECHO.FREQS)?window.ECHO.FREQS:[];
   var FOCAL={'img/face-up.png':'26%','img/eyes-closed.png':'26%','img/eyes-open.png':'24%','img/gaze-dark.png':'22%',
@@ -2122,7 +2167,9 @@
 
   // any of the 22 frequencies → the same Player, varied only by hue + motion
   var grid=document.getElementById('node-grid');
-  if(grid) grid.addEventListener('click', function(e){ var n=e.target.closest('[data-fname]'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
+  if(grid) grid.addEventListener('click', function(e){
+    var more=e.target.closest('[data-more]'); if(more){ renderNodes(more.dataset.more); document.getElementById('view-library').scrollTop=0; return; }
+    var n=e.target.closest('[data-fname]'); if(!n) return; openPlayer({freq:{name:n.dataset.fname,hz:n.dataset.fhz,cat:n.dataset.fcat}}); });
 
   /* ───────── STATS INTEGRITY ─────────────────────────────────────
      Streak and weekly minutes are DERIVED from the listening history,
