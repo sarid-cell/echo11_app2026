@@ -64,7 +64,7 @@
           <div class="greet">
             <h1 id="greet-h">Good night<b>.</b></h1>
             <div class="coord" id="coord">Founding listener · Nº 011</div>
-            <div class="beta-line">Everything is unlocked — your listening shapes what echo becomes.</div>
+            <div class="beta-line">Early access — everything is open for now.</div>
           </div>
         </div>
       </div>
@@ -1829,17 +1829,14 @@
     return {streak:streak,mins:mins};
   }
 
-  /* ───────── FOUNDING BETA WINDOW · one constant, app-wide ───────── */
-  var BETA_END='2026-10-01';
-  window.ECHO_BETA_END=BETA_END;
-  function betaDaysLeft(){ return Math.ceil((new Date(BETA_END+'T23:59:59') - new Date())/86400000); }
-  function betaDateText(){ return new Date(BETA_END+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); }
+  /* ───────── EARLY-ACCESS LINE · follows the paywall switch, no dates ─────────
+     Paywall off → say everything is open. Paywall on → nothing; the locks speak for themselves. */
   function renderBeta(){
     var el=document.querySelector('.beta-line'); if(!el) return;
-    var n=betaDaysLeft(), tail='Everything is unlocked \u2014 your listening shapes what echo becomes.';
-    el.textContent = n>0 ? ('The founding beta is open until '+betaDateText()+' \u2014 '+n+' day'+(n===1?'':'s')+' left. '+tail) : tail;
+    var open=!(window.EchoPass && EchoPass.enabled());
+    el.textContent = open ? 'Early access \u2014 everything is open for now.' : '';
+    el.hidden = !open;
   }
-  window.__echoRenderBeta=renderBeta;
 
   /* ───────── HOME STATE · single source of truth, time-aware, persisted ───────── */
   var homeRecFreq={name:'Alpha Clarity',hz:'10 Hz',cat:'binaural'};
