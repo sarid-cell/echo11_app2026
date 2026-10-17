@@ -1021,7 +1021,7 @@
       var cards=reel.children; if(!cards.length){ count.textContent=''; return; }
       var mid=reel.scrollLeft+reel.clientWidth/2, best=0, d=1e9;
       for(var k=0;k<cards.length;k++){ var c=cards[k], cm=c.offsetLeft+c.offsetWidth/2, dd=Math.abs(cm-mid); if(dd<d){ d=dd; best=k; } }
-      count.textContent=String(best+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
+      count.textContent=String(best+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0')+' · hold to see it without the clock';
     }
     if(!reel.__counted){ reel.__counted=true; var raf=0; reel.addEventListener('scroll', function(){ cancelAnimationFrame(raf); raf=requestAnimationFrame(syncCount); }, {passive:true}); }
     reel.__sync=syncCount; syncCount();
@@ -1069,6 +1069,16 @@
       b.addEventListener('click', function(){ saveWallpaper(list[i],b); });
     });
   }
+  /* press and hold an open preview → the clock steps aside to show the whole still */
+  (function(){
+    var reel=document.getElementById('gal-grid'); if(!reel) return;
+    function scr(e){ var s=e.target.closest('.lock-screen'); return (s && !s.closest('.lock.locked')) ? s : null; }
+    reel.addEventListener('pointerdown', function(e){ var s=scr(e); if(s) s.classList.add('peek'); });
+    ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+      reel.addEventListener(ev, function(){ reel.querySelectorAll('.lock-screen.peek').forEach(function(s){ s.classList.remove('peek'); }); });
+    });
+    reel.addEventListener('contextmenu', function(e){ if(scr(e)) e.preventDefault(); });   // long-press shows the image, not the browser menu
+  })();
   /* the preview clock is the device's own time, like a real lock screen */
   function lockClock(){
     var d=new Date();
