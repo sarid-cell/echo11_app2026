@@ -15,7 +15,7 @@
 
 ### Remove
 
-- The "Beta status" callout at the top (*free, invite-only beta, no payments*).
+- The "Beta status" callout at the top (*free public beta, no payments*).
 - Section **3. Beta access — free, no payments**.
 
 ### Replace section 3 with: **3. The Founding Pass — payments**
