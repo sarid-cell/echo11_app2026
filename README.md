@@ -33,10 +33,13 @@ npx serve .
 Deployed on Vercel. `vercel.json` routes `/` to `echo11-app.html` and the
 legal pages to `project/legal/`.
 
-**Note:** the site currently ships `robots.txt` (disallow all) and
-`noindex` meta tags while the app is still being finished, to keep it out
-of Google search results. Remove these once the app is ready to be
-discovered publicly.
+**Search & analytics (open beta, since Oct 2026):** the app is public and
+indexable — `robots.txt` allows all and points to `sitemap.xml`; `index.html`
+carries a canonical (`https://echo11.space/`) and `WebApplication` JSON-LD.
+The legal pages and the legacy `echo11-app.html` keep `noindex`.
+Analytics use the same GA4 property as echo11.app (`G-TP9YRD6TN8`) with
+Consent Mode (cookies off until the in-app "Accept"); app events are
+`frequency_start` and `frequency_complete` with `source: "app"`.
 
 ## Background
 
