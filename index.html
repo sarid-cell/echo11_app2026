@@ -3,8 +3,26 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="robots" content="noindex, nofollow" />
-<title>echo.|| — App</title>
+<!-- Google tag (gtag.js) — same GA4 property as echo11.app. Consent Mode:
+     analytics cookies stay off until the listener accepts (echo11_consent). -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', { analytics_storage: (function(){ try{ return localStorage.getItem('echo11_consent')==='granted'?'granted':'denied'; }catch(e){ return 'denied'; } })() });
+  gtag('js', new Date());
+  gtag('config', 'G-TP9YRD6TN8');
+  /* the library loads off the critical path: first interaction, or 3 s after load */
+  (function(){
+    var loaded=false;
+    function load(){ if(loaded) return; loaded=true; var s=document.createElement('script'); s.async=true; s.src='https://www.googletagmanager.com/gtag/js?id=G-TP9YRD6TN8'; document.head.appendChild(s); }
+    ['click','keydown','touchstart','scroll','mousemove'].forEach(function(ev){ window.addEventListener(ev, load, {once:true, passive:true}); });
+    window.addEventListener('load', function(){ setTimeout(load, 3000); });
+  })();
+  /* one safe entry point for app events — never throws, never blocks audio */
+  window.echoTrack=function(name, params){ try{ if(typeof gtag==='function') gtag('event', name, Object.assign({source:'app'}, params||{})); }catch(e){} };
+</script>
+<title>echo·11 — Binaural Beats App for Calm, Focus &amp; Sleep</title>
+<link rel="canonical" href="https://echo11.space/" />
 <meta name="description" content="echo·11 — 22 binaural and pure-tone frequencies for calm, focus and rest. Twenty quiet minutes a day, with headphones." />
 <meta name="theme-color" content="#E9E9E7" />
 <meta property="og:type" content="website" />
@@ -36,6 +54,27 @@
 <link rel="stylesheet" href="echo11-web.css" />
 <!-- Bonus book (Founding Pass) — bundled as a blob for standalone export -->
 <meta name="ext-resource-dependency" content="media/echo-volume-one.pdf" data-resource-id="book" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://echo11.space/#app",
+  "name": "echo·11",
+  "alternateName": ["Echo.11", "echo11"],
+  "url": "https://echo11.space/",
+  "description": "A free web app with 22 binaural-beat and pure-tone frequencies for calm, focus and rest. Twenty quiet minutes a day, with headphones. A wellness tool, not a medical device.",
+  "image": "https://echo11.space/img/hero-portrait.jpg",
+  "applicationCategory": "HealthApplication",
+  "applicationSubCategory": "Binaural beats",
+  "operatingSystem": "Any — runs in the browser (iPhone, Android, desktop)",
+  "browserRequirements": "Requires JavaScript and the Web Audio API. Stereo headphones for binaural sessions.",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Shira Sarid", "url": "https://echo11.app/shira-sarid.html" },
+  "isRelatedTo": { "@type": "WebSite", "name": "Echo.11", "url": "https://echo11.app/" }
+}
+</script>
 </head>
 <body>
 <div class="stage">
@@ -662,6 +701,40 @@
     button.wdl{padding:0;cursor:pointer;font:inherit;}
     </style>
 
+    <!-- ░░ ANALYTICS CONSENT · sits under the sign-in and splash layers, above the tab bar ░░ -->
+    <div class="consentbar" id="consentbar" role="dialog" aria-live="polite" aria-label="Analytics consent" hidden>
+      <p>echo uses Google Analytics to learn which frequencies people play. Your listening history stays on your device. <a href="legal/privacy.html" target="_blank" rel="noopener">Privacy</a></p>
+      <div class="cb-row">
+        <button type="button" class="cb-btn cb-no" id="consent-no">Decline</button>
+        <button type="button" class="cb-btn cb-yes" id="consent-yes">Accept</button>
+      </div>
+    </div>
+    <style>
+    .consentbar{position:absolute;left:14px;right:14px;bottom:calc(100px + env(safe-area-inset-bottom));z-index:150;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:22px;padding:14px 16px;box-shadow:0 18px 40px -16px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:10px;}
+    .consentbar[hidden]{display:none;}
+    .consentbar p{margin:0;font-size:13px;line-height:1.5;color:var(--muted);text-wrap:pretty;}
+    .consentbar a{color:var(--azure);font-weight:600;text-decoration:none;}
+    .consentbar .cb-row{display:flex;gap:8px;justify-content:flex-end;}
+    .consentbar .cb-btn{height:38px;padding:0 18px;border-radius:99px;font-size:14px;font-weight:600;cursor:pointer;}
+    .consentbar .cb-no{background:transparent;border:1px solid var(--line);color:var(--ink);}
+    .consentbar .cb-yes{background:var(--azure);border:0;color:#fff;}
+    </style>
+    <script>
+    (function(){
+      var bar=document.getElementById('consentbar'); if(!bar) return;
+      var v=null; try{ v=localStorage.getItem('echo11_consent'); }catch(e){}
+      if(v==='granted'||v==='denied') return;
+      bar.hidden=false;
+      function set(val){
+        try{ localStorage.setItem('echo11_consent',val); }catch(e){}
+        if(val==='granted' && typeof gtag==='function') gtag('consent','update',{analytics_storage:'granted'});
+        bar.hidden=true;
+      }
+      document.getElementById('consent-yes').addEventListener('click',function(){ set('granted'); });
+      document.getElementById('consent-no').addEventListener('click',function(){ set('denied'); });
+    })();
+    </script>
+
     <!-- ░░ AUTH / ONBOARDING — sign-in gate ░░ -->
     <div class="auth" id="auth" hidden aria-label="Sign in to echo.||">
       <img class="auth-bg" src="img/astro-woman.jpg" alt="" />
@@ -710,17 +783,6 @@
   </div>
 </div>
 
-<!-- ════════ DESIGN NOTES ════════ -->
-<aside class="flowcard">
-  <span class="fc-mark">echo.|| · canonical app</span>
-  <h3>Light system, combined</h3>
-  <div class="flowstep"><span class="n">1</span><p>Original-site palette restored — <b>Cloud Dancer + Geist</b>, blue accent — with depth and 3D liquid-glass buttons, large accessible type.</p></div>
-  <div class="flowstep"><span class="n">2</span><p>Video hero on top; below it, the <b>22 frequencies split into two big category cards</b> (Binaural / Pure-Tone).</p></div>
-  <div class="flowstep"><span class="n">3</span><p>Podcast is gone — replaced by a <b>Gallery</b> of open &amp; founding lock-screen stills with a weekly empowering line.</p></div>
-  <div class="flowstep"><span class="n">4</span><p>Header: <b>echo</b> logo, an Apple-safe <b>Calm-Reset</b> breath pulse, and a glass <b>profile</b> avatar.</p></div>
-  <div class="flowstep"><span class="n">5</span><p><b>Profile</b> holds listening history + a <b>listening pattern</b> summary with suggestions. <b>The Science</b> explains binaural beats (Monroe / CIA Gateway).</p></div>
-  <p class="note">Try it: open a category, switch Open/Founding in Gallery, tap the breath pulse, or open Profile to see your listening pattern.</p>
-</aside>
 
 <script src="config.js"></script>
 <script src="echo11-app-data.js"></script>
@@ -1960,6 +2022,7 @@
       hist.unshift({name:curFreq.name,hz:curFreq.hz,cat:curFreq.cat,min:mins,ts:pendingHistTs,feel:null});
       lset(HIST_KEY, JSON.stringify(hist.slice(0,50)));
       normalizeStats();                                 // streak + weekly minutes are derived, never incremented blind
+      if(window.echoTrack) echoTrack('frequency_complete',{id:curFreq.name, hz:curFreq.hz, category:curFreq.cat, duration:mins*60});
     }
     plcSub.textContent=prof.name+' · '+(isFinite(SESSION)?Math.round(SESSION/60)+' min':fmt(elapsed))+(sessionCounted?'':' · not counted');
     renderPlcStreak();
@@ -2183,6 +2246,7 @@
     if(window.EchoPass && !EchoPass.isUnlocked(target.name)){ EchoPass.open(); return; }
     if(!opts.__hpOk && needsSheet(target.cat)){ opts.__cat=target.cat; hpPending=opts; showHP(target.cat); return; }
     curFreq=target;
+    if(window.echoTrack) echoTrack('frequency_start',{id:curFreq.name, hz:curFreq.hz, category:curFreq.cat, resume:!!opts.resume});
     applyProfile(profile(curFreq));
     var fl=true; try{ fl=localStorage.getItem(FL_KEY)!=='done'; }catch(e){}
     firstListen = fl && !opts.resume && prof.fL===200 && prof.fR===210;   // guided captions = first Alpha listen only
