@@ -35,7 +35,7 @@ legal pages to `project/legal/`.
 
 **Search & analytics (open beta, since Oct 2026):** the app is public and
 indexable — `robots.txt` allows all and points to `sitemap.xml`; `index.html`
-carries a canonical (`https://echo11.space/`) and `WebApplication` JSON-LD.
+carries a canonical (`https://www.echo11.space/`) and `WebApplication` JSON-LD.
 The legal pages and the legacy `echo11-app.html` keep `noindex`.
 Analytics use the same GA4 property as echo11.app (`G-TP9YRD6TN8`) with
 Consent Mode (cookies off until the in-app "Accept"); app events are
