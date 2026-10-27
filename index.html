@@ -1712,12 +1712,14 @@
     wireRadios(setupEl.querySelector('[aria-labelledby="breath-pat-lbl"]'), function(b){ applyPat(b.getAttribute('data-pat')); });
     wireRadios(setupEl.querySelector('[aria-labelledby="breath-min-lbl"]'), function(){});
     cueBtn.addEventListener('click', function(){ setCue(!cueOn); });
-    try{ if(localStorage.getItem(PAT_KEY)&&PATS[localStorage.getItem(PAT_KEY)]) applyPat(localStorage.getItem(PAT_KEY)); }catch(e){}
-    try{ setCue(localStorage.getItem(CUE_KEY)==='1'); }catch(e){ setCue(false); }
-    var savedBtn=setupEl.querySelector('[data-pat="'+pat+'"]');
-    if(savedBtn) savedBtn.click();
+    function restore(){
+      var id='478', cue=false;
+      try{ var saved=localStorage.getItem(PAT_KEY); if(PATS[saved]) id=saved; cue=localStorage.getItem(CUE_KEY)==='1'; }catch(e){}
+      var btn=setupEl.querySelector('[data-pat="'+id+'"]'); if(btn) btn.click();
+      setCue(cue);
+    }
     document.getElementById('reset-open').addEventListener('click', function(){
-      showView('setup'); paintStreak(loadStreak().n); breath.dataset.phase='in';
+      restore(); showView('setup'); paintStreak(loadStreak().n); breath.dataset.phase='in';
       resetScrim.inert=false; resetScrim.classList.add('open');
       EchoDialog.open(resetScrim,{focus:'#breath-start', onEscape:closeReset});
     });
