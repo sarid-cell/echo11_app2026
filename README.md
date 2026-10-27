@@ -41,6 +41,16 @@ Analytics use the same GA4 property as echo11.app (`G-TP9YRD6TN8`) with
 Consent Mode (cookies off until the in-app "Accept"); app events are
 `frequency_start` and `frequency_complete` with `source: "app"`.
 
+## CSS
+
+The stylesheets the page loads (`echo11-app.css`, `echo11-web.css`) are minified. Edit the readable copies in `src/`, then regenerate (no build step, no dependency added to the app):
+
+```bash
+sh scripts/minify-css.sh
+```
+
+That runs `csso-cli` 5.0.5 with restructuring on, and writes the files the page already links. After regenerating, look at Home, the category cards, and the player on a phone-width window and on desktop.
+
 ## Background
 
 This repo originated as a design handoff from Claude Design
