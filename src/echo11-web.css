@@ -345,3 +345,14 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .begin-lbl{flex-direction:column;align-items:flex-start;gap:2px;min-width:0;}
 #begin-label{max-width:100%;font-size:clamp(15px,4.4vw,17px);}
 .begin-hz{font-size:11.5px;letter-spacing:.6px;opacity:.95;}
+
+/* outbound: a quiet line under the disclaimer, and the end-of-session invite */
+.site-links{margin:-8px 4px 0;font-size:13px;line-height:1.4;}
+.site-links a{color:var(--muted);font-weight:500;text-decoration:none;}
+.site-links a:hover{color:var(--azure);}
+.site-links a:active{opacity:.65;}
+.site-links a:focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px;}
+.plc-yt{font-size:13.5px;font-weight:500;color:var(--azure);text-decoration:none;text-align:center;}
+.plc-yt:hover{text-decoration:underline;}
+.plc-yt:active{opacity:.65;}
+.plc-yt:focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px;}

@@ -129,7 +129,7 @@
         <div class="begin-wrap">
           <button class="begin" id="begin-signal" data-mode="begin" aria-label="Begin tonight's echo">
             <span class="begin-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l13 7-13 7z"/></svg></span>
-            <span class="begin-lbl"><span class="begin-label" id="begin-label">Begin tonight's echo</span> <span class="begin-hz" id="begin-hz">Delta Sleep · 2 Hz</span></span>
+            <span class="begin-lbl"><span class="begin-label" id="begin-label">Begin tonight's echo</span> <span class="begin-hz" id="begin-hz">Release · 174 Hz</span></span>
           </button>
           <p class="begin-note" id="begin-note">A steady tone, not music — give it 60 seconds.</p>
         </div>
@@ -200,6 +200,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
           <p>Wellness &amp; cognitive-training tool — <b>not a medical device</b>, not a diagnosis or treatment. Use stereo headphones for binaural protocols. Don't use while driving. <a href="legal/disclaimer.html" target="_blank" rel="noopener">Safe-use &amp; disclaimer</a></p>
         </div>
+        <p class="site-links"><a href="https://echo11.app/" target="_blank" rel="noopener">More on echo11.app</a></p>
       </div>
     </section>
 
@@ -326,6 +327,14 @@
           <a class="srow" href="legal/terms.html" target="_blank" rel="noopener">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v16H7zM10 9h4M10 13h4"/></svg></span>
             <span class="sname">Terms of use (EULA)</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" href="https://echo11.app/" target="_blank" rel="noopener">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+            <span class="sname">More on echo11.app</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="srow" href="https://www.youtube.com/@shira_sarid?sub_confirmation=1" target="_blank" rel="noopener">
+            <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="18" height="11" rx="3"/><path d="M11 10l4 2-4 2z"/></svg></span>
+            <span class="sname">Subscribe on YouTube</span><span class="sarr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
           </a>
           <button type="button" class="srow" id="signout">
             <span class="sic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5M20 12H9M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3"/></svg></span>
@@ -489,7 +498,7 @@
           <span class="pl-fill" id="pl-fill"></span>
           <span class="pl-tick" id="pl-tick"><span class="pl-tick-dot"></span></span>
         </div>
-        <div class="pl-shift" id="pl-shift">descending → 10 Hz · min 3</div>
+        <div class="pl-shift" id="pl-shift">steady · 10 Hz</div>
       </div>
 
       <div class="pl-controls">
@@ -533,6 +542,7 @@
           <div class="plc-foot-top">
             <span class="plc-streak" id="plc-streak">Day 5 <span class="plc-dot" aria-hidden="true"></span></span>
             <span class="plc-next" id="plc-next">same time tomorrow</span>            <span class="plc-upnext" id="plc-upnext" hidden></span>
+            <a class="plc-yt" href="https://www.youtube.com/@shira_sarid?sub_confirmation=1" target="_blank" rel="noopener">More sessions on YouTube</a>
           </div>
           <button class="plc-done" id="plc-done">Done</button>
         </div>
@@ -1068,7 +1078,7 @@
   /* ── the dial ── */
   var DIAL=[], dialIdx=0, pendingTune=null, dialWhy='';
   var SLOTS=[[5,11,['beta','alpha'],'morning','this morning'],[11,17,['alpha','beta'],'afternoon','this afternoon'],
-             [17,22,['theta','alpha'],'evening','this evening'],[22,29,['delta','theta'],'night','tonight']];
+             [17,22,['theta','alpha'],'evening','this evening'],[22,29,['tone'],'night','tonight']];
   function slotOf(ts){ var h=new Date(ts).getHours(); if(h<5) h+=24; return SLOTS.filter(function(p){ return h>=p[0] && h<p[1]; })[0]||SLOTS[3]; }
   function renderDial(){
     var bin=ECHO.FREQS.filter(function(f){ return f.cat!=='tone'; }).sort(function(x,y){ return parseFloat(x.hz)-parseFloat(y.hz); });
@@ -1172,7 +1182,9 @@
       try{ last=(JSON.parse(localStorage.getItem('echo:last'))||{}).name; }catch(e){}
       var pool=ECHO.FREQS.filter(function(f){ return slot[2].indexOf(bandOf(f))>-1 && EchoPass.isUnlocked(f.n) && f.n!==last && (!again || !cur || f.n!==cur.n); });
       if(!pool.length) pool=ECHO.FREQS.filter(function(f){ return EchoPass.isUnlocked(f.n); });
-      pick=pool[Math.floor(Math.random()*pool.length)];
+      /* night default is a speaker tone (same sound both ears). Release is the low one; another tone only if that was just played. */
+      var nightTone=slot[3]==='night' ? pool.filter(function(f){ return f.n==='Release'; })[0] : null;
+      pick=nightTone || pool[Math.floor(Math.random()*pool.length)];
       why=again?'<b>Another one</b> for '+slot[4]:'<b>Tuned for '+slot[4]+'</b>';
     }
     setDial(DIAL.indexOf(pick), why, !!again);
@@ -1773,17 +1785,12 @@
     p.intent = INTENT[freq.name] || BAND_INTENT[p.band] || 'resonance';
     return p;
   }
-  /* live phase narration under the slider — one line, mono, never a claim */
+  /* one line under the slider. Frequency stays put; only loudness moves (fade in, then the last 15s fade out). */
   function shiftLine(){
-    var last = isFinite(SESSION) && elapsed >= SESSION-60;
-    if(prof.band==='tone'){
-      if(last) return 'releasing · '+prof.hzNum+' Hz → rest';
-      if(elapsed<180) return 'settling · '+prof.hzNum+' Hz';
-      return 'sustained '+prof.hzNum+' Hz';
-    }
-    if(last) return 'releasing · '+prof.beat+' Hz → rest';
-    if(elapsed<180) return (prof.beat<13?'descending':'ascending')+' → '+prof.beat+' Hz · min 3';
-    return 'holding '+prof.beat+' Hz · '+prof.band;
+    var hz = prof.band==='tone' ? prof.hzNum : prof.beat;
+    if(isFinite(SESSION) && elapsed >= Math.max(1, SESSION-15)) return 'fading out · '+hz+' Hz';
+    if(elapsed<15) return 'settling in · '+hz+' Hz';
+    return 'steady · '+hz+' Hz';
   }
   var prof=profile(null), SESSION=900;
   function applyProfile(p){
@@ -2381,7 +2388,7 @@
     if(h>=5 && h<11)  return {name:'Beta Focus',   hz:'18 Hz', cat:'binaural', word:'Morning', greet:'Good morning',   begin:"Begin this morning's echo"};   // focus
     if(h>=11 && h<17) return {name:'Alpha Clarity', hz:'10 Hz', cat:'binaural', word:'Day',     greet:'Good afternoon', begin:"Begin this afternoon's echo"}; // clarity
     if(h>=17 && h<22) return {name:'Theta Drift',   hz:'6 Hz',  cat:'binaural', word:'Evening', greet:'Good evening',   begin:"Begin this evening's echo"};   // wind-down
-    return                   {name:'Delta Sleep',   hz:'2 Hz',  cat:'binaural', word:'Night',   greet:'Good night',     begin:"Begin tonight's echo"};        // sleep
+    return                   {name:'Release',       hz:'174 Hz',cat:'tone',     word:'Night',   greet:'Good night',     begin:"Begin tonight's echo"};        // speaker, same tone both ears
   }
   function relTime(ts){
     var d=Date.now()-ts, day=86400000;
