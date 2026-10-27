@@ -1,5 +1,21 @@
 {
   "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "X-Frame-Options": "SAMEORIGIN",
+        "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(img|media|icons)/(.*)",
+      "headers": { "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800" },
+      "continue": true
+    },
     { "src": "/privacy",    "dest": "/legal/privacy.html" },
     { "src": "/terms",      "dest": "/legal/terms.html" },
     { "src": "/disclaimer", "dest": "/legal/disclaimer.html" },

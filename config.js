@@ -5,5 +5,6 @@ window.ECHO_CONFIG = {
   PAYWALL_ENABLED: false,
   CHECKOUT_URL: "",          // Lemon Squeezy checkout link, added later
   PRICE_LABEL: "$12 · one-time",
-  FREE_FREQS: ["Alpha Clarity","Theta Drift","Delta Sleep","The Universe"]
+  FREE_FREQS: ["Alpha Clarity","Theta Drift","Delta Sleep","The Universe"],
+  BOOK_ENABLED: false        // true once media/echo-volume-one.pdf is deployed
 };
