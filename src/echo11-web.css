@@ -356,3 +356,53 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .plc-yt:hover{text-decoration:underline;}
 .plc-yt:active{opacity:.65;}
 .plc-yt:focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px;}
+
+/* calm reset: pattern, length, phase count. Same orb, three timings. */
+.resetscrim{overflow-y:auto;justify-content:center;justify-content:safe center;padding:28px 26px 32px;-webkit-overflow-scrolling:touch;}
+.resetscrim h2{margin:8px 0 8px;}
+.resetscrim p{margin:0;}
+#reset-setup,#reset-run,#reset-done{display:flex;flex-direction:column;align-items:center;width:100%;}
+#reset-setup[hidden],#reset-run[hidden],#reset-done[hidden]{display:none;}
+.breath .bcore,.breath .bring,.breath.run .bcore,.breath.run .bring{animation:breathe 19s ease-in-out infinite paused;}
+.breath.run .bcore,.breath.run .bring{animation-play-state:running;}
+.breath[data-pat="box"] .bcore,.breath[data-pat="box"] .bring,
+.breath[data-pat="box"].run .bcore,.breath[data-pat="box"].run .bring{animation-name:breathe-box;animation-duration:16s;}
+.breath[data-pat="calm"] .bcore,.breath[data-pat="calm"] .bring,
+.breath[data-pat="calm"].run .bcore,.breath[data-pat="calm"].run .bring{animation-name:breathe-calm;animation-duration:10s;}
+@keyframes breathe-box{
+  0%{transform:scale(.55);}
+  25%{transform:scale(1);}
+  50%{transform:scale(1);}
+  75%{transform:scale(.55);}
+  100%{transform:scale(.55);}
+}
+@keyframes breathe-calm{
+  0%{transform:scale(.55);}
+  40%{transform:scale(1);}
+  100%{transform:scale(.55);}
+}
+.breath-k{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-top:16px;}
+.breath-picks{display:flex;gap:8px;width:100%;max-width:320px;margin-top:8px;}
+.bpick{flex:1;min-height:44px;min-width:0;padding:8px 6px;border-radius:16px;cursor:pointer;font-family:var(--ui);font-size:14px;font-weight:600;color:#fff;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.28);}
+.bpick span{display:block;margin-top:2px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.3px;color:rgba(255,255,255,.72);}
+.bpick[aria-checked="true"]{background:var(--azure-pale);color:#0a0e18;border-color:var(--azure-pale);}
+.bpick[aria-checked="true"] span{color:rgba(10,14,24,.68);}
+.bpick:focus-visible,.breath-cue:focus-visible,.reset-btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+.breath-cue{margin-top:12px;min-height:44px;padding:0 8px;border:0;background:none;cursor:pointer;font-family:var(--ui);font-size:13.5px;font-weight:500;color:rgba(255,255,255,.78);}
+.breath-cue[aria-pressed="true"]{color:var(--azure-pale);}
+.breath-streak{font-family:var(--mono);font-size:12px;letter-spacing:.4px;color:rgba(255,255,255,.72);margin-top:10px;min-height:16px;}
+.breath-streak[hidden]{display:none;}
+.reset-cue{font-family:var(--ui);font-size:22px;font-weight:500;letter-spacing:-.3px;text-transform:none;margin-top:0;}
+#reset-done-title:focus{outline:2px solid #fff;outline-offset:4px;border-radius:6px;}
+.reset-count{font-family:var(--mono);font-size:56px;font-weight:300;letter-spacing:-1px;line-height:1;color:#fff;margin-top:6px;}
+.reset-actions.col{flex-direction:column;width:min(280px,100%);align-items:stretch;}
+.reset-actions.col .reset-btn{width:100%;text-decoration:none;display:flex;align-items:center;justify-content:center;}
+@media (prefers-reduced-motion: reduce){
+  .breath .bcore,.breath .bring,.breath.run .bcore,.breath.run .bring{animation:none!important;}
+  .resetscrim{transition:none;}
+  .breath[data-phase="in"] .bcore,.breath[data-phase="hold"] .bcore{transform:scale(1);}
+  .breath[data-phase="out"] .bcore,.breath[data-phase="holdout"] .bcore{transform:scale(.62);}
+  .breath[data-phase="in"] .bring,.breath[data-phase="hold"] .bring{transform:scale(1);}
+  .breath[data-phase="out"] .bring,.breath[data-phase="holdout"] .bring{transform:scale(.72);}
+}

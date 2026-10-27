@@ -96,7 +96,7 @@
       <div class="appheader">
         <span class="wordmark" aria-label="echo.11">echo<span class="mk" aria-hidden="true"><i></i><i></i></span></span>
         <div class="hgroup">
-          <button class="resetbtn" id="reset-open" aria-label="Calm reset — grounding breath">
+          <button class="resetbtn" id="reset-open" aria-label="Calm reset">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z" opacity=".35"/><circle cx="12" cy="9" r="2.4"/></svg>
           </button>
           <button class="iconbtn avatar" id="profile-open" aria-label="Profile">
@@ -597,16 +597,49 @@
     </div>
 
     <!-- ░░ CALM RESET overlay ░░ -->
-    <div class="resetscrim" id="reset-scrim" role="dialog" aria-modal="true" aria-label="Calm reset" inert>
-      <div class="breath" id="breath" aria-hidden="true"><div class="bring"></div><div class="bcore"></div></div>
-      <span class="reset-kick">Calm Reset</span>
-      <h2>Find your <b>baseline</b></h2>
-      <p>A 4·7·8 grounding breath. Let everything else go quiet and follow the light — in as it grows, out as it falls.</p>
-      <div class="reset-cue" id="reset-cue">Breathe in…</div>
-      <div class="reset-timer" id="reset-timer">2:00</div>
-      <div class="reset-actions">
-        <button class="reset-btn" id="reset-close">Close</button>
-        <button class="reset-btn solid" id="reset-toggle">Pause</button>
+    <div class="resetscrim" id="reset-scrim" role="dialog" aria-modal="true" aria-labelledby="reset-title" inert>
+      <div class="breath" id="breath" data-pat="478" data-phase="in" aria-hidden="true"><div class="bring"></div><div class="bcore"></div></div>
+      <div id="reset-setup">
+        <span class="reset-kick">Calm Reset</span>
+        <h2 id="reset-title">Find your <b>baseline</b></h2>
+        <p id="reset-blurb">In for 4, hold for 7, out for 8.</p>
+        <span class="breath-k" id="breath-pat-lbl">Pattern</span>
+        <div class="breath-picks" role="radiogroup" aria-labelledby="breath-pat-lbl">
+          <button type="button" class="bpick" role="radio" data-pat="box" aria-checked="false" tabindex="-1">Box<span>4-4-4-4</span></button>
+          <button type="button" class="bpick" role="radio" data-pat="478" aria-checked="true" tabindex="0">4-7-8<span>In, hold, out</span></button>
+          <button type="button" class="bpick" role="radio" data-pat="calm" aria-checked="false" tabindex="-1">Calm<span>In 4, out 6</span></button>
+        </div>
+        <span class="breath-k" id="breath-min-lbl">Minutes</span>
+        <div class="breath-picks mins" role="radiogroup" aria-labelledby="breath-min-lbl">
+          <button type="button" class="bpick" role="radio" data-min="1" aria-checked="false" tabindex="-1">1 min</button>
+          <button type="button" class="bpick" role="radio" data-min="3" aria-checked="true" tabindex="0">3 min</button>
+          <button type="button" class="bpick" role="radio" data-min="5" aria-checked="false" tabindex="-1">5 min</button>
+        </div>
+        <button type="button" class="breath-cue" id="breath-cue" aria-pressed="false">Soft tone · off</button>
+        <p class="breath-streak" id="breath-streak" hidden></p>
+        <div class="reset-actions">
+          <button class="reset-btn" id="reset-close" type="button">Close</button>
+          <button class="reset-btn solid" id="breath-start" type="button">Start</button>
+        </div>
+      </div>
+      <div id="reset-run" hidden>
+        <div class="reset-cue" id="reset-cue" aria-live="polite">Breathe in</div>
+        <div class="reset-count" id="reset-count" aria-hidden="true">4</div>
+        <div class="reset-timer" id="reset-timer" aria-hidden="true">3:00</div>
+        <div class="reset-actions">
+          <button class="reset-btn" id="breath-close-run" type="button">Close</button>
+          <button class="reset-btn solid" id="breath-pause" type="button">Pause</button>
+        </div>
+      </div>
+      <div id="reset-done" hidden>
+        <span class="reset-kick">Calm Reset</span>
+        <h2 id="reset-done-title" tabindex="0" aria-describedby="breath-streak-done">Round complete</h2>
+        <p class="breath-streak" id="breath-streak-done"></p>
+        <div class="reset-actions col">
+          <button class="reset-btn solid" id="breath-continue" type="button">Continue to a session</button>
+          <a class="reset-btn" id="breath-yt" href="https://www.youtube.com/@shira_sarid?sub_confirmation=1" target="_blank" rel="noopener">More breathing on YouTube</a>
+          <button class="reset-btn" id="breath-done-close" type="button">Close</button>
+        </div>
       </div>
     </div>
 
@@ -1556,26 +1589,154 @@
     io.observe(ex);
   })();
 
-  // calm reset
-  var resetScrim=document.getElementById('reset-scrim'), breath=document.getElementById('breath'), cueEl=document.getElementById('reset-cue'), timerEl=document.getElementById('reset-timer'), toggleBtn=document.getElementById('reset-toggle');
-  var phases=[['Breathe in…',4],['Hold',7],['Breathe out…',8]]; // 4-7-8
-  var pi=0, pt=0, remain=120, running=false, tick=null;
-  function fmt(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
-  function step(){
-    if(!running) return;
-    pt--; remain--;
-    if(remain<=0){ stopReset(true); return; }
-    timerEl.textContent=fmt(remain);
-    if(pt<=0){ pi=(pi+1)%phases.length; pt=phases[pi][1]; cueEl.textContent=phases[pi][0]; }
-  }
-  function startReset(){ pi=0; pt=phases[0][1]; remain=120; running=true; cueEl.textContent=phases[0][0]; timerEl.textContent=fmt(remain); toggleBtn.textContent='Pause'; breath.classList.add('run'); clearInterval(tick); tick=setInterval(step,1000); }
-  function stopReset(done){ running=false; clearInterval(tick); breath.classList.remove('run'); if(done){ cueEl.textContent='Grounded'; } resetScrim.classList.remove('open'); resetScrim.inert=true; EchoDialog.close(resetScrim); }
-  document.getElementById('reset-open').addEventListener('click', function(){
-    resetScrim.inert=false; resetScrim.classList.add('open'); startReset();
-    EchoDialog.open(resetScrim,{focus:'#reset-close', onEscape:function(){ stopReset(false); }});
-  });
-  document.getElementById('reset-close').addEventListener('click', function(){ stopReset(false); });
-  toggleBtn.addEventListener('click', function(){ running=!running; toggleBtn.textContent=running?'Pause':'Resume'; breath.classList.toggle('run',running); });
+  // calm reset: same orb and one-second phases, with a pattern, a length, and a quiet finish
+  (function(){
+    var PAT_KEY='echo:breathPat', CUE_KEY='echo:breathCue', DAY_KEY='echo:breathDays';
+    var PATS={
+      box:{name:'Box', blurb:'Four even counts. In, hold, out, hold.', phases:[['Breathe in',4,'in'],['Hold',4,'hold'],['Breathe out',4,'out'],['Hold',4,'holdout']]},
+      '478':{name:'4-7-8', blurb:'In for 4, hold for 7, out for 8.', phases:[['Breathe in',4,'in'],['Hold',7,'hold'],['Breathe out',8,'out']]},
+      calm:{name:'Calm', blurb:'A slower rhythm to settle into.', phases:[['Breathe in',4,'in'],['Breathe out',6,'out']]}
+    };
+    var resetScrim=document.getElementById('reset-scrim'), breath=document.getElementById('breath');
+    var setupEl=document.getElementById('reset-setup'), runEl=document.getElementById('reset-run'), doneEl=document.getElementById('reset-done');
+    var blurbEl=document.getElementById('reset-blurb'), cueEl=document.getElementById('reset-cue'), countEl=document.getElementById('reset-count'), timerEl=document.getElementById('reset-timer');
+    var pauseBtn=document.getElementById('breath-pause'), cueBtn=document.getElementById('breath-cue');
+    var streakEl=document.getElementById('breath-streak'), streakDone=document.getElementById('breath-streak-done');
+    var pat='478', mins=3, cueOn=false, phases=PATS['478'].phases, pi=0, phaseMs=4000, remainMs=180000, running=false, breathTick=null, lastTick=0, shownSec=-1, cueCtx=null;
+    if(!resetScrim||!breath||!setupEl||!runEl||!doneEl||!pauseBtn||!cueBtn) return;
+    function breathFmt(s){ s=Math.max(0,s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+    function dayKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+    function loadStreak(){ try{ var v=JSON.parse(localStorage.getItem(DAY_KEY)); if(v&&v.n>0&&v.last) return v; }catch(e){} return {n:0,last:''}; }
+    function streakLine(n){ return n?(n+' day'+(n===1?'':'s')+' in a row'):''; }
+    function paintStreak(n){
+      var t=streakLine(n);
+      if(streakEl){ streakEl.textContent=t; streakEl.hidden=!t; }
+      if(streakDone) streakDone.textContent=t;
+    }
+    function markStreak(){
+      var s=loadStreak(), today=dayKey(new Date()), y=new Date(); y.setDate(y.getDate()-1);
+      var next=s.last===today?s.n:(s.last===dayKey(y)?s.n+1:1);
+      try{ localStorage.setItem(DAY_KEY, JSON.stringify({n:next,last:today})); }catch(e){}
+      return next;
+    }
+    function showView(which){
+      setupEl.hidden=which!=='setup'; runEl.hidden=which!=='run'; doneEl.hidden=which!=='done';
+      resetScrim.setAttribute('aria-labelledby', which==='run'?'reset-cue':which==='done'?'reset-done-title':'reset-title');
+    }
+    function paintCue(){
+      var label=phases[pi][0];
+      if(cueEl.textContent!==label) cueEl.textContent=label;
+      breath.dataset.phase=phases[pi][2];
+    }
+    function paintTime(){
+      var sec=Math.max(1, Math.ceil(phaseMs/1000));
+      if(sec!==shownSec){ shownSec=sec; countEl.textContent=String(sec); }
+      timerEl.textContent=breathFmt(Math.ceil(remainMs/1000));
+    }
+    function blip(){
+      if(!cueOn) return;
+      try{
+        var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+        if(!cueCtx) cueCtx=new AC();
+        if(cueCtx.state==='suspended') cueCtx.resume();
+        var pitch={in:440,hold:392,out:330,holdout:294}[phases[pi][2]]||392;
+        var t=cueCtx.currentTime, o=cueCtx.createOscillator(), g=cueCtx.createGain();
+        o.type='sine'; o.frequency.setValueAtTime(pitch, t);
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.03, t+0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t+0.16);
+        o.connect(g); g.connect(cueCtx.destination); o.start(t); o.stop(t+0.18);
+      }catch(e){}
+    }
+    function beginPhase(i){ pi=i%phases.length; phaseMs=phases[pi][1]*1000; shownSec=-1; paintCue(); paintTime(); blip(); }
+    function step(){
+      if(!running) return;
+      var now=Date.now(), dt=now-lastTick; if(dt<0) dt=0; lastTick=now;
+      remainMs-=dt; phaseMs-=dt;
+      if(remainMs<=0){ finishRound(); return; }
+      if(phaseMs<=0){ beginPhase(pi+1); return; }
+      paintTime();
+    }
+    function applyPat(id){
+      if(!PATS[id]) id='478';
+      pat=id; phases=PATS[id].phases; breath.dataset.pat=id; blurbEl.textContent=PATS[id].blurb;
+      try{ localStorage.setItem(PAT_KEY, id); }catch(e){}
+    }
+    function startReset(){
+      mins=3;
+      var picked=setupEl.querySelector('[data-min][aria-checked="true"]');
+      if(picked) mins=parseInt(picked.getAttribute('data-min'),10)||3;
+      phases=PATS[pat].phases; remainMs=mins*60*1000; running=true; lastTick=Date.now();
+      pauseBtn.textContent='Pause';
+      [breath.querySelector('.bcore'), breath.querySelector('.bring')].forEach(function(el){ if(el) el.style.animation='none'; });
+      void breath.offsetWidth;
+      [breath.querySelector('.bcore'), breath.querySelector('.bring')].forEach(function(el){ if(el) el.style.animation=''; });
+      breath.classList.add('run');
+      showView('run'); beginPhase(0);
+      clearInterval(breathTick); breathTick=setInterval(step,200);
+      if(window.echoTrack) echoTrack('breath_start',{pattern:PATS[pat].name});
+      try{ pauseBtn.focus(); }catch(e){}
+    }
+    function finishRound(){
+      if(!running && !breathTick) return;
+      running=false; clearInterval(breathTick); breathTick=null; breath.classList.remove('run');
+      var n=markStreak(); paintStreak(n);
+      if(window.echoTrack) echoTrack('breath_complete',{pattern:PATS[pat].name});
+      showView('done');
+      var title=document.getElementById('reset-done-title');
+      try{ title.focus(); }catch(e){}
+    }
+    function closeReset(){
+      running=false; clearInterval(breathTick); breathTick=null; breath.classList.remove('run');
+      if(cueCtx&&cueCtx.state==='running'){ try{ cueCtx.suspend(); }catch(e){} }
+      resetScrim.classList.remove('open'); resetScrim.inert=true; EchoDialog.close(resetScrim);
+    }
+    function wireRadios(group, read){
+      function buttons(){ return Array.prototype.slice.call(group.querySelectorAll('[role="radio"]')); }
+      function select(b){ buttons().forEach(function(x){ var on=x===b; x.setAttribute('aria-checked',on?'true':'false'); x.tabIndex=on?0:-1; }); }
+      group.addEventListener('click', function(e){ var b=e.target.closest('[role="radio"]'); if(!b||!group.contains(b)) return; select(b); read(b); });
+      group.addEventListener('keydown', function(e){
+        var b=e.target.closest('[role="radio"]'); if(!b) return;
+        var dir=e.key==='ArrowRight'||e.key==='ArrowDown'?1:e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:0;
+        if(!dir) return;
+        e.preventDefault();
+        var list=buttons(), n=list[(list.indexOf(b)+dir+list.length)%list.length];
+        select(n); n.focus(); read(n);
+      });
+    }
+    function setCue(on){
+      cueOn=!!on; cueBtn.setAttribute('aria-pressed', cueOn?'true':'false');
+      cueBtn.textContent='Soft tone · '+(cueOn?'on':'off');
+      try{ if(cueOn) localStorage.setItem(CUE_KEY,'1'); else localStorage.removeItem(CUE_KEY); }catch(e){}
+    }
+    wireRadios(setupEl.querySelector('[aria-labelledby="breath-pat-lbl"]'), function(b){ applyPat(b.getAttribute('data-pat')); });
+    wireRadios(setupEl.querySelector('[aria-labelledby="breath-min-lbl"]'), function(){});
+    cueBtn.addEventListener('click', function(){ setCue(!cueOn); });
+    function restore(){
+      var id='478', cue=false;
+      try{ var saved=localStorage.getItem(PAT_KEY); if(PATS[saved]) id=saved; cue=localStorage.getItem(CUE_KEY)==='1'; }catch(e){}
+      var btn=setupEl.querySelector('[data-pat="'+id+'"]'); if(btn) btn.click();
+      setCue(cue);
+    }
+    document.getElementById('reset-open').addEventListener('click', function(){
+      restore(); showView('setup'); paintStreak(loadStreak().n); breath.dataset.phase='in';
+      resetScrim.inert=false; resetScrim.classList.add('open');
+      EchoDialog.open(resetScrim,{focus:'#breath-start', onEscape:closeReset});
+    });
+    document.getElementById('reset-close').addEventListener('click', closeReset);
+    document.getElementById('breath-close-run').addEventListener('click', closeReset);
+    document.getElementById('breath-done-close').addEventListener('click', closeReset);
+    document.getElementById('breath-start').addEventListener('click', startReset);
+    pauseBtn.addEventListener('click', function(){
+      running=!running; pauseBtn.textContent=running?'Pause':'Resume'; breath.classList.toggle('run', running);
+      if(running){ lastTick=Date.now(); }
+    });
+    document.getElementById('breath-continue').addEventListener('click', function(){
+      closeReset();
+      if(typeof renderHome==='function') renderHome();
+      if(typeof openPlayer==='function') openPlayer({resume:false, freq:homeRecFreq});
+    });
+  })();
 
   // boot — pre-render the app behind the splash
   renderNodes('all'); renderGallery('all'); renderProfile(); showView('home');
