@@ -38,6 +38,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
 <link rel="manifest" href="/manifest.webmanifest" />
+<link rel="preload" as="image" href="img/hero-portrait.webp" type="image/webp" fetchpriority="high" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -99,7 +100,7 @@
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6c0 4 6 12 6 12s6-8 6-12a6 6 0 0 0-6-6z" opacity=".35"/><circle cx="12" cy="9" r="2.4"/></svg>
           </button>
           <button class="iconbtn avatar" id="profile-open" aria-label="Profile">
-            <img src="img/astro-profile.png" alt="" />
+            <img src="img/astro-profile.webp" alt="" width="128" height="170" decoding="async" />
           </button>
         </div>
       </div>
@@ -108,7 +109,7 @@
     <!-- ░░ SIGNAL / HOME ░░ -->
     <section class="view" id="view-home" data-screen-label="Echo (Home)">
       <div class="hero">
-        <video class="hero-media" autoplay muted loop playsinline preload="metadata" data-respect-reduce poster="img/hero-portrait.jpg">
+        <video class="hero-media" autoplay muted loop playsinline preload="metadata" data-respect-reduce poster="img/hero-portrait.webp">
           <source src="media/hero.mp4" type="video/mp4" />
         </video>
         <div class="hero-veil" aria-hidden="true"></div>
@@ -161,7 +162,7 @@
         <span class="seclabel">Choose your category</span>
         <div class="cats">
           <button class="cat" data-cat="binaural" aria-label="Open Binaural Synchronization">
-            <img class="cat-bg" src="img/cat-binaural.png" alt="" />
+            <img class="cat-bg" src="img/cat-binaural.webp" alt="" width="752" height="422" decoding="async" loading="lazy" />
             <span class="cat-scrim" aria-hidden="true"></span>
             <span class="cat-glass" aria-hidden="true"></span>
             <span class="cat-body">
@@ -175,7 +176,7 @@
           </button>
 
           <button class="cat" data-cat="tone" aria-label="Open Pure-Tone Resonance">
-            <img class="cat-bg" src="img/cat-tone.png" alt="" />
+            <img class="cat-bg" src="img/cat-tone.webp" alt="" width="752" height="422" decoding="async" loading="lazy" />
             <span class="cat-scrim" aria-hidden="true"></span>
             <span class="cat-glass" aria-hidden="true"></span>
             <span class="cat-body">
@@ -249,7 +250,7 @@
     <section class="view" id="view-profile" hidden data-screen-label="Profile">
       <button class="backbtn prof-back" id="profile-back" aria-label="Back"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
       <div class="prof-head">
-        <span class="prof-av"><img src="img/astro-profile.png" alt="" loading="lazy" decoding="async" /></span>
+        <span class="prof-av"><img src="img/astro-profile.webp" alt="" width="128" height="170" loading="lazy" decoding="async" /></span>
         <div class="prof-id">
           <h2>Founding Listener</h2>
           <div class="pmeta"><span class="pro-pill" id="pro-pill">Founding Beta</span> <span id="prof-founder">Founding Listener Nº 011 · since 2026</span></div>
@@ -434,7 +435,7 @@
 
     <!-- ░░ PLAYER · guided first listen ░░ -->
     <div class="player" id="player" hidden role="dialog" aria-label="Now playing — Alpha Clarity" aria-modal="true" data-signal="binaural">
-      <div class="pl-photo" aria-hidden="true"><img id="pl-photo-img" src="img/face-up.png" alt="" /></div>
+      <div class="pl-photo" aria-hidden="true"><img id="pl-photo-img" src="img/face-up.webp" alt="" width="928" height="1232" decoding="async" loading="lazy" /></div>
       <div class="pl-scrim" aria-hidden="true"></div>
       <div class="pl-plate" id="pl-plate">N.03</div>
       <button class="player-min" id="player-min" aria-label="Back — the session keeps playing">
@@ -2759,9 +2760,9 @@
 
   window.addEventListener('echo:pass', updateGate);   // a license activated or removed re-gates the book
   updateGate();
-  /* the book's only entry point stays hidden until the PDF is actually deployed
-     (same HEAD check the reader uses); the reader's "on its way" state stays as a fallback */
-  checkBook(function(ok){ var sec=document.getElementById('book-sec'); if(sec) sec.hidden=!ok; });
+  /* #book-sec stays hidden (see the hidden attribute in the markup) while
+     media/echo-volume-one.pdf is not deployed. checkBook() still runs when
+     the reader opens, so page load does not HEAD a file that 404s. */
   /* founding listener Nº — assigned once, persisted; real join-order serial comes from the backend at signup */
   (function(){
     var K='echo:founderNo', n=null;

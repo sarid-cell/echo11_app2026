@@ -1,0 +1,347 @@
+/* ════════════════════════════════════════════════════════════
+   echo11-web.css — web-app shim
+
+   echo11-app.css is kept byte-identical to the Claude Design bundle
+   so it can be re-synced without losing local edits. Everything that
+   turns the bundle's DESKTOP MOCKUP PRESENTATION into a real web app
+   lives here.
+
+   The bundle renders the app as a 393x852 iPhone mockup floating on a
+   gray "stage", complete with a painted iOS status bar (9:41, battery).
+   Right for design review, wrong for production: on a phone the frame
+   overflows the viewport, and on desktop it reads as a prototype, not
+   a product.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── every size: drop the mockup theater ─────────────────────
+   The painted iOS status bar stays as empty space (52px) because a
+   dozen rules position content 114px below the device top; removing
+   the element would shift every screen. Hiding its content keeps the
+   geometry and reads as breathing room. */
+.stage-label{display:none;}
+.flowcard{display:none;}   /* the bundle's design-notes aside — review artifact, not product */
+.statusbar,.auth-statusbar{visibility:hidden;}
+body{background:var(--bg);}
+
+/* ── phones and small tablets: the app IS the viewport ─────── */
+@media (max-width: 700px){
+  body{
+    display:block;
+    padding:0;
+    min-height:100vh;
+    min-height:100dvh;
+  }
+
+  .stage{gap:0;}
+
+  .device{
+    width:100vw;
+    height:100vh;
+    height:100dvh;
+    border-radius:0;
+    box-shadow:none;
+  }
+}
+
+/* ── desktop: a real app column, not a phone-in-a-frame ──────
+   The design system is built for a 393px column; stretching it to
+   full desktop width would break every layout. A full-height centered
+   column on the same canvas color is the standard mobile-web-app
+   presentation. Hairlines give the column definition without reading
+   as a device bezel. */
+@media (min-width: 701px){
+  body{
+    padding:0;
+    align-items:stretch;
+    gap:0;
+  }
+
+  .stage{
+    flex:1;
+    width:100%;
+    gap:0;
+    justify-content:center;
+  }
+
+  .device{
+    width:393px;
+    height:100vh;
+    height:100dvh;
+    border-radius:0;
+    box-shadow:1px 0 0 var(--line-2), -1px 0 0 var(--line-2),
+      0 0 60px -20px rgba(22,22,22,.12);
+  }
+}
+
+/* ───────── auth: guest-only layout ─────────
+   Stripping Apple/Google/email left one CTA where five controls used
+   to stack. Let .auth-inner fill the remaining height and push the CTA
+   to the bottom — headline anchored under the hero fade, primary
+   action in the thumb zone. */
+.auth-inner{flex:1;}
+.auth-providers{margin-top:auto;}
+
+/* ───────── mini-player: end-session control ─────────
+   stopPlayer() was reachable only from the completion screen; the ×
+   ends the audio from the mini-player. The open session stays in
+   localStorage, so Home still offers Resume. */
+.mini-close{flex-shrink:0;width:40px;height:40px;margin-right:4px;border:none;border-radius:50%;
+  background:transparent;color:var(--faint);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:color .15s,transform .12s;}
+.mini-close:active{transform:scale(.94);color:var(--ink);}
+
+/* ───────── science: the Gateway report opens the real document ─────────
+   The exhibit used to be a dead mock; the link (and the paper itself, via
+   the JS below in index.html) opens the declassified PDF in the system
+   viewer - the one PDF path that works everywhere, including iOS. */
+.ex-open{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;margin-top:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--azure);text-decoration:none;font-weight:600;}
+.ex-open span{color:var(--faint);letter-spacing:1px;}
+.ex-open:active{opacity:.7;}
+.sci-exhibit .ex-paper{cursor:pointer;}
+
+/* ───────── Founding Pass sheet ─────────
+   Built on the existing .hpsheet / .hp-card sheet (same scrim, radius,
+   type and colors); only the key field and price line are new. */
+.pass-price{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--azure);margin-top:-6px;}
+.hp-btn:disabled{opacity:.5;cursor:default;box-shadow:none;filter:none;transform:none;}
+.pass-key{border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:9px;}
+.pass-lbl{font-size:13.5px;font-weight:600;color:var(--ink);}
+.pass-row{display:flex;gap:8px;}
+.pass-input{flex:1;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;
+  background:var(--bg-2);color:var(--ink);font-family:var(--mono);font-size:16px;letter-spacing:.2px;}
+.pass-input:focus{outline:2px solid var(--azure);outline-offset:1px;}
+.pass-act{flex-shrink:0;height:44px;padding:0 16px;border:0;border-radius:12px;background:var(--azure-tint);
+  color:var(--azure);font-size:14px;font-weight:600;cursor:pointer;}
+.pass-act:disabled{opacity:.6;cursor:default;}
+.pass-msg{font-size:13px;line-height:1.45;color:var(--muted);}
+.pass-msg:empty{display:none;}
+.pass-msg.ok{color:var(--azure);font-weight:600;}
+.pass-msg.err{color:#A8433A;}
+.pass-warn{color:var(--ink);}
+/* profile membership card: the CTA sits on the card's dark glass */
+.sub .sub-cta{position:relative;margin-top:16px;}
+
+/* ───────── player: "your device paused the sound" ─────────
+   Shown when the AudioContext isn't running after a tap (iOS route blocked,
+   a call, an interruption). Sits above the play row so it reads as the
+   reason the play button is back. */
+.pl-audio-note{display:block;width:fit-content;max-width:100%;margin:0 auto 12px;padding:8px 14px;border-radius:99px;
+  background:rgba(8,9,12,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13.5px;font-weight:500;line-height:1.35;text-align:center;}
+.pl-audio-note[hidden]{display:none;}
+
+/* ───────── boot guard: data file failed to load ───────── */
+.splash.boot-failed{cursor:pointer;}
+.splash.boot-failed .splash-tag{color:#fff;letter-spacing:1.6px;}
+
+/* ───────── accessibility: real buttons where links/spans faked them ───────── */
+button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--line);font:inherit;text-align:left;}
+/* saved card: the card is a plain container; play and remove are two sibling buttons */
+.saved-card .sc-open{position:absolute;inset:0;z-index:2;width:100%;height:100%;padding:0;border:0;border-radius:inherit;
+  background:none;cursor:pointer;}
+.saved-card .sc-open:focus-visible{outline:2px solid var(--azure-pale);outline-offset:-3px;}
+/* sheet titles take focus on open (keeps the iPhone keyboard down); no ring on a heading */
+.hp-title:focus{outline:none;}
+
+/* ═══════════ THE DIAL · turn it, or let echo turn it for you ═══════════
+   One scale for all 22 frequencies under a fixed needle; the card under it
+   is what plays. Below: your echoes as big cards, then one swipeable shelf
+   per band. Each band reuses the accent the player gives it (BAND_THEMES in
+   index.html), so a frequency keeps one color from dial to player. */
+#view-library [data-band]{--band:#3E80B0;--band-pale:#CFF6FF;}
+#view-library [data-band="delta"]{--band:#4B53B8;--band-pale:#C9CDF6;}
+#view-library [data-band="theta"]{--band:#7A4FC0;--band-pale:#DCC9F3;}
+#view-library [data-band="alpha"]{--band:#3E80B0;--band-pale:#CFF6FF;}
+#view-library [data-band="beta"]{--band:#4E7290;--band-pale:#CFE0EF;}
+#view-library [data-band="gamma"]{--band:#8F7B4A;--band-pale:#F5EEDC;}
+#view-library [data-band="tone"]{--band:#7A7166;--band-pale:#F1ECE3;}
+
+.dial{margin:18px 16px 0;padding:16px 0 14px;border-radius:26px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-sm);}
+.dial-read{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 18px;text-align:center;}
+.dial-why{font-size:13px;line-height:1.35;color:var(--muted);min-height:18px;text-wrap:balance;}
+.dial-why b{color:var(--band);font-weight:600;}
+.dial-hz{font-family:var(--mono);font-size:44px;font-weight:300;letter-spacing:-1.5px;line-height:1.05;color:var(--ink);transition:color .3s;}
+
+/* the scale: ticks scroll under a fixed needle */
+.dial-scale{position:relative;margin-top:8px;}
+.dial-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 calc(50% - 16px);height:62px;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);mask-image:linear-gradient(90deg,transparent,#000 18%,#000 82%,transparent);}
+.dial-track::-webkit-scrollbar{display:none;}
+.dial-track:focus-visible{outline:2px solid var(--azure);outline-offset:-2px;border-radius:12px;}
+.dstop{flex:0 0 32px;height:62px;position:relative;scroll-snap-align:center;padding:0;border:0;background:none;cursor:pointer;}
+.dstop::before{content:"";position:absolute;left:0;top:14px;width:1px;height:9px;background:var(--line);}
+.dtick{position:absolute;left:50%;top:8px;width:2px;height:22px;margin-left:-1px;border-radius:2px;
+  background:color-mix(in srgb,var(--band) 45%,transparent);transition:height .2s,background .2s;}
+.dstop.first:not(:first-child){margin-left:30px;}   /* a breath between bands so their names never collide */
+.dstop.first .dtick{height:28px;background:var(--band);}
+.dstop.locked .dtick{background:var(--line);}
+.dstop.on .dtick{height:32px;background:var(--band);}
+.dword{position:absolute;top:42px;left:50%;margin-left:-1px;font-family:var(--mono);font-size:9.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--band);white-space:nowrap;}
+.dial-needle{position:absolute;left:50%;top:0;height:40px;width:2px;margin-left:-1px;border-radius:2px;background:var(--ink);pointer-events:none;}
+.dial-needle::before{content:"";position:absolute;top:-5px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--ink);}
+
+/* what's under the needle — one big card, one tap plays it */
+.dial-card{display:block;position:relative;width:calc(100% - 28px);margin:8px 14px 0;aspect-ratio:16/10;border-radius:20px;overflow:hidden;
+  padding:0;border:0;background:#0c0d10;cursor:pointer;color:#fff;text-align:left;font:inherit;transition:transform .15s;}
+.dial-card:active{transform:scale(.985);}
+.dial-card:focus-visible{outline:2px solid var(--band);outline-offset:3px;}
+.dial-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;filter:var(--img-filter);}
+.dial-card.locked img{filter:var(--img-filter) brightness(.55);}
+.dial-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--band);}
+.dc-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.3) 0%,rgba(5,5,5,0) 34%,rgba(5,5,5,.86) 100%);}
+.dc-band{position:absolute;top:12px;left:12px;height:24px;padding:0 10px;border-radius:99px;display:inline-flex;align-items:center;
+  background:rgba(8,9,12,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  font-family:var(--mono);font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--band-pale);}
+.dc-txt{position:absolute;left:16px;right:76px;bottom:16px;display:flex;flex-direction:column;gap:3px;}
+.dc-name{font-size:22px;font-weight:600;letter-spacing:-.5px;line-height:1.1;}
+.dc-sub{font-size:13px;color:rgba(255,255,255,.76);}
+.dc-play{position:absolute;right:14px;bottom:14px;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--band);color:#fff;box-shadow:0 8px 22px -8px var(--band);}
+.dc-play svg{margin-left:2px;}
+.dial-card.locked .dc-play{background:rgba(255,255,255,.18);}
+.dial-card.locked .dc-play svg{margin-left:0;}
+.dial-again{display:flex;align-items:center;gap:7px;margin:8px auto 0;min-height:44px;padding:0 14px;border:0;background:none;cursor:pointer;
+  font:inherit;font-size:13.5px;font-weight:600;color:var(--azure);}
+.dial-again:active{opacity:.6;}
+
+/* your echoes: the big cards, full-bleed row */
+#saved-sec{padding-top:24px;}
+#saved-sec .saved-lbl{padding-left:6px;}
+#saved-sec .saved-row{margin:0 -16px;padding:1px 16px 6px;scroll-snap-type:x mandatory;scroll-padding:0 16px;}
+.echo-card{width:156px;aspect-ratio:4/5;border-radius:22px;scroll-snap-align:start;}
+.echo-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;z-index:2;background:var(--band);}
+.echo-card .sc-name{bottom:14px;font-size:15.5px;}
+.echo-card .sc-tag{display:block;margin-bottom:4px;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--band-pale);}
+
+/* shelves */
+.shelves{padding:28px 0 130px;display:flex;flex-direction:column;gap:28px;}
+.shelf{display:flex;flex-direction:column;gap:11px;}
+.shelf-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;padding:0 16px 0 22px;}
+.shelf-word{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:-.4px;line-height:1;color:var(--ink);}
+.shelf-band{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.9px;text-transform:uppercase;color:var(--band);}
+.shelf-band i{width:7px;height:7px;border-radius:50%;background:var(--band);box-shadow:0 0 0 3px color-mix(in srgb,var(--band) 16%,transparent);}
+.shelf-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;padding:2px 16px 8px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.shelf-row::-webkit-scrollbar{display:none;}
+
+/* frequency card: photo first, the number as a small tag, the tuner underneath */
+.scard{flex:0 0 auto;width:138px;aspect-ratio:3/4;position:relative;border-radius:20px;overflow:hidden;cursor:pointer;scroll-snap-align:start;
+  padding:0;border:0;background:#0c0d10;box-shadow:var(--shadow-md);font:inherit;color:#fff;text-align:left;transition:transform .15s;}
+.scard:active{transform:scale(.97);}
+.scard:focus-visible{outline:2px solid var(--band);outline-offset:2px;}
+.scard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:var(--img-filter);}
+.scard-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.32) 0%,rgba(5,5,5,0) 30%,rgba(5,5,5,.9) 100%);}
+.scard-hz{position:absolute;top:10px;left:10px;z-index:1;height:22px;padding:0 8px;border-radius:99px;display:inline-flex;align-items:center;
+  background:rgba(8,9,12,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.3px;color:#fff;}
+.scard-lock{position:absolute;top:9px;right:9px;z-index:1;width:24px;height:24px;border-radius:50%;background:rgba(8,9,12,.5);
+  display:flex;align-items:center;justify-content:center;color:#fff;}
+.scard-txt{position:absolute;left:11px;right:11px;bottom:12px;z-index:1;display:flex;flex-direction:column;gap:3px;}
+.scard-name{font-size:15px;font-weight:600;letter-spacing:-.3px;line-height:1.15;}
+.scard-sub{font-size:11.5px;color:rgba(255,255,255,.74);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* the tuner: where this frequency sits on its band's scale */
+.scard-tuner{position:relative;height:2px;margin-top:8px;border-radius:2px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.34) 0 1px,transparent 1px 10%),rgba(255,255,255,.16);}
+.scard-tuner i{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;
+  background:var(--band-pale);box-shadow:0 0 0 2px color-mix(in srgb,var(--band) 70%,transparent),0 0 10px var(--band);}
+.scard.locked img{filter:var(--img-filter) brightness(.55);}
+.scard.locked .scard-name,.scard.locked .scard-sub{opacity:.72;}
+.scard.locked .scard-tuner i{background:rgba(255,255,255,.5);box-shadow:none;}
+
+/* ═══════════ GALLERY · lock-screen reel ═══════════
+   Each still is previewed as a phone lock screen — full color, the device's
+   own clock over it — in a swipeable reel, one at a time. Nothing here looks
+   like the Dial's shelves, so the two screens stop reading as twins. */
+#view-gallery .seg{margin-top:16px;}
+.lockreel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;
+  padding:18px 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.lockreel::-webkit-scrollbar{display:none;}
+.lock{flex:0 0 auto;width:min(58%, calc((100vh - 450px) * 9 / 19.5), calc((100dvh - 450px) * 9 / 19.5));min-width:150px;margin:0;scroll-snap-align:center;
+  display:flex;flex-direction:column;gap:12px;}
+.lock-screen{position:relative;aspect-ratio:9/19.5;container-type:inline-size;border-radius:30px;overflow:hidden;background:#0c0d10;
+  border:1px solid var(--line);box-shadow:var(--shadow-lg);}
+.lock-screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;pointer-events:none;}
+.lock-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,0) 78%,rgba(0,0,0,.3) 100%);}
+/* clock + date in the brand's pale sky, thin and a touch smaller, so the face
+   or figure at the top of each still stays visible through it */
+.lock-date{position:absolute;top:9%;left:0;right:0;text-align:center;font-size:clamp(9.5px,6cqi,11px);font-weight:400;letter-spacing:.4px;
+  color:rgba(207,246,255,.92);text-shadow:0 1px 8px rgba(0,0,0,.35);transition:opacity .25s ease;}
+.lock-time{position:absolute;top:calc(9% + 15px);left:0;right:0;text-align:center;font-family:var(--ui);font-size:clamp(30px,26cqi,54px);
+  font-weight:200;letter-spacing:-1px;line-height:1;color:var(--azure-pale);font-variant-numeric:tabular-nums;
+  text-shadow:0 0 18px rgba(207,246,255,.35),0 1px 10px rgba(0,0,0,.28);transition:opacity .25s ease;}
+/* press and hold a preview: the clock steps aside so the whole image shows */
+.lock-screen.peek .lock-date,.lock-screen.peek .lock-time,.lock-screen.peek .lock-shade{opacity:0;}
+.lock-shade{transition:opacity .25s ease;}
+.lock-bar{position:absolute;bottom:9px;left:50%;width:34%;height:4px;margin-left:-17%;border-radius:4px;background:rgba(255,255,255,.75);}
+.lock.locked .lock-screen{cursor:pointer;}
+.lock.locked .lock-screen img{filter:blur(10px) brightness(.62);transform:scale(1.08);}
+.lock-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;}
+.lock-gate b{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;
+  padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);}
+.lock-screen:focus-visible{outline:2px solid var(--azure);outline-offset:3px;}
+.lock-cap{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:0 2px;min-width:0;}
+.lock-name{display:flex;align-items:center;gap:7px;min-width:0;flex-wrap:wrap;row-gap:4px;font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(--ink);}
+.lock-tag{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--azure);
+  padding:2px 7px;border-radius:99px;background:var(--azure-tint);}
+.lock-save{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 13px;border-radius:99px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:600;box-shadow:var(--shadow-sm);}
+.lock-save:active{transform:scale(.97);}
+.lock-save.done{color:var(--azure);border-color:var(--azure);}
+.lockreel-count{padding:10px 16px 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--faint);}
+#view-gallery .quote{margin-bottom:130px;}
+
+/* ───────── player top rail ─────────
+   Back chevron on a visible surface chip; the whole top rail (back, plate
+   number, save/share) stays below the iOS status bar on notched phones.
+   Overrides echo11-app.css, which stays byte-identical to the design bundle. */
+.player-min{top:max(54px, calc(env(safe-area-inset-top) + 8px));z-index:8;border:1px solid var(--line);
+  background:color-mix(in srgb, var(--surface) 72%, transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);}
+.player-actions,.pl-plate{top:max(54px, calc(env(safe-area-inset-top) + 8px));}
+
+/* ───────── player: session-length picker ─────────
+   The bundle centred a 7-chip single row on the "15 min" pill, which sits
+   right of centre, so the row ran off the screen edge (and 100vw was the
+   window, not the 393px app column). Now: anchored to the whole timer row,
+   a compact 4-column grid (5 10 15 20 / 30 45 ∞) with a "Minutes" label,
+   always inside the player. */
+.pl-timer{position:relative;}
+.pl-total-wrap{position:static;}
+.pl-lenmenu{left:50%;right:auto;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,52px);gap:6px;
+  max-width:none;overflow:visible;padding:10px;border-radius:20px;z-index:12;}
+.pl-lenmenu::before{content:"Minutes";grid-column:1/-1;padding:0 2px 2px;font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);line-height:1.4;}
+.pl-lenmenu button{width:52px;padding:0;}
+.pl-lenmenu button:focus-visible{outline:2px solid var(--pb-accent);outline-offset:2px;}
+
+/* player: the medical/safety notice stays one tap away during every session */
+.pl-safe{display:block;margin-top:6px;text-align:center;font-size:11.5px;letter-spacing:.2px;color:var(--faint);text-decoration:none;}
+.pl-safe:active{opacity:.6;}
+
+/* ───────── player on short screens (iPhone SE, 667pt and below) ─────────
+   The stage is the only flexible block, so on short screens it collapsed to
+   ~40px and the 226px orb spilled up over the back / save / share rail.
+   Here the stage starts below the rail, the orb is scaled down, and the
+   fixed gaps tighten so everything fits without overlap. */
+@media (max-height: 760px){
+  .player{padding-top:100px;padding-bottom:18px;}
+  .player-stage{flex:0 0 136px;}
+  .pbreath{transform:scale(.56);margin:-50px 0;}
+  .pl-capzone{height:34px;}
+  .pl-info{gap:5px;margin-top:0;}
+  .pl-name{font-size:24px;}
+  .pl-timer{margin-top:4px;}
+  .pl-track{margin-top:24px;}
+  .pl-controls{margin-top:auto;padding-top:10px;gap:4px;}
+  .pl-safe{margin-top:2px;}
+}
+
+/* ───────── home CTA: two lines instead of one truncated line ─────────
+   The time-aware labels ("Begin this afternoon's echo") plus "· 10 Hz" did
+   not fit one line on a 375pt screen and were cut mid-word. The action now
+   gets the whole first line; the frequency it plays sits under it. */
+.begin{justify-content:flex-start;padding:10px 18px;}
+.begin-lbl{flex-direction:column;align-items:flex-start;gap:2px;min-width:0;}
+#begin-label{max-width:100%;font-size:clamp(15px,4.4vw,17px);}
+.begin-hz{font-size:11.5px;letter-spacing:.6px;opacity:.95;}
