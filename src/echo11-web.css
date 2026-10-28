@@ -357,6 +357,47 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .plc-yt:active{opacity:.65;}
 .plc-yt:focus-visible{outline:2px solid var(--azure);outline-offset:3px;border-radius:4px;}
 
+/* player: name and timer lead. The rest sits back. */
+.pl-plate,.pl-plate[hidden]{display:none!important;}
+.pl-info{gap:2px;}
+.pl-name{font-size:32px;font-weight:600;letter-spacing:-.8px;}
+.pl-sig{height:auto;margin:2px 0 0;padding:0;border:0;border-radius:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+  font-family:var(--ui);font-size:13.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted);box-shadow:none;}
+.pl-freq,.pl-intent,.pl-freq[hidden],.pl-intent[hidden]{display:none;}
+.pl-timer{font-size:48px;font-weight:300;margin-top:12px;justify-content:center;}
+.pl-track{margin-top:16px;}
+.pl-shift{margin-top:8px;font-family:var(--ui);font-size:12.5px;font-weight:500;letter-spacing:0;color:var(--faint);}
+.pl-shift[hidden]{display:none;}
+.pl-controls{gap:8px;margin-top:22px;}
+.pl-row{grid-template-columns:44px 1fr 44px;}
+.pl-amb,.pl-total{width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border-radius:50%;justify-content:center;justify-self:center;
+  background:transparent;box-shadow:none;border:1px solid var(--line);color:var(--muted);font-size:0;}
+.pl-amb.on{color:var(--pb-accent);border-color:color-mix(in srgb, var(--pb-accent) 50%, var(--line));background:color-mix(in srgb, var(--pb-accent) 12%, transparent);}
+.pl-amb .dot{display:none;}
+.pl-total[aria-expanded="true"]{color:#fff;background:var(--pb-accent);border-color:var(--pb-accent);}
+.pl-play{justify-self:center;}
+.pl-row .pl-amb{justify-self:start;}
+.pl-row .pl-total-wrap{position:relative;justify-self:end;}
+.pl-row .pl-lenmenu{left:auto;right:0;transform:none;bottom:calc(100% + 10px);}
+.pl-amb:focus-visible,.pl-total:focus-visible,.pl-play:focus-visible,.pl-why:focus-visible{outline:2px solid var(--pb-accent);outline-offset:3px;}
+.pl-why{font-size:13px;font-weight:500;color:var(--muted);}
+.pl-safe{font-size:11px;}
+.sci-now{margin:0 0 14px;font-size:14.5px;line-height:1.5;color:var(--muted);}
+.sci-now[hidden]{display:none;}
+@media (max-width:380px){
+  .pl-name{font-size:28px;}
+  .pl-timer{font-size:40px;}
+}
+@media (max-height:760px){
+  .pl-name{font-size:26px;}
+  .pl-timer{font-size:36px;margin-top:4px;}
+  .pl-track{margin-top:10px;}
+  .pl-controls{margin-top:8px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .pl-amb,.pl-total,.pl-play{transition:none;}
+}
+
 /* calm reset: pattern, length, phase count. Same orb, three timings. */
 .resetscrim{overflow-y:auto;justify-content:center;justify-content:safe center;padding:28px 26px 32px;-webkit-overflow-scrolling:touch;}
 .resetscrim h2{margin:8px 0 8px;}
