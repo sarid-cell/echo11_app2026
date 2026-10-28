@@ -6,6 +6,7 @@
 <!-- Google tag (gtag.js) — same GA4 property as echo11.app. Consent Mode:
      analytics cookies stay off until the listener accepts (echo11_consent). -->
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("consent","default",{analytics_storage:function(){try{return"granted"===localStorage.getItem("echo11_consent")?"granted":"denied"}catch(e){return"denied"}}()}),gtag("js",new Date),gtag("config","G-TP9YRD6TN8"),function(){var loaded=!1;function load(){if(!loaded){loaded=!0;var s=document.createElement("script");s.async=!0,s.src="https://www.googletagmanager.com/gtag/js?id=G-TP9YRD6TN8",document.head.appendChild(s)}}["click","keydown","touchstart","scroll","mousemove"].forEach((function(ev){window.addEventListener(ev,load,{once:!0,passive:!0})})),window.addEventListener("load",(function(){setTimeout(load,3e3)}))}(),window.echoTrack=function(name,params){try{"function"==typeof gtag&&gtag("event",name,Object.assign({source:"app"},params||{}))}catch(e){}};</script>
+<script>!function(){if(window.__echoStoreWrapped)return;window.__echoStoreWrapped=1;try{var set=localStorage.setItem.bind(localStorage),rem=localStorage.removeItem.bind(localStorage);localStorage.setItem=function(k,v){set(k,v);try{window.__echoOnStore&&window.__echoOnStore(k)}catch(e){}};localStorage.removeItem=function(k){rem(k);try{window.__echoOnStore&&window.__echoOnStore(k)}catch(e){}}}catch(e){}}();</script>
 <title>echo·11 — Binaural Beats App for Calm, Focus &amp; Sleep</title>
 <link rel="canonical" href="https://www.echo11.space/" />
 <meta name="description" content="echo·11 — 22 binaural and pure-tone frequencies for calm, focus and rest. Twenty quiet minutes a day, with headphones." />
@@ -36,7 +37,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.2.5/index.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.2.5/index.min.css" />
 </noscript>
-<link rel="stylesheet" href="echo11-app.css?v=f11f258c" />
+<link rel="stylesheet" href="echo11-app.css?v=ef471577" />
 <link rel="stylesheet" href="echo11-web.css?v=beedfed4" />
 <!-- Bonus book (Founding Pass) — bundled as a blob for standalone export -->
 <meta name="ext-resource-dependency" content="media/echo-volume-one.pdf" data-resource-id="book" />
@@ -256,6 +257,7 @@
 
       <div class="prof-sec">
         <div class="sec-head"><span class="seclabel">Listening history</span></div>
+        <div class="acct" id="account-slot" hidden></div>
         <div class="hist" id="hist-list"></div>
       </div>
 
@@ -677,6 +679,27 @@
       </div>
     </div>
 
+    <div class="hpsheet" id="acct-outsheet" hidden role="dialog" aria-modal="true" aria-labelledby="acct-outsheet-title">
+      <div class="hp-scrim" id="acct-out-scrim"></div>
+      <div class="hp-card">
+        <h2 class="hp-title" id="acct-outsheet-title" tabindex="-1">Sign out?</h2>
+        <p class="hp-body">The listening history on this device will be cleared. Your account keeps its copy, and it comes back the next time you sign in.</p>
+        <button class="hp-btn" id="acct-out-yes" type="button">Sign out</button>
+        <button class="hp-link" id="acct-out-no" type="button">Cancel</button>
+      </div>
+    </div>
+
+    <div class="hpsheet" id="acct-delsheet" hidden role="dialog" aria-modal="true" aria-labelledby="acct-delsheet-title">
+      <div class="hp-scrim" id="acct-del-scrim"></div>
+      <div class="hp-card">
+        <h2 class="hp-title" id="acct-delsheet-title" tabindex="-1">Delete my account and history?</h2>
+        <p class="hp-body">This removes the listening history saved to your account, and the sign-in itself. This device is cleared too. It cannot be undone.</p>
+        <p class="hp-body" id="acct-del-note" hidden></p>
+        <button class="hp-btn danger" id="acct-del-yes" type="button">Delete my account and history</button>
+        <button class="hp-link" id="acct-del-no" type="button">Cancel</button>
+      </div>
+    </div>
+
     <!-- ░░ FOUNDING PASS · one-time purchase sheet — opens from any locked item ░░ -->
     <div class="hpsheet" id="passsheet" hidden role="dialog" aria-modal="true" aria-labelledby="pass-title">
       <div class="hp-scrim" id="pass-scrim"></div>
@@ -972,5 +995,6 @@
     </g>
   </svg>
 </template>
+<script src="echo11-account.js?v=7d3767e1"></script>
 </body>
 </html>
