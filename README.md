@@ -43,13 +43,13 @@ Consent Mode (cookies off until the in-app "Accept"); app events are
 
 ## CSS
 
-The stylesheets the page loads (`echo11-app.css`, `echo11-web.css`) are minified. Edit the readable copies in `src/`, then regenerate (no build step, no dependency added to the app):
+The page's styles are minified and inlined into `index.html` (no stylesheet request before first paint). Edit the readable copies in `src/`, then regenerate (no build step, no dependency added to the app):
 
 ```bash
 sh scripts/minify-css.sh
 ```
 
-That runs `csso-cli` 5.0.5 with restructuring on, and writes the files the page already links. After regenerating, look at Home, the category cards, and the player on a phone-width window and on desktop.
+That runs `csso-cli` 4.0.2 (csso 5) with restructuring on, writes `echo11-app.css` and `echo11-web.css`, then `scripts/inline-css.mjs` copies them into the `<style data-inline="…">` blocks in `index.html`'s `<head>`. Don't edit those blocks by hand. After regenerating, look at Home, the category cards, and the player on a phone-width window and on desktop.
 
 ## Background
 
