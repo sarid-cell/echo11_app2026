@@ -290,6 +290,27 @@ button.srow{width:100%;background:none;border:0;border-bottom:1px solid var(--li
 .lock-save:active{transform:scale(.97);}
 .lock-save.done{color:var(--azure);border-color:var(--azure);}
 .lockreel-count{padding:10px 16px 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--faint);}
+
+/* ── reel on desktop: arrows, drag, keys ──
+   Touch keeps its native swipe untouched. With a mouse there is no sideways
+   scroll, so the reel gains glass arrows (same look as the header icon
+   buttons), click-and-drag, and Left/Right keys once focused. */
+.lockreel-wrap{position:relative;}
+.lockreel:focus{outline:none;}
+.lockreel:focus-visible{outline:2px solid var(--azure);outline-offset:-2px;border-radius:18px;}
+.lr-arrow{display:none;}
+@media (hover:hover) and (pointer:fine){
+  .lockreel{cursor:grab;}
+  .lockreel .lock-save,.lockreel .lock.locked .lock-screen{cursor:pointer;}
+  .lockreel.dragging{cursor:grabbing;scroll-snap-type:none;-webkit-user-select:none;user-select:none;}
+  .lockreel.dragging *{cursor:grabbing !important;}
+  .lr-arrow{display:flex;position:absolute;z-index:3;top:var(--lr-arrow-top,50%);margin-top:-22px;padding:0;
+    transition:transform .15s,background .18s,opacity .2s;}
+  .lr-arrow.prev{left:8px;}
+  .lr-arrow.next{right:8px;}
+  .lr-arrow:disabled{opacity:0;pointer-events:none;}
+  .lr-arrow:focus-visible{outline:2px solid var(--azure);outline-offset:2px;}
+}
 #view-gallery .quote{margin-bottom:130px;}
 
 /* ───────── player top rail ─────────
