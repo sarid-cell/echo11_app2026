@@ -57,7 +57,7 @@ Founding Pass on that device or browser.
 - Each key can be activated on a limited number of devices. If you run out,
   contact support and we'll free one up.
 - Clearing your browser data, using a different browser, or using
-  **Delete my account** removes the pass from that device. Re-activate it
+  **Erase my data** removes the pass from that device. Re-activate it
   any time with the same key (*Restore a pass on this device*).
 - We may disable a key that has been refunded, charged back, or shared
   publicly.
@@ -110,7 +110,7 @@ Add Lemon Squeezy (payments, tax, receipts, license keys) and Vercel
 ### Edit **7. Data retention**
 
 Add: *Your license key stays on your device until you clear your browser
-data or use Delete my account. Lemon Squeezy keeps order records as
+data or use Erase my data. Lemon Squeezy keeps order records as
 required by tax and accounting law.*
 
 ### Edit **8. Your rights**

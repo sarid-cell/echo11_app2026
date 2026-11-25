@@ -41,6 +41,14 @@ Analytics use the same GA4 property as echo11.app (`G-TP9YRD6TN8`) with
 Consent Mode (cookies off until the in-app "Accept"); app events are
 `frequency_start` and `frequency_complete` with `source: "app"`.
 
+**Offline (Nov 2026):** `sw.js` caches the page, its CSS/JS, the manifest,
+icons, fonts and the images a visitor has seen. The tones are generated with
+Web Audio, so the app opens and plays without a network. It needs no edit per
+deploy: pages are network-first, and `?v=<hash>` files are cached as
+immutable, with older versions of the same file dropped. Video, PDFs and
+`/api/*` are never cached. The manifest also declares the icons as `maskable`
+(the mark sits well inside Android's safe zone).
+
 ## CSS
 
 The stylesheets the page loads (`echo11-app.css`, `echo11-web.css`) are minified. Edit the readable copies in `src/`, then regenerate (no build step, no dependency added to the app):
